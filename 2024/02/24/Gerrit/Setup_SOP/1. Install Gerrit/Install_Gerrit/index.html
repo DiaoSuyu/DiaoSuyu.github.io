@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This topic is used to record how to set up the gerrit server under Ubuntu.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Gerrit] 1. Install Gerrit">
+<meta property="og:url" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This topic is used to record how to set up the gerrit server under Ubuntu.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/Ubuntu_Vserion.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/login.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/dashboard.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/user_settings.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/guest_user_setting.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/static_ip.png">
+<meta property="article:published_time" content="2024-02-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-02-23T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="Gerrit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/Ubuntu_Vserion.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Gerrit] 1. Install Gerrit | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Practice makes perfect</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Gerrit] 1. Install Gerrit
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-02-24 00:00:00" itemprop="dateCreated datePublished" datetime="2024-02-24T00:00:00+08:00">2024-02-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Gerrit/" itemprop="url" rel="index"><span itemprop="name">Gerrit</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>13 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This topic is used to record how to set up the gerrit server under Ubuntu.</strong></p>
+</blockquote>
+<h2 id="1-Environment"><a href="#1-Environment" class="headerlink" title="1. Environment"></a>1. Environment</h2><ul>
+<li>OS: Ubuntu 22.04.4 LTS<br> <img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/Ubuntu_Vserion.png" alt="Ubuntu_Vserion.png" title="Ubuntu_Vserion.png"></li>
+<li>Git: 2.34.1</li>
+<li>Jdk: 19.0.2</li>
+<li>agancha: 2.4.52</li>
+<li>Gerrit: 3.10.0</li>
+<li>Local ip address: 192.168.77.28</li>
+</ul>
+<h2 id="2-Configuration-Steps"><a href="#2-Configuration-Steps" class="headerlink" title="2. Configuration Steps"></a>2. Configuration Steps</h2><h3 id="2-1-Update-the-package-list"><a href="#2-1-Update-the-package-list" class="headerlink" title="2.1 Update the package list"></a>2.1 Update the package list</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Install-Git"><a href="#2-2-Install-Git" class="headerlink" title="2.2 Install Git"></a>2.2 Install Git</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install git</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Install-Jdk"><a href="#2-3-Install-Jdk" class="headerlink" title="2.3 Install Jdk"></a>2.3 Install Jdk</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sudo apt install openjdk-19-jre-headless</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-Install-Apache2"><a href="#2-4-Install-Apache2" class="headerlink" title="2.4 Install Apache2"></a>2.4 Install Apache2</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sudo apt install apache2</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-Create-Gerrit-Workplace-folder-under-Home-site"><a href="#2-5-Create-Gerrit-Workplace-folder-under-Home-site" class="headerlink" title="2.5 Create Gerrit_Workplace folder under Home site"></a>2.5 Create Gerrit_Workplace folder under Home site</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir Gerrit_Workplace</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-Download-Gerrit-3-10-0-to-Gerrit-Workplace-foler"><a href="#2-6-Download-Gerrit-3-10-0-to-Gerrit-Workplace-foler" class="headerlink" title="2.6 Download Gerrit 3.10.0 to Gerrit_Workplace foler"></a>2.6 Download Gerrit 3.10.0 to Gerrit_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -P /home/administrator/Gerrit_Workplace/ https://gerrit-releases.storage.googleapis.com/gerrit-3.10.0.war</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-7-Install-Gerrit-3-10-0-to-Gerrit-Workplace-foler"><a href="#2-7-Install-Gerrit-3-10-0-to-Gerrit-Workplace-foler" class="headerlink" title="2.7 Install Gerrit 3.10.0 to Gerrit_Workplace foler"></a>2.7 Install Gerrit 3.10.0 to Gerrit_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar /home/administrator/Gerrit_Workplace/gerrit-3.10.0.war init -d /home/administrator/Gerrit_Workplace/</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>After executing the above command, you will enter the configuration interface of gerrit, please press enter to execute the default configuration except [Plugins] part, and we will modify the configuration in step 8, the following is the log of the default configuration.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">Using secure store: com.google.gerrit.server.securestore.DefaultSecureStore</span><br><span class="line">[2024-06-29 10:51:45,119] [main] INFO    com.google.gerrit.server.config.GerritServerConfigProvider : No   /home/administrator/Gerrit_Workplace/etc/gerrit.config; assuming defaults</span><br><span class="line"></span><br><span class="line">*** Gerrit Code Review 3.10.0</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Git Repositories</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Location of Git repositories   [git]: </span><br><span class="line"></span><br><span class="line">*** JGit Configuration</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Auto-configured &quot;receive.autogc = false&quot; to disable auto-gc after git-  receive-pack.</span><br><span class="line"></span><br><span class="line">*** Index</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Type                           [lucene]: </span><br><span class="line"></span><br><span class="line">*** User Authentication</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Authentication method          [openid/?]: </span><br><span class="line">Enable signed push support     [y/N]? </span><br><span class="line"></span><br><span class="line">*** Review Labels</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Install Verified label         [y/N]? </span><br><span class="line"></span><br><span class="line">*** Email Delivery</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">SMTP server hostname           [localhost]: </span><br><span class="line">SMTP server port               [(default)]: </span><br><span class="line">SMTP encryption                [none/?]: </span><br><span class="line">SMTP username                  : </span><br><span class="line"></span><br><span class="line">*** Container Process</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Run as                         [administrator]: </span><br><span class="line">Java runtime                   [/usr/lib/jvm/java-19-openjdk-amd64]: </span><br><span class="line">Copy gerrit-3.10.0.war to /home/administrator/Gerrit_Workplace/bin/gerrit.war   [Y/n]? </span><br><span class="line">Copying gerrit-3.10.0.war to   /home/administrator/Gerrit_Workplace/bin/gerrit.war</span><br><span class="line"></span><br><span class="line">*** SSH Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [29418]: </span><br><span class="line">Generating SSH host key ... rsa... ed25519... ecdsa 256... ecdsa 384... ecdsa   521... done</span><br><span class="line"></span><br><span class="line">*** HTTP Daemon</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Behind reverse proxy           [y/N]? </span><br><span class="line">Use SSL (https://)             [y/N]? </span><br><span class="line">Listen on address              [*]: </span><br><span class="line">Listen on port                 [8080]: </span><br><span class="line">Canonical URL                  [http://administrator-Default-string:8080/]: </span><br><span class="line"></span><br><span class="line">*** Cache</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">*** Plugins</span><br><span class="line">*** </span><br><span class="line"></span><br><span class="line">Installing plugins.</span><br><span class="line">Install plugin codemirror-editor version v3.10.0 [y/N]? y</span><br><span class="line">Installed codemirror-editor v3.10.0</span><br><span class="line">Install plugin commit-message-length-validator version v3.10.0 [y/N]? y</span><br><span class="line">Installed commit-message-length-validator v3.10.0</span><br><span class="line">Install plugin delete-project version v3.10.0 [y/N]? y</span><br><span class="line">Installed delete-project v3.10.0</span><br><span class="line">Install plugin download-commands version v3.10.0 [y/N]? y</span><br><span class="line">Installed download-commands v3.10.0</span><br><span class="line">Install plugin gitiles version v3.10.0 [y/N]? y</span><br><span class="line">Installed gitiles v3.10.0</span><br><span class="line">Install plugin hooks version v3.10.0 [y/N]? y</span><br><span class="line">Installed hooks v3.10.0</span><br><span class="line">Install plugin plugin-manager version v3.10.0 [y/N]? y</span><br><span class="line">Installed plugin-manager v3.10.0</span><br><span class="line">Install plugin replication version v3.10.0 [y/N]? y</span><br><span class="line">Installed replication v3.10.0</span><br><span class="line">Install plugin reviewnotes version v3.10.0 [y/N]? y</span><br><span class="line">Installed reviewnotes v3.10.0</span><br><span class="line">Install plugin singleusergroup version v3.10.0 [y/N]? y</span><br><span class="line">Installed singleusergroup v3.10.0</span><br><span class="line">Install plugin webhooks version v3.10.0 [y/N]? y</span><br><span class="line">Installed webhooks v3.10.0</span><br><span class="line">Initializing plugins.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Jun 29, 2024 10:56:11 AM   org.apache.lucene.store.MemorySegmentIndexInputProvider &lt;init&gt;</span><br><span class="line">INFO: Using MemorySegmentIndexInput with Java 19; to disable start with -  Dorg.apache.lucene.store.MMapDirectory.enableMemorySegments=false</span><br><span class="line">============================================================================</span><br><span class="line">Welcome to the Gerrit community</span><br><span class="line"></span><br><span class="line">Find more information on the homepage: https://www.gerritcodereview.com</span><br><span class="line">Discuss Gerrit on the mailing list: https://groups.google.com/g/repo-discuss</span><br><span class="line">============================================================================</span><br><span class="line">Initialized /home/administrator/Gerrit_Workplace</span><br><span class="line">Init complete, reindexing accounts,changes,groups,projects with: reindex --  site-path /home/administrator/Gerrit_Workplace --threads 1 --index accounts -  -index changes --index groups --index projectsReindexed 0 documents in   accounts index in 0.0s (0.0/s)</span><br><span class="line">Index accounts in version 14 is ready</span><br><span class="line">Reindexing groups:      100% (2/2)</span><br><span class="line">Reindexed 2 documents in groups index in 0.1s (15.6/s)</span><br><span class="line">Index groups in version 11 is ready</span><br><span class="line">Reindexing changes: Slicing projects: 100% (2/2), done    </span><br><span class="line">Reindexed 0 documents in changes index in 0.5s (0.0/s)</span><br><span class="line">Index changes in version 86 is ready</span><br><span class="line">Reindexing projects:    100% (2/2)</span><br><span class="line">Reindexed 2 documents in projects index in 0.1s (27.4/s)</span><br><span class="line">Index projects in version 9 is ready</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-8-Modify-the-installation-configuration"><a href="#2-8-Modify-the-installation-configuration" class="headerlink" title="2.8 Modify the installation configuration"></a>2.8 Modify the installation configuration</h3><ul>
+<li><p>Swtich the path of terminal to &#x2F;home&#x2F;administrator&#x2F;Gerrit_Workplace&#x2F;etc&#x2F;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /home/administrator/Gerrit_Workplace/etc/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>View gerrit.config, the below is the default configuration  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim gerrit.config [or] gedit gerrit.config</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">default gerrit.config:</span></span><br><span class="line"></span><br><span class="line">[gerrit]</span><br><span class="line"> basePath = git</span><br><span class="line"> canonicalWebUrl = http://administrator-Default-string:8080/</span><br><span class="line"> serverId = 9cbbca33-3ef1-4a00-ace1-35d249b377aa</span><br><span class="line">[container]</span><br><span class="line"> javaOptions = &quot;-  Dflogger.backend_factory=com.google.common.flogger.backend.log4j.Log4jBackend  Factory#getInstance&quot;</span><br><span class="line"> javaOptions = &quot;-  Dflogger.logging_context=com.google.gerrit.server.logging.LoggingContext#getI  nstance&quot;</span><br><span class="line"> user = administrator</span><br><span class="line"> javaHome = /usr/lib/jvm/java-19-openjdk-amd64</span><br><span class="line">[index]</span><br><span class="line"> type = lucene</span><br><span class="line">[auth]</span><br><span class="line"> type = OPENID</span><br><span class="line">[receive]</span><br><span class="line"> enableSignedPush = false</span><br><span class="line">[sendemail]</span><br><span class="line"> smtpServer = localhost</span><br><span class="line">[sshd]</span><br><span class="line"> listenAddress = *:29418</span><br><span class="line">[httpd]</span><br><span class="line"> listenUrl = http://*:8080/</span><br><span class="line">[cache]</span><br><span class="line"> directory = cache</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Modify gerrit.config, the below is the modified configuration  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim gerrit.config [or] sudo gedit gerrit.config</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Modify gerrit.config</span></span><br><span class="line"></span><br><span class="line">[gerrit]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">The base path <span class="built_in">where</span> the Git repository is stored</span></span><br><span class="line"> basePath = git</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">The URL of the Gerrit web interface</span></span><br><span class="line"> canonicalWebUrl = https://192.168.77.28:8081/</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">A unique identifier <span class="keyword">for</span> a Gerrit server</span></span><br><span class="line"> serverId = 9cbbca33-3ef1-4a00-ace1-35d249b377aa</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">[container]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Configure the logging backend</span></span><br><span class="line"> javaOptions = &quot;-  Dflogger.backend_factory=com.google.common.flogger.backend.log4j.Log4jBackend  Factory#getInstance&quot;</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Configure the logging context</span></span><br><span class="line"> javaOptions = &quot;-  Dflogger.logging_context=com.google.gerrit.server.logging.LoggingContext#getI  nstance&quot;</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">The user <span class="built_in">who</span> will run Gerrit services</span></span><br><span class="line"> user = administrator</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">The path to the Java runtime environment</span></span><br><span class="line"> javaHome = /usr/lib/jvm/java-19-openjdk-amd64</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">[index]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Use Lucene as the index backend</span></span><br><span class="line"> type = lucene  </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[auth]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="comment"># Use HTTP authentication</span></span></span><br><span class="line"> type = HTTP</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Usernames are not case-sensitive</span></span><br><span class="line"> userNameCaseInsensitive = true</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[receive]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Disable signature push</span></span><br><span class="line"> enableSignedPush = false</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[sendemail]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">Enable email sending</span></span><br><span class="line"> enable = true</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">SMTP server address</span></span><br><span class="line"> smtpServer = smtp.sk1999.com</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">SMTP server port</span></span><br><span class="line"> smtpServerPort = 465  </span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">SMTP <span class="built_in">users</span></span></span><br><span class="line"> smtpUser = diaosuyu@sk1999.com</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash">The sender<span class="string">&#x27;s address when sending the message</span></span></span><br><span class="line"> from = Code Review &lt;diaosuyu@sk1999.com&gt;</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">SSL encryption is used</span></span></span><br><span class="line"> smtpEncryption = ssl</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">Disable SSL validation</span></span></span><br><span class="line"> sslVerify = false</span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">SMTP user password</span></span></span><br><span class="line"> smtpPass = VTHRtCdf9ytdsQxJ</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[sshd]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">SSHD listening address and port</span></span></span><br><span class="line"> listenAddress = *:29418</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[httpd]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">URL of the HTTPD listener</span></span></span><br><span class="line"> listenUrl = proxy-https://192.168.77.28:8080/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[cache]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">Cache directory</span></span></span><br><span class="line"> directory = cache</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[log]</span><br><span class="line"><span class="meta prompt_"> # </span><span class="language-bash"><span class="string">Logging level</span></span></span><br><span class="line"> level = DEBUG</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Swtich the path of terminal to &#x2F;home&#x2F;administrator&#x2F;Gerrit_Workplace&#x2F;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /home/administrator/Gerrit_Workplace/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create key folder and create SSL Certificate</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir key</span><br><span class="line">cd key/</span><br><span class="line">openssl req -x509 -nodes -days 365 \</span><br><span class="line">  -newkey rsa:2048 \</span><br><span class="line">  -keyout gerrit.key \</span><br><span class="line">  -out gerrit.crt \</span><br><span class="line">  -subj &quot;/C=AU/ST=Some-State/O=Internet Widgits Pty Ltd/CN=192.168.77.28&quot; \</span><br><span class="line">  -addext &quot;subjectAltName=IP:192.168.77.28&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-9-Modify-the-Apache2-configuration"><a href="#2-9-Modify-the-Apache2-configuration" class="headerlink" title="2.9 Modify the Apache2 configuration"></a>2.9 Modify the Apache2 configuration</h3><ul>
+<li><p>Swtich the path of terminal to &#x2F;etc&#x2F;apache2</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/apache2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create a new file named gerrit_httpd.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo touch gerrit_httpd.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Modify gerrit_httpd.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim gerrit_httpd.conf [or] sudo gedit gerrit_httpd.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">gerrit_httpd.conf:</span></span><br><span class="line"></span><br><span class="line">&lt;VirtualHost *:8081&gt;</span><br><span class="line">    ServerName 192.168.77.40</span><br><span class="line"></span><br><span class="line">    ProxyRequests Off</span><br><span class="line">    ProxyVia Off</span><br><span class="line">    ProxyPreserveHost On</span><br><span class="line"></span><br><span class="line">    SSLEngine on</span><br><span class="line">    SSLCertificateFile /home/administrator/Gerrit_Workplace/key/gerrit.crt</span><br><span class="line">    SSLCertificateKeyFile /home/administrator/Gerrit_Workplace/key/gerrit.key</span><br><span class="line">    </span><br><span class="line">    &lt;Proxy *&gt;</span><br><span class="line">          Order deny,allow</span><br><span class="line">          Allow from all</span><br><span class="line">    &lt;/Proxy&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Location /login/&gt;</span><br><span class="line">      AuthType Basic</span><br><span class="line">      AuthName &quot;Gerrit Code Review&quot;</span><br><span class="line">      Require valid-user</span><br><span class="line">      AuthBasicProvider file</span><br><span class="line">      AuthUserFile /home/administrator/Gerrit_Workplace/users/gerrit.password </span><br><span class="line">    &lt;/Location&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    AllowEncodedSlashes On</span><br><span class="line">    ProxyPass / http://192.168.77.40:8080/ nocanon</span><br><span class="line">    ProxyPassReverse / http://192.168.77.40:8080/ nocanon</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Modify ports.conf, adds a listen on port 8081</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim ports.conf [or] sudo gedit ports.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">ports.conf:</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">If you just change the port or add more ports here, you will likely also</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">have to change the VirtualHost statement <span class="keyword">in</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/etc/apache2/sites-enabled/000-default.conf</span></span><br><span class="line"></span><br><span class="line">Listen 80</span><br><span class="line"></span><br><span class="line">&lt;IfModule ssl_module&gt;</span><br><span class="line"> Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"></span><br><span class="line">&lt;IfModule mod_gnutls.c&gt;</span><br><span class="line"> Listen 443</span><br><span class="line">&lt;/IfModule&gt;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">&lt;Sam_Diao-20240629&gt;+</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">For gerrit server use</span></span><br><span class="line">Listen 8081</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">&lt;Sam_Diao-20240629&gt;-</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">vim: syntax=apache ts=4 sw=4 sts=4 sr noet</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Modify apache2.conf, Include gerrit_httpd.conf at the end of apache2.conf</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim apache2.conf [or] sudo gedit apache2.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">at the end of apache2.conf:</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">&lt;Sam_Diao-20240629&gt;+</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">For gerrit server use</span></span><br><span class="line">Include gerrit_httpd.conf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">&lt;Sam_Diao-20240629&gt;-</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Execute the following command</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo a2enmod proxy</span><br><span class="line">sudo a2enmod proxy_http</span><br><span class="line">sudo a2enmod proxy_balancer</span><br><span class="line">sudo a2enmod auth_basic</span><br><span class="line">sudo a2enmod headers</span><br><span class="line">sudo a2enmod lbmethod_byrequests</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Swtich the path of terminal to &#x2F;etc&#x2F;apache2&#x2F;mods-enabled</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /etc/apacha2/mods-enabled</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Execute the following command</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo ln -s proxy.load</span><br><span class="line">sudo ln -s proxy.conf</span><br><span class="line">sudo ln -s proxy_http.load</span><br><span class="line">sudo ln -s proxy_balancer.conf</span><br><span class="line">sudo ln -s proxy_balancer.load</span><br><span class="line">sudo ln -s rewrite.load</span><br><span class="line">sudo ln -s ssl.conf</span><br><span class="line">sudo ln -s ssl.load</span><br><span class="line">sudo ln -s slotmem_shm.load</span><br><span class="line">sudo ln -s socache_shmcb.load</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-10-Create-a-login-authentication-file-under-Gerrit-Workplace"><a href="#2-10-Create-a-login-authentication-file-under-Gerrit-Workplace" class="headerlink" title="2.10 Create a login authentication file under Gerrit_Workplace"></a>2.10 Create a login authentication file under Gerrit_Workplace</h3><ul>
+<li><p>Swtich the path of terminal to &#x2F;home&#x2F;administrator&#x2F;Gerrit_Workplace&#x2F;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /home/administrator/Gerrit_Workplace/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create users folder for save name and password of users who will login gerrit</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir users</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Swtich the path of terminal to users&#x2F;</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd users/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create an administrator accout for gerrit</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -c gerrit.password administrator</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash log:</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">htpasswd -c gerrit.password administrator</span></span><br><span class="line">New password: </span><br><span class="line">Re-type new password: </span><br><span class="line">Adding password for user administrator</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create an guest accout for gerrit</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -m gerrit.password guest</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bash log:</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">htpasswd -m gerrit.password guest</span></span><br><span class="line">New password: </span><br><span class="line">Re-type new password: </span><br><span class="line">Adding password for user guest</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-11-Modify-the-access-permission-of-Apache2"><a href="#2-11-Modify-the-access-permission-of-Apache2" class="headerlink" title="2.11 Modify the access permission of Apache2"></a>2.11 Modify the access permission of Apache2</h3><ul>
+<li><p>Apache2 is run as a www-data user by default, use the following command to determine what the user is.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep apache2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>gerrit.password is created by administrator, other users have no permission to access, like user www-data, so we need to add www-data into group of administrator, then www-data can access gerrit.password.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo usermod -aG administrator www-data</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-12-Restart-the-Gerrit-and-Apache2"><a href="#2-12-Restart-the-Gerrit-and-Apache2" class="headerlink" title="2.12 Restart the Gerrit and Apache2"></a>2.12 Restart the Gerrit and Apache2</h3><ul>
+<li><p>Swtich the path of terminal to &#x2F;home&#x2F;administrator&#x2F;Gerrit_Workplace&#x2F;bin</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd /home/administrator/Gerrit_Workplace/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Restart Gerrit.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./gerrit.sh restart</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Enable the SSL module and site configuration, then restart Apache2.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo a2enmod ssl</span><br><span class="line">sudo a2ensite default-ssl</span><br><span class="line">sudo systemctl restart apache2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Tips: The following commands or files are used to check and correct errors in the event of errors:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. sudo systemctl status apache2</span><br><span class="line">2. journalctl -xeu apache2.service</span><br><span class="line">3. /var/log/apache2/error.log</span><br><span class="line">4. /home/administrator/Gerrit_Workplace/log/error_log</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="3-Login-Verification"><a href="#3-Login-Verification" class="headerlink" title="3. Login Verification"></a>3. Login Verification</h2><h3 id="3-1-Open-browser-and-login"><a href="#3-1-Open-browser-and-login" class="headerlink" title="3.1 Open browser and login"></a>3.1 Open browser and login</h3><ul>
+<li><p>Open browser and enter 192.168.77.28:8081, then enter the name and password of the administrator account that you have just registered.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.77.28:8081</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/login.png" alt="login.png" title="login.png"></p>
+</li>
+</ul>
+<h3 id="3-2-Check-dashboard"><a href="#3-2-Check-dashboard" class="headerlink" title="3.2 Check dashboard"></a>3.2 Check dashboard</h3><ul>
+<li><p>if everything is working properly then will go to dashboard automatically.</p>
+<p><img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/dashboard.png" alt="dashboard.png" title="dashboard.png"></p>
+</li>
+</ul>
+<h3 id="3-3-Check-administrator-account-settings"><a href="#3-3-Check-administrator-account-settings" class="headerlink" title="3.3 Check administrator account settings"></a>3.3 Check administrator account settings</h3><ul>
+<li><p>Click the username in the top right corner, and then click Setting, if everything is working properly, the account ID is 1000000 that means administrator is super manager(By default, the account for this number is super manager).</p>
+<p><img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/user_settings.png" alt="user_settings.png" title="user_settings.png"></p>
+</li>
+</ul>
+<h3 id="3-4-Check-guest-account-settings"><a href="#3-4-Check-guest-account-settings" class="headerlink" title="3.4 Check guest account settings"></a>3.4 Check guest account settings</h3><ul>
+<li><p>In the same way, you can check the information of the guest account and note that the guest account does not have administrative privileges.</p>
+<p><img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/guest_user_setting.png" alt="guest_user_setting.png" title="guest_user_setting.png"></p>
+</li>
+</ul>
+<h2 id="4-Option-Configuration"><a href="#4-Option-Configuration" class="headerlink" title="4. Option Configuration"></a>4. Option Configuration</h2><h3 id="4-1-Auto-start-Gerrit-and-Apache2-on-boot"><a href="#4-1-Auto-start-Gerrit-and-Apache2-on-boot" class="headerlink" title="4.1 Auto-start Gerrit and Apache2 on boot"></a>4.1 Auto-start Gerrit and Apache2 on boot</h3><ul>
+<li><p>Gerrit will automatically turn off after os reboot, if you want Gerrit to turn on automatically every time that you turn on the device, please perform the following configuration.</p>
+</li>
+<li><p>Set the gerrit service to start automatically when ubuntu is powered on</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/systemd/system/gerrit.service</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Add the following Setting</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Gerrit Code Review</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=forking</span><br><span class="line">User=administrator</span><br><span class="line">ExecStart=/home/administrator/Gerrit_Workplace/bin/gerrit.sh restart</span><br><span class="line">ExecStop=/home/administrator/Gerrit_Workplace/bin/gerrit.sh stop</span><br><span class="line">WorkingDirectory=/home/administrator/Gerrit_Workplace</span><br><span class="line">Restart=on-failure</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Apache2 auto start</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl enable apache2</span><br><span class="line">sudo systemctl enable gerrit</span><br><span class="line">sudo systemctl start apache2</span><br><span class="line">sudo systemctl start gerrit</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Apache2 Status check</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl status apache2</span><br><span class="line">sudo systemctl status gerrit</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-2-Configure-static-IP-address"><a href="#4-2-Configure-static-IP-address" class="headerlink" title="4.2 Configure static IP address"></a>4.2 Configure static IP address</h3><ul>
+<li><p>By default, dynamic IP addresses are used, if you wish to use a static IP address, please use this section to set the settings.</p>
+</li>
+<li><p>Configure static ip address<br><img src="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/static_ip.png" alt="static_ip.png" title="static_ip.png"></p>
+</li>
+<li><p>Enable the management of specific network interfaces</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/NetworkManager/NetworkManager.conf </span><br><span class="line">  [main]</span><br><span class="line">  plugins=ifupdown,keyfile</span><br><span class="line">  [ifupdown]</span><br><span class="line">  managed=true</span><br><span class="line">  [device]</span><br><span class="line">  wifi.scan-rand-mac-address=no</span><br><span class="line"></span><br><span class="line">sudo systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Set network for access external web</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/resolv.conf</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">add at the bottom</span></span><br><span class="line">nameserver 8.8.8.8</span><br><span class="line">nameserver 8.8.4.4</span><br><span class="line"></span><br><span class="line">sudo service NetworkManager stop</span><br><span class="line">sudo rm /var/lib/NetworkManager/NetworkManager.state</span><br><span class="line">sudo service NetworkManager start</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-3-Ensure-Apache-Can-Access-Gerrit’s-Directory-on-External-Hard-Drive"><a href="#4-3-Ensure-Apache-Can-Access-Gerrit’s-Directory-on-External-Hard-Drive" class="headerlink" title="4.3 Ensure Apache Can Access Gerrit’s Directory on External Hard Drive"></a>4.3 Ensure Apache Can Access Gerrit’s Directory on External Hard Drive</h3><ul>
+<li>If you’re setting up Gerrit on an external hard drive and sharing the folder for access by Ubuntu, you may encounter issues where Apache cannot access the Gerrit password file. Follow these steps to resolve potential access problems:</li>
+</ul>
+<h4 id="4-3-1-Ensure-Apache-Can-Access-the-Directory"><a href="#4-3-1-Ensure-Apache-Can-Access-the-Directory" class="headerlink" title="4.3.1 Ensure Apache Can Access the Directory"></a>4.3.1 Ensure Apache Can Access the Directory</h4><ul>
+<li><p>The directory itself must also have read permissions for the Apache user (<code>www-data</code>). Run the following command to ensure the <code>/media/sf_VirtualBox/Gerrit_Workplace/users/</code> directory is accessible:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 755 /media/sf_VirtualBox/Gerrit_Workplace/users</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-3-2-Modify-File-Permissions"><a href="#4-3-2-Modify-File-Permissions" class="headerlink" title="4.3.2 Modify File Permissions"></a>4.3.2 Modify File Permissions</h4><ul>
+<li><p>Ensure that the <code>gerrit.password</code> file is readable by the owner, group members, and others by using the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> 644 /media/sf_VirtualBox/Gerrit_Workplace/users/gerrit.password</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>This will grant read permissions to <code>root</code>, the <code>vboxsf</code> group, and others.</p>
+</li>
+</ul>
+<h4 id="4-3-3-Check-If-www-data-Has-Permissions"><a href="#4-3-3-Check-If-www-data-Has-Permissions" class="headerlink" title="4.3.3 Check If www-data Has Permissions"></a>4.3.3 Check If <code>www-data</code> Has Permissions</h4><ul>
+<li><p>If the permissions are correctly set but the problem persists, it may be because the <code>www-data</code> user is not part of the group for that directory. You can add the <code>www-data</code> user to the <code>vboxsf</code> group to give it access to the directory and files:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> usermod -aG vboxsf www-data</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-3-4-Restart-Apache"><a href="#4-3-4-Restart-Apache" class="headerlink" title="4.3.4 Restart Apache"></a>4.3.4 Restart Apache</h4><ul>
+<li><p>Then restart Apache so the <code>www-data</code> user can gain access:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart apache2</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-3-5-Confirm-vboxsf-Group-Permissions"><a href="#4-3-5-Confirm-vboxsf-Group-Permissions" class="headerlink" title="4.3.5 Confirm vboxsf Group Permissions"></a>4.3.5 Confirm <code>vboxsf</code> Group Permissions</h4><ul>
+<li><p>Ensure the <code>vboxsf</code> group has appropriate permissions for the <code>/media/sf_VirtualBox/</code> directory and all of its subdirectories and files. Use the following command to check the directory’s permissions:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -l /media/sf_VirtualBox</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Gerrit/" rel="tag"><i class="fa fa-tag"></i> Gerrit</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2024/06/29/Gerrit/Setup_SOP/2.%20Configure%20Gerrit%20on%20Website/Configure_Gerrit_on_Website/" rel="next" title="[Gerrit] 2. Configure Gerrit on Website">
+      [Gerrit] 2. Configure Gerrit on Website <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Environment"><span class="nav-text">1. Environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Configuration-Steps"><span class="nav-text">2. Configuration Steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Update-the-package-list"><span class="nav-text">2.1 Update the package list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Install-Git"><span class="nav-text">2.2 Install Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Install-Jdk"><span class="nav-text">2.3 Install Jdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Install-Apache2"><span class="nav-text">2.4 Install Apache2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Create-Gerrit-Workplace-folder-under-Home-site"><span class="nav-text">2.5 Create Gerrit_Workplace folder under Home site</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Download-Gerrit-3-10-0-to-Gerrit-Workplace-foler"><span class="nav-text">2.6 Download Gerrit 3.10.0 to Gerrit_Workplace foler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Install-Gerrit-3-10-0-to-Gerrit-Workplace-foler"><span class="nav-text">2.7 Install Gerrit 3.10.0 to Gerrit_Workplace foler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-Modify-the-installation-configuration"><span class="nav-text">2.8 Modify the installation configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-Modify-the-Apache2-configuration"><span class="nav-text">2.9 Modify the Apache2 configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-10-Create-a-login-authentication-file-under-Gerrit-Workplace"><span class="nav-text">2.10 Create a login authentication file under Gerrit_Workplace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-11-Modify-the-access-permission-of-Apache2"><span class="nav-text">2.11 Modify the access permission of Apache2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-12-Restart-the-Gerrit-and-Apache2"><span class="nav-text">2.12 Restart the Gerrit and Apache2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Login-Verification"><span class="nav-text">3. Login Verification</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Open-browser-and-login"><span class="nav-text">3.1 Open browser and login</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Check-dashboard"><span class="nav-text">3.2 Check dashboard</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Check-administrator-account-settings"><span class="nav-text">3.3 Check administrator account settings</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Check-guest-account-settings"><span class="nav-text">3.4 Check guest account settings</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Option-Configuration"><span class="nav-text">4. Option Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Auto-start-Gerrit-and-Apache2-on-boot"><span class="nav-text">4.1 Auto-start Gerrit and Apache2 on boot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Configure-static-IP-address"><span class="nav-text">4.2 Configure static IP address</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Ensure-Apache-Can-Access-Gerrit%E2%80%99s-Directory-on-External-Hard-Drive"><span class="nav-text">4.3 Ensure Apache Can Access Gerrit’s Directory on External Hard Drive</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-1-Ensure-Apache-Can-Access-the-Directory"><span class="nav-text">4.3.1 Ensure Apache Can Access the Directory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-2-Modify-File-Permissions"><span class="nav-text">4.3.2 Modify File Permissions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-3-Check-If-www-data-Has-Permissions"><span class="nav-text">4.3.3 Check If www-data Has Permissions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-4-Restart-Apache"><span class="nav-text">4.3.4 Restart Apache</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-3-5-Confirm-vboxsf-Group-Permissions"><span class="nav-text">4.3.5 Confirm vboxsf Group Permissions</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">25k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">23 mins.</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("11/12/2025 10:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>

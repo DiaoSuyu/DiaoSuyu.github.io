@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This topic is used to record how to configure Windows Oa of Users.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Gerrit] 3. Configure Windows Oa of Users">
+<meta property="og:url" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This topic is used to record how to configure Windows Oa of Users.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/user_account.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/email_verify.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/verification_address.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/verification_pass.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/keygen.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/ssh_keys.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/puttygen.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/pageant.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/hook.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/clone.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/upload.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/push.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/Gredential.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/Http_Credentials.jpg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/change.jpg">
+<meta property="article:published_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-03T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="Gerrit">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/user_account.jpg">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Gerrit] 3. Configure Windows Oa of Users | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Practice makes perfect</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Gerrit] 3. Configure Windows Oa of Users
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-07-04 00:00:00" itemprop="dateCreated datePublished" datetime="2024-07-04T00:00:00+08:00">2024-07-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Gerrit/" itemprop="url" rel="index"><span itemprop="name">Gerrit</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>2.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This topic is used to record how to configure Windows Oa of Users.</strong><br><strong>You must have successfully completed the first and second chapter before you can execute this chapter.</strong></p>
+</blockquote>
+<h2 id="1-Login-your-account"><a href="#1-Login-your-account" class="headerlink" title="1. Login your account"></a>1. Login your account</h2><p>  <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/user_account.jpg" alt="user_account.jpg" title="user_account.jpg"></p>
+<h2 id="2-Verify-your-Email"><a href="#2-Verify-your-Email" class="headerlink" title="2. Verify your Email"></a>2. Verify your Email</h2><p>  <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/email_verify.jpg" alt="email_verify.jpg" title="email_verify.jpg"></p>
+<ul>
+<li><p>You will receive a verification email, then open the link in the email.</p>
+<p><img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/verification_address.jpg" alt="verification_address.jpg" title="verification_address.jpg"></p>
+</li>
+<li><p>The email address has been verified.</p>
+<p><img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/verification_pass.jpg" alt="verification_pass.jpg" title="verification_pass.jpg"></p>
+</li>
+</ul>
+<h2 id="3-Configure-SSH-Keys"><a href="#3-Configure-SSH-Keys" class="headerlink" title="3. Configure SSH Keys"></a>3. Configure SSH Keys</h2><ul>
+<li><p>Open your Git Bash anywhere, then run the command down below:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/keygen.jpg" alt="keygen.jpg" title="keygen.jpg"></p>
+<ul>
+<li>Follow the prompt address to locate the public key and copy it to the SSH Keys bar</li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/ssh_keys.jpg" alt="ssh_keys.jpg" title="ssh_keys.jpg"></p>
+<h2 id="4-Configure-your-information-under-Git"><a href="#4-Configure-your-information-under-Git" class="headerlink" title="4. Configure your information under Git"></a>4. Configure your information under Git</h2><h3 id="4-1-Configure-Git-with-Git-Bash"><a href="#4-1-Configure-Git-with-Git-Bash" class="headerlink" title="4.1 Configure Git with Git Bash"></a>4.1 Configure Git with Git Bash</h3><ul>
+<li><p>Open your Git Bash anywhere, then run the command down below:  </p>
+</li>
+<li><p>user.name is the username you just logged into gerrit  </p>
+</li>
+<li><p>user.email is the address you just used to authenticate your email address  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">example:</span><br><span class="line">git config --global user.name &quot;Sam_Diao&quot;</span><br><span class="line">git config --global user.email &quot;your_email@example.com&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="4-2-Configure-Git-with-TortoiseGit"><a href="#4-2-Configure-Git-with-TortoiseGit" class="headerlink" title="4.2 Configure Git with TortoiseGit"></a>4.2 Configure Git with TortoiseGit</h3><ul>
+<li><strong>If you want to use TortoiseGit instead of Git Bash, Here’s what you need to do:</strong></li>
+<li><strong>Please note that the below three steps require you to install TortoiseGit correctly!</strong></li>
+</ul>
+<h4 id="4-2-1-Generate-SSH-keys-with-PuttyGen"><a href="#4-2-1-Generate-SSH-keys-with-PuttyGen" class="headerlink" title="4.2.1 Generate SSH keys with PuttyGen"></a>4.2.1 Generate SSH keys with PuttyGen</h4><ul>
+<li><p>Run puttygen.exe to create a public-private key pair, input your name to Key comment bar, then save public and private key.</p>
+<p><img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/puttygen.jpg" alt="puttygen.jpg" title="puttygen.jpg"></p>
+</li>
+</ul>
+<h4 id="4-2-2-Copy-public-key-to-SSH-Keys"><a href="#4-2-2-Copy-public-key-to-SSH-Keys" class="headerlink" title="4.2.2 Copy public key to SSH Keys"></a>4.2.2 Copy public key to SSH Keys</h4><ul>
+<li>Using the same method as above, copy the public key which has generated by puttygen.exe to the SSH Keys bar.</li>
+</ul>
+<h4 id="4-2-3-Configure-Pageant-with-private-key"><a href="#4-2-3-Configure-Pageant-with-private-key" class="headerlink" title="4.2.3 Configure Pageant with private key"></a>4.2.3 Configure Pageant with private key</h4><ul>
+<li><p>Run pageant.exe and add the private key which has generated by puttygen.exe to Pegeant Key List, like this:</p>
+<p><img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/pageant.jpg" alt="pageant.jpg" title="pageant.jpg"></p>
+</li>
+</ul>
+<h2 id="5-Copy-commit-msg-to-your-Git-hooks-folder"><a href="#5-Copy-commit-msg-to-your-Git-hooks-folder" class="headerlink" title="5. Copy [commit-msg] to your Git hooks folder"></a>5. Copy [commit-msg] to your Git hooks folder</h2><ul>
+<li>For example, my git hooks folder is C:\Software\Git\mingw64\share\git-core\templates\hooks</li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/hook.jpg" alt="hook.jpg" title="hook.jpg"></p>
+<h2 id="6-Test-Workflow"><a href="#6-Test-Workflow" class="headerlink" title="6. Test Workflow"></a>6. Test Workflow</h2><h3 id="6-1-Clone-the-test-repository-in-gerrit-with-Git-Bash"><a href="#6-1-Clone-the-test-repository-in-gerrit-with-Git-Bash" class="headerlink" title="6.1 Clone the test repository in gerrit with Git Bash"></a>6.1 Clone the test repository in gerrit with Git Bash</h3><p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/clone.jpg" alt="clone.jpg" title="clone.jpg"></p>
+<ul>
+<li>If you encounter the following problem:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">Cloning into &#x27;SuZhou_Test&#x27;...</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @</span><br><span class="line">@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</span><br><span class="line">IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!</span><br><span class="line">Someone could be eavesdropping on you right now (man-in-the-middle attack)!</span><br><span class="line">It is also possible that a host key has just been changed.</span><br><span class="line">The fingerprint for the ED25519 key sent by the remote host is</span><br><span class="line">SHA256:U3AS9BcRFdnpRSfzDe4k/Jipa1sk2ez5XaTxRehpw4k.</span><br><span class="line">Please contact your system administrator.</span><br><span class="line">Add correct host key in /c/Users/Administrator/.ssh/known_hosts to get rid of this message.</span><br><span class="line">Offending ED25519 key in /c/Users/Administrator/.ssh/known_hosts:1</span><br><span class="line">Host key for [192.168.77.28]:29418 has changed and you have requested strict checking.</span><br><span class="line">Host key verification failed.</span><br><span class="line">fatal: Could not read from remote repository.</span><br><span class="line"></span><br><span class="line">Please make sure you have the correct access rights</span><br><span class="line">and the repository exists.</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Please run this command to fix:</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -R [192.168.77.28]:29418</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-Perpare-test-file"><a href="#6-2-Perpare-test-file" class="headerlink" title="6.2 Perpare test file"></a>6.2 Perpare test file</h3><ul>
+<li>Create a file named UploadTest.txt in the test repository and input something, then save this file:</li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/upload.jpg" alt="upload.jpg" title="upload.jpg"></p>
+<h3 id="6-3-Push-test-file-to-Gerrit-with-Git-Bash"><a href="#6-3-Push-test-file-to-Gerrit-with-Git-Bash" class="headerlink" title="6.3 Push test file to Gerrit with Git Bash"></a>6.3 Push test file to Gerrit with Git Bash</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add UploadTest.txt</span><br><span class="line">git commit -m &quot;push test file to Gerrit&quot;</span><br><span class="line">git push origin head:refs/for/master</span><br></pre></td></tr></table></figure>
+
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/push.jpg" alt="push.jpg" title="push.jpg"></p>
+<ul>
+<li>If you have this pop-up window appearing:</li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/Gredential.jpg" alt="Gredential.jpg" title="Gredential.jpg"></p>
+<ul>
+<li>The Username is your gerrit account name, not your email address, please get the password from here:</li>
+</ul>
+<p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/Http_Credentials.jpg" alt="Http_Credentials.jpg" title="Http_Credentials.jpg"></p>
+<h2 id="7-Review-your-code-commits-in-Gerrit"><a href="#7-Review-your-code-commits-in-Gerrit" class="headerlink" title="7. Review your code commits in Gerrit"></a>7. Review your code commits in Gerrit</h2><p> <img src="/2024/07/04/Gerrit/Setup_SOP/3.%20Configure%20Windows%20Oa%20of%20Users/Configure_Windows_Oa_Of_Users/change.jpg" alt="change.jpg" title="change.jpg"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Gerrit/" rel="tag"><i class="fa fa-tag"></i> Gerrit</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/06/29/Gerrit/Setup_SOP/2.%20Configure%20Gerrit%20on%20Website/Configure_Gerrit_on_Website/" rel="prev" title="[Gerrit] 2. Configure Gerrit on Website">
+      <i class="fa fa-chevron-left"></i> [Gerrit] 2. Configure Gerrit on Website
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/07/19/Git/Git/" rel="next" title="[Git] A useful guide of Git">
+      [Git] A useful guide of Git <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Login-your-account"><span class="nav-text">1. Login your account</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Verify-your-Email"><span class="nav-text">2. Verify your Email</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Configure-SSH-Keys"><span class="nav-text">3. Configure SSH Keys</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Configure-your-information-under-Git"><span class="nav-text">4. Configure your information under Git</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Configure-Git-with-Git-Bash"><span class="nav-text">4.1 Configure Git with Git Bash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Configure-Git-with-TortoiseGit"><span class="nav-text">4.2 Configure Git with TortoiseGit</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-Generate-SSH-keys-with-PuttyGen"><span class="nav-text">4.2.1 Generate SSH keys with PuttyGen</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-Copy-public-key-to-SSH-Keys"><span class="nav-text">4.2.2 Copy public key to SSH Keys</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-3-Configure-Pageant-with-private-key"><span class="nav-text">4.2.3 Configure Pageant with private key</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Copy-commit-msg-to-your-Git-hooks-folder"><span class="nav-text">5. Copy [commit-msg] to your Git hooks folder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Test-Workflow"><span class="nav-text">6. Test Workflow</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Clone-the-test-repository-in-gerrit-with-Git-Bash"><span class="nav-text">6.1 Clone the test repository in gerrit with Git Bash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Perpare-test-file"><span class="nav-text">6.2 Perpare test file</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Push-test-file-to-Gerrit-with-Git-Bash"><span class="nav-text">6.3 Push test file to Gerrit with Git Bash</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Review-your-code-commits-in-Gerrit"><span class="nav-text">7. Review your code commits in Gerrit</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">25k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">23 mins.</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("11/12/2025 10:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>
