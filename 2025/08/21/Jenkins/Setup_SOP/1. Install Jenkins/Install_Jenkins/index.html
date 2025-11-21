@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This topic is used to record how to set up the jinkins server under Ubuntu.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Jenkins] 1. Install Jenkins">
+<meta property="og:url" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This topic is used to record how to set up the jinkins server under Ubuntu.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Ubuntu_Vserion.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Login_Setting.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_3.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Create_First_Admin_User.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Instance_Configuration.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Login.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Home_Page.png">
+<meta property="article:published_time" content="2025-08-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-08-20T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="Jenkins">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Ubuntu_Vserion.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Jenkins] 1. Install Jenkins | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Jenkins] 1. Install Jenkins
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-08-21 00:00:00" itemprop="dateCreated datePublished" datetime="2025-08-21T00:00:00+08:00">2025-08-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Jenkins/" itemprop="url" rel="index"><span itemprop="name">Jenkins</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>9.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>9 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This topic is used to record how to set up the Jenkins server under Ubuntu.</strong></p>
+</blockquote>
+<h2 id="1-Environment"><a href="#1-Environment" class="headerlink" title="1. Environment"></a>1. Environment</h2><ul>
+<li>OS: Ubuntu 22.04.4 LTS<br><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Ubuntu_Vserion.png" alt="Ubuntu_Vserion.png" title="Ubuntu_Vserion.png"></li>
+<li>Jenkins: 2.516.2</li>
+<li>Jdk: 21.0.8</li>
+<li>Local ip address: 192.168.77.199</li>
+</ul>
+<h2 id="2-Configuration-Steps"><a href="#2-Configuration-Steps" class="headerlink" title="2. Configuration Steps"></a>2. Configuration Steps</h2><h3 id="2-1-Update-the-package-list"><a href="#2-1-Update-the-package-list" class="headerlink" title="2.1 Update the package list"></a>2.1 Update the package list</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Install-JDK-21"><a href="#2-2-Install-JDK-21" class="headerlink" title="2.2 Install JDK 21"></a>2.2 Install JDK 21</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y openjdk-21-jre-headless</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ sudo apt install -y openjdk-17-jre-headless</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree... Done</span><br><span class="line">Reading state information... Done</span><br><span class="line">Suggested packages:</span><br><span class="line">  fonts-ipafont-gothic fonts-ipafont-mincho fonts-wqy-microhei | fonts-wqy-zenhei</span><br><span class="line">The following NEW packages will be installed:</span><br><span class="line">  openjdk-17-jre-headless</span><br><span class="line">0 upgraded, 1 newly installed, 0 to remove and 59 not upgraded.</span><br><span class="line">Need to get 48.3 MB of archives.</span><br><span class="line">After this operation, 193 MB of additional disk space will be used.</span><br><span class="line">Get:1 http://cn.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 openjdk-17-jre-headless amd64 17.0.16+8~us1-0ubuntu1~22.04.1 [48.3 MB]</span><br><span class="line">Fetched 48.3 MB in 3s (15.7 MB/s)                  </span><br><span class="line">Selecting previously unselected package openjdk-17-jre-headless:amd64.</span><br><span class="line">(Reading database ... 207010 files and directories currently installed.)</span><br><span class="line">Preparing to unpack .../openjdk-17-jre-headless_17.0.16+8~us1-0ubuntu1~22.04.1_amd64.deb ...</span><br><span class="line">Unpacking openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...</span><br><span class="line">Setting up openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java --version</span><br><span class="line">openjdk 21.0.8 2025-07-15</span><br><span class="line">OpenJDK Runtime Environment (build 21.0.8+9-Ubuntu-0ubuntu122.04.1)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 21.0.8+9-Ubuntu-0ubuntu122.04.1, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Create-Jenkins-Workplace-folder"><a href="#2-3-Create-Jenkins-Workplace-folder" class="headerlink" title="2.3 Create Jenkins_Workplace folder"></a>2.3 Create Jenkins_Workplace folder</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir Jenkins_Workplace</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins$ sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line">[sudo] password for ubuntu: </span><br><span class="line">--2025-08-21 17:51:49--  https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line">Resolving mirrors.jenkins.io (mirrors.jenkins.io)... 20.7.178.24, 2603:1030:408:5::15a</span><br><span class="line">Connecting to mirrors.jenkins.io (mirrors.jenkins.io)|20.7.178.24|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 302 Found</span><br><span class="line">Location: https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war [following]</span><br><span class="line">--2025-08-21 17:51:51--  https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war</span><br><span class="line">Resolving mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)... 101.6.15.130, 2402:f000:1:400::2</span><br><span class="line">Connecting to mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)|101.6.15.130|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 87485720 (83M) [application/java-archive]</span><br><span class="line">Saving to: ‘./jenkins.war’</span><br><span class="line"></span><br><span class="line">jenkins.war                100%[========================================&gt;]  83.43M  45.8MB/s    in 1.8s    </span><br><span class="line"></span><br><span class="line">2025-08-21 17:51:54 (45.8 MB/s) - ‘./jenkins.war’ saved [87485720/87485720]</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jenkins.war --httpPort=8000</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>After executing the above command, the Jenkins engine is power on, the following is the log of the default configuration.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java -jar jenkins.war --httpPort=8000</span><br><span class="line">Running from: /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war</span><br><span class="line">webroot: /home/ubuntu/.jenkins/war</span><br><span class="line">2025-08-21 10:22:52.882+0000 [<span class="built_in">id</span>=1]	INFO	winstone.Logger#logInternal: Beginning extraction from war file</span><br><span class="line">2025-08-21 10:22:52.930+0000 [<span class="built_in">id</span>=1]	WARNING	o.e.j.ee9.nested.ContextHandler#setContextPath: Empty contextPath</span><br><span class="line">2025-08-21 10:22:52.971+0000 [<span class="built_in">id</span>=1]	INFO	org.eclipse.jetty.server.Server#doStart: jetty-12.0.22; built: 2025-06-02T15:25:31.946Z; git: 335c9ab44a5591f0ea941bf350e139b8c4f5537c; jvm 21.0.8+9-Ubuntu-0ubuntu122.04.1</span><br><span class="line">2025-08-21 10:22:53.225+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.e.w.StandardDescriptorProcessor#visitServlet: NO JSP Support <span class="keyword">for</span> /, did not find org.eclipse.jetty.ee9.jsp.JettyJspServlet</span><br><span class="line">2025-08-21 10:22:53.268+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.s.DefaultSessionIdManager#doStart: Session workerName=node0</span><br><span class="line">2025-08-21 10:22:53.530+0000 [<span class="built_in">id</span>=1]	INFO	hudson.WebAppMain#contextInitialized: Jenkins home directory: /home/ubuntu/.jenkins found at: <span class="variable">$user</span>.home/.jenkins</span><br><span class="line">2025-08-21 10:22:53.624+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.s.handler.ContextHandler#doStart: Started oeje9n.ContextHandler<span class="variable">$CoreContextHandler</span>@7577b641&#123;Jenkins v2.516.2,/,b=file:///home/ubuntu/.jenkins/war/,a=AVAILABLE,h=oeje9n.ContextHandler$CoreContextHandler<span class="variable">$CoreToNestedHandler</span>@3704122f&#123;STARTED&#125;&#125;</span><br><span class="line">2025-08-21 10:22:53.630+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.server.AbstractConnector#doStart: Started ServerConnector@7561db12&#123;HTTP/1.1, (http/1.1)&#125;&#123;0.0.0.0:8000&#125;</span><br><span class="line">2025-08-21 10:22:53.635+0000 [<span class="built_in">id</span>=1]	INFO	org.eclipse.jetty.server.Server#doStart: Started oejs.Server@57c758ac&#123;STARTING&#125;[12.0.22,sto=0] @1055ms</span><br><span class="line">2025-08-21 10:22:53.636+0000 [<span class="built_in">id</span>=39]	INFO	winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled</span><br><span class="line">2025-08-21 10:22:53.723+0000 [<span class="built_in">id</span>=38]	INFO	jenkins.model.Jenkins#&lt;init&gt;: Starting version 2.516.2</span><br><span class="line">2025-08-21 10:22:53.777+0000 [<span class="built_in">id</span>=48]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Started initialization</span><br><span class="line">2025-08-21 10:22:53.782+0000 [<span class="built_in">id</span>=55]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Listed all plugins</span><br><span class="line">2025-08-21 10:22:54.231+0000 [<span class="built_in">id</span>=55]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Prepared all plugins</span><br><span class="line">2025-08-21 10:22:54.234+0000 [<span class="built_in">id</span>=48]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Started all plugins</span><br><span class="line">2025-08-21 10:22:54.234+0000 [<span class="built_in">id</span>=50]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Augmented all extensions</span><br><span class="line">2025-08-21 10:22:54.318+0000 [<span class="built_in">id</span>=50]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: System config loaded</span><br><span class="line">2025-08-21 10:22:54.319+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: System config adapted</span><br><span class="line">2025-08-21 10:22:54.319+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Loaded all <span class="built_in">jobs</span></span><br><span class="line">2025-08-21 10:22:54.320+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Configuration <span class="keyword">for</span> all <span class="built_in">jobs</span> updated</span><br><span class="line">2025-08-21 10:22:54.333+0000 [<span class="built_in">id</span>=75]	INFO	hudson.util.Retrier#start: Attempt <span class="comment">#1 to do the action check updates server</span></span><br><span class="line">2025-08-21 10:22:54.537+0000 [<span class="built_in">id</span>=54]	INFO	jenkins.install.SetupWizard#init: </span><br><span class="line"></span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line"></span><br><span class="line">Jenkins initial setup is required. An admin user has been created and a password generated.</span><br><span class="line">Please use the following password to proceed to installation:</span><br><span class="line"></span><br><span class="line">2781b125f4cc45b6a912324b1e710b4b</span><br><span class="line"></span><br><span class="line">This may also be found at: /home/ubuntu/.jenkins/secrets/initialAdminPassword</span><br><span class="line"></span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line"></span><br><span class="line">2025-08-21 10:23:00.033+0000 [<span class="built_in">id</span>=54]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Completed initialization</span><br><span class="line">2025-08-21 10:23:00.045+0000 [<span class="built_in">id</span>=38]	INFO	hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running</span><br><span class="line">2025-08-21 10:23:03.133+0000 [<span class="built_in">id</span>=75]	INFO	h.m.DownloadService<span class="variable">$Downloadable</span>#load: Obtained the updated data file <span class="keyword">for</span> hudson.tasks.Maven.MavenInstaller</span><br><span class="line">2025-08-21 10:23:03.133+0000 [<span class="built_in">id</span>=75]	INFO	hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt <span class="comment">#1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-Try-to-login"><a href="#2-6-Try-to-login" class="headerlink" title="2.6 Try to login"></a>2.6 Try to login</h3><ul>
+<li><p>Try to entry <code>http://192.168.77.119:8000</code> use browser</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Login_Setting.png" alt="Login_Setting.png" title="Login_Setting.png"></p>
+</li>
+<li><p>Input the initialAdminPassword which you can find from &#x2F;home&#x2F;ubuntu&#x2F;.jenkins&#x2F;secrets&#x2F;initialAdminPassword and click <code>Continue</code> button</p>
+</li>
+</ul>
+<h3 id="2-7-Install-plugins"><a href="#2-7-Install-plugins" class="headerlink" title="2.7 Install plugins"></a>2.7 Install plugins</h3><ul>
+<li><p>if no errors incur, you will see the <code>plungins</code> page</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_1.png" alt="Install_Plugins_1.png" title="Install_Plugins_1.png"></p>
+</li>
+<li><p>click the left one(Install suggested plugins)</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_2.png" alt="Install_Plugins_2.png" title="Install_Plugins_2.png"><br><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Install_Plugins_3.png" alt="Install_Plugins_3.png" title="Install_Plugins_3.png"></p>
+</li>
+</ul>
+<h3 id="2-8-Create-User-Account"><a href="#2-8-Create-User-Account" class="headerlink" title="2.8 Create User Account"></a>2.8 Create User Account</h3><ul>
+<li><p>if no errors incur, you will see the <code>Create First Admin User</code> page</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Create_First_Admin_User.png" alt="Create_First_Admin_User.png" title="Create_First_Admin_User.png"></p>
+</li>
+<li><p>click <code>Skip and continue as admin</code> button</p>
+</li>
+</ul>
+<h3 id="2-9-Instance-Configuration"><a href="#2-9-Instance-Configuration" class="headerlink" title="2.9 Instance Configuration"></a>2.9 Instance Configuration</h3><ul>
+<li><p>if no errors incur, you will see the <code>Instance Configuration</code> page</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Instance_Configuration.png" alt="Instance_Configuration.png" title="Instance_Configuration.png"></p>
+</li>
+<li><p>click <code>Save and Finish</code> button</p>
+</li>
+</ul>
+<h3 id="2-10-Finish"><a href="#2-10-Finish" class="headerlink" title="2.10 Finish"></a>2.10 Finish</h3><ul>
+<li><p>if no errors incur, you will see the <code>ready</code> page</p>
+</li>
+<li><p>click <code>Save and Finish</code> button</p>
+</li>
+</ul>
+<h3 id="2-11-Login"><a href="#2-11-Login" class="headerlink" title="2.11 Login"></a>2.11 Login</h3><ul>
+<li><p>Entry <code>http://192.168.77.119:8000</code> use browser</p>
+</li>
+<li><p>Input the initialAdminPassword which you can find from &#x2F;home&#x2F;ubuntu&#x2F;.jenkins&#x2F;secrets&#x2F;initialAdminPassword and click <code>Sign in</code> button</p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Login.png" alt="Login.png" title="Login.png"></p>
+<p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Home_Page.png" alt="Home_Page.png" title="Home_Page.png"></p>
+</li>
+</ul>
+<h2 id="3-Strongly-Recommend-Configuration"><a href="#3-Strongly-Recommend-Configuration" class="headerlink" title="3. Strongly Recommend Configuration"></a>3. Strongly Recommend Configuration</h2><h3 id="3-1-Auto-start-Jenkins-on-boot"><a href="#3-1-Auto-start-Jenkins-on-boot" class="headerlink" title="3.1 Auto-start Jenkins on boot"></a>3.1 Auto-start Jenkins on boot</h3><p>Jenkins will automatically turn off after OS reboot, if you want Jenkins to turn on automatically every time that you turn on the device, please perform the following configuration.</p>
+<ul>
+<li>Set the Jenkins service to start automatically when ubuntu is powered on</li>
+</ul>
+<h4 id="3-1-1-Create-the-Jenkins-directory"><a href="#3-1-1-Create-the-Jenkins-directory" class="headerlink" title="3.1.1 Create the Jenkins directory"></a>3.1.1 Create the Jenkins directory</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /opt/jenkins</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory"><a href="#3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory" class="headerlink" title="3.1.2 Copy the Jenkins WAR file to the directory"></a>3.1.2 Copy the Jenkins WAR file to the directory</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war /opt/jenkins/</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-3-Set-ownership-to-the-ubuntu-user"><a href="#3-1-3-Set-ownership-to-the-ubuntu-user" class="headerlink" title="3.1.3 Set ownership to the ubuntu user"></a>3.1.3 Set ownership to the ubuntu user</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R ubuntu:ubuntu /opt/jenkins</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-4-Create-a-Java-TrustStore-and-import-the-Gerrit-certificate"><a href="#3-1-4-Create-a-Java-TrustStore-and-import-the-Gerrit-certificate" class="headerlink" title="3.1.4 Create a Java TrustStore and import the Gerrit certificate"></a>3.1.4 Create a Java TrustStore and import the Gerrit certificate</h4><ul>
+<li><p>Remove any existing TrustStore (if present):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -f /home/ubuntu/gerritTrustStore.jks</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create an empty TrustStore with a temporary key entry:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -genkey -alias temp \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit \</span><br><span class="line">  -keyalg RSA -keysize 2048 \</span><br><span class="line">  -dname &quot;CN=temp&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Delete the temporary alias:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -delete -alias temp \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Import the Gerrit certificate into the TrustStore:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -importcert -trustcacerts -alias gerrit \</span><br><span class="line">  -file /home/ubuntu/Gerrit_Workplace/key/gerrit.crt \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit -noprompt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Verify the certificate was imported successfully:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -list -v -keystore /home/ubuntu/gerritTrustStore.jks -storepass changeit</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-1-5-Create-a-systemd-service-file-for-Jenkins"><a href="#3-1-5-Create-a-systemd-service-file-for-Jenkins" class="headerlink" title="3.1.5 Create a systemd service file for Jenkins"></a>3.1.5 Create a systemd service file for Jenkins</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/systemd/system/jenkins.service</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Add the following content:</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Jenkins Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=ubuntu</span><br><span class="line">Group=ubuntu</span><br><span class="line">WorkingDirectory=/opt/jenkins</span><br><span class="line">ExecStart=/usr/bin/java -Djavax.net.ssl.trustStore=/home/ubuntu/gerritTrustStore.jks -Djavax.net.ssl.trustStorePassword=changeit -jar /opt/jenkins/jenkins.war --httpPort=8000</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-6-Reload-systemd-to-apply-the-new-service"><a href="#3-1-6-Reload-systemd-to-apply-the-new-service" class="headerlink" title="3.1.6 Reload systemd to apply the new service"></a>3.1.6 Reload systemd to apply the new service</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot"><a href="#3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot" class="headerlink" title="3.1.7 Start Jenkins and enable it to auto-start on boot:"></a>3.1.7 Start Jenkins and enable it to auto-start on boot:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start jenkins</span><br><span class="line">sudo systemctl enable jenkins</span><br><span class="line">sudo systemctl status jenkins</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Jenkins/" rel="tag"><i class="fa fa-tag"></i> Jenkins</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/11/Windbg/Blue_screen_debug_method/Blue_screen_debug_method/" rel="prev" title="[Windbg] Blue screen debug method">
+      <i class="fa fa-chevron-left"></i> [Windbg] Blue screen debug method
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/08/22/Jenkins/Setup_SOP/2.%20Configure%20Jenkins%20on%20Website/Configure_Jenkins_on_Website/" rel="next" title="[Jenkins] 2. Configure Jenkins on Website">
+      [Jenkins] 2. Configure Jenkins on Website <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Environment"><span class="nav-text">1. Environment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Configuration-Steps"><span class="nav-text">2. Configuration Steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Update-the-package-list"><span class="nav-text">2.1 Update the package list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-Install-JDK-21"><span class="nav-text">2.2 Install JDK 21</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-Create-Jenkins-Workplace-folder"><span class="nav-text">2.3 Create Jenkins_Workplace folder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><span class="nav-text">2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><span class="nav-text">2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-6-Try-to-login"><span class="nav-text">2.6 Try to login</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-7-Install-plugins"><span class="nav-text">2.7 Install plugins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-Create-User-Account"><span class="nav-text">2.8 Create User Account</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-9-Instance-Configuration"><span class="nav-text">2.9 Instance Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-10-Finish"><span class="nav-text">2.10 Finish</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-11-Login"><span class="nav-text">2.11 Login</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Strongly-Recommend-Configuration"><span class="nav-text">3. Strongly Recommend Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Auto-start-Jenkins-on-boot"><span class="nav-text">3.1 Auto-start Jenkins on boot</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-Create-the-Jenkins-directory"><span class="nav-text">3.1.1 Create the Jenkins directory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory"><span class="nav-text">3.1.2 Copy the Jenkins WAR file to the directory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-3-Set-ownership-to-the-ubuntu-user"><span class="nav-text">3.1.3 Set ownership to the ubuntu user</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-4-Create-a-Java-TrustStore-and-import-the-Gerrit-certificate"><span class="nav-text">3.1.4 Create a Java TrustStore and import the Gerrit certificate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-5-Create-a-systemd-service-file-for-Jenkins"><span class="nav-text">3.1.5 Create a systemd service file for Jenkins</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-6-Reload-systemd-to-apply-the-new-service"><span class="nav-text">3.1.6 Reload systemd to apply the new service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot"><span class="nav-text">3.1.7 Start Jenkins and enable it to auto-start on boot:</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">51k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">46 mins.</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>
