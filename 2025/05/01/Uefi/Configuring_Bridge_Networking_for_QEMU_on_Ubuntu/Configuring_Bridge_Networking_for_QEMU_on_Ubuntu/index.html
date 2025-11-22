@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This tutorial will guide you through setting up bridge networking for QEMU on Ubuntu, allowing your QEMU virtual machine to share the same network connection as your physical machine.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[UEFI] Configuring Bridge Networking for QEMU on Ubuntu">
+<meta property="og:url" content="https://diaosuyu.github.io/2025/05/01/Uefi/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This tutorial will guide you through setting up bridge networking for QEMU on Ubuntu, allowing your QEMU virtual machine to share the same network connection as your physical machine.">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-04-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-30T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="UEFI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2025/05/01/Uefi/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[UEFI] Configuring Bridge Networking for QEMU on Ubuntu | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2025/05/01/Uefi/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [UEFI] Configuring Bridge Networking for QEMU on Ubuntu
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-05-01 00:00:00" itemprop="dateCreated datePublished" datetime="2025-05-01T00:00:00+08:00">2025-05-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UEFI/" itemprop="url" rel="index"><span itemprop="name">UEFI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>8.5k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This tutorial will guide you through setting up bridge networking for QEMU on Ubuntu, allowing your QEMU virtual machine to share the same network connection as your physical machine.</strong></p>
+</blockquote>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><p>This guide provides step-by-step instructions on how to set up bridge networking for QEMU on Ubuntu. It covers:</p>
+<ul>
+<li>Installing necessary tools for bridge networking configuration</li>
+<li>Creating and configuring bridge interface</li>
+<li>Verifying IP routing configuration</li>
+<li>Configuring QEMU to use bridge networking</li>
+<li>Recovering original Ubuntu network</li>
+</ul>
+<hr>
+<h2 id="2-Install-Necessary-Tools"><a href="#2-Install-Necessary-Tools" class="headerlink" title="2. Install Necessary Tools"></a>2. Install Necessary Tools</h2><p>First, install the tools required for configuring bridge networking and User Mode Linux (UML) utilities:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install bridge-utils  <span class="comment"># Virtual bridge configuration tools</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install uml-utilities <span class="comment"># UML (User-mode Linux)</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-Create-and-Configure-the-Bridge-Interface"><a href="#3-Create-and-Configure-the-Bridge-Interface" class="headerlink" title="3. Create and Configure the Bridge Interface"></a>3. Create and Configure the Bridge Interface</h2><h3 id="3-1-Create-the-br0-Bridge-Interface"><a href="#3-1-Create-the-br0-Bridge-Interface" class="headerlink" title="3.1 Create the br0 Bridge Interface"></a>3.1 Create the <code>br0</code> Bridge Interface</h3><p>You can create a new bridge interface using the <code>ip</code> command. If you already have a bridge interface, skip this step.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> add name br0 <span class="built_in">type</span> bridge</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-Add-the-Physical-Network-Interface-to-the-Bridge"><a href="#3-2-Add-the-Physical-Network-Interface-to-the-Bridge" class="headerlink" title="3.2 Add the Physical Network Interface to the Bridge"></a>3.2 Add the Physical Network Interface to the Bridge</h3><p>Assuming your physical network interface is <code>enp0s3</code>, add it to the <code>br0</code> bridge interface. This allows QEMU to share the network connection.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 master br0</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-Configure-the-Bridge-Interface-br0-to-Get-an-IP-Address"><a href="#3-3-Configure-the-Bridge-Interface-br0-to-Get-an-IP-Address" class="headerlink" title="3.3 Configure the Bridge Interface (br0) to Get an IP Address"></a>3.3 Configure the Bridge Interface (<code>br0</code>) to Get an IP Address</h3><ul>
+<li><p><strong>Obtain a Dynamic IP Address:</strong></p>
+<p>Use DHCP to get an IP address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dhclient br0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Configure a Static IP Address:</strong></p>
+<p>To set a static IP, use the following commands, assuming the static IP is <code>192.168.77.163</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip addr add 192.168.77.163/24 dev br0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Configure a <code>tap</code> Interface:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip tuntap add dev tap0 mode tap</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 master br0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP"><a href="#3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP" class="headerlink" title="3.4 Ensure Both the Bridge and Physical Network Interface Are UP"></a>3.4 Ensure Both the Bridge and Physical Network Interface Are <code>UP</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> br0 up</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 up</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 up</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5-Check-the-IP-Configuration-of-the-Bridge-Interface"><a href="#3-5-Check-the-IP-Configuration-of-the-Bridge-Interface" class="headerlink" title="3.5 Check the IP Configuration of the Bridge Interface"></a>3.5 Check the IP Configuration of the Bridge Interface</h3><p>Use the following command to check if <code>br0</code> has been assigned an IP address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show br0</span><br></pre></td></tr></table></figure>
+
+<p>If the bridge is configured correctly, you should see the IP address assigned to <code>br0</code>, and the QEMU virtual machine should be able to access the same network as the physical machine.</p>
+<h3 id="3-6-Check-if-the-Physical-Network-Interface-enp0s3-Is-Associated-with-the-Bridge"><a href="#3-6-Check-if-the-Physical-Network-Interface-enp0s3-Is-Associated-with-the-Bridge" class="headerlink" title="3.6 Check if the Physical Network Interface enp0s3 Is Associated with the Bridge"></a>3.6 Check if the Physical Network Interface <code>enp0s3</code> Is Associated with the Bridge</h3><p>Run the following command to check if <code>enp0s3</code> is correctly added to the bridge <code>br0</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show</span><br></pre></td></tr></table></figure>
+
+<p>You should see output similar to this:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:39:5c:2c brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.77.119/24 brd 192.168.77.255 scope global noprefixroute enp0s3</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::4c94:9b80:38a0:cea1/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">12: tap0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000</span><br><span class="line">    link/ether d2:20:61:63:21:f9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">14: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    link/ether 46:5d:c4:0f:f8:80 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.77.163/24 brd 192.168.77.255 scope global dynamic br0</span><br><span class="line">       valid_lft 86121sec preferred_lft 86121sec</span><br><span class="line">    inet6 fe80::e6aa:8ec2:3b62:2d9f/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>As shown, both <code>br0</code> and <code>enp0s3</code> should have their own IP addresses, and the status should be <code>UP</code>.</p>
+<p>Sure, here’s a more detailed version of the “Verify IP Routing” section:</p>
+<hr>
+<h3 id="3-7-Verify-IP-Routing"><a href="#3-7-Verify-IP-Routing" class="headerlink" title="3.7 Verify IP Routing"></a>3.7 Verify IP Routing</h3><p>After setting up the bridge and configuring your network interfaces, it’s important to verify the IP routing configuration to ensure that the traffic will correctly flow through the bridge network.</p>
+<h4 id="3-7-1-View-Current-Routing-Table"><a href="#3-7-1-View-Current-Routing-Table" class="headerlink" title="3.7.1 View Current Routing Table"></a>3.7.1 View Current Routing Table</h4><p>To view the current routing table, use the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route show</span><br></pre></td></tr></table></figure>
+
+<p>This command will display the routing information for your system. The expected output might look something like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:~$ ip route show</span><br><span class="line">default via 192.168.77.1 dev br0 </span><br><span class="line">default via 192.168.77.1 dev enp0s3 proto static metric 100 </span><br><span class="line">169.254.0.0/16 dev enp0s3 scope <span class="built_in">link</span> metric 1000 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 </span><br><span class="line">192.168.77.0/24 dev enp0s3 proto kernel scope <span class="built_in">link</span> src 192.168.77.119 metric 100</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-7-2-Explanation-of-the-Routing-Table"><a href="#3-7-2-Explanation-of-the-Routing-Table" class="headerlink" title="3.7.2 Explanation of the Routing Table"></a>3.7.2 Explanation of the Routing Table</h4><ul>
+<li><p><strong><code>default via 192.168.77.1 dev br0</code></strong>: This shows the default route for all outbound traffic, which is routed through the bridge interface <code>br0</code> to the gateway <code>192.168.77.1</code>.</p>
+</li>
+<li><p><strong><code>default via 192.168.77.1 dev enp0s3 proto static metric 100</code></strong>: This indicates another default route but routed through the physical network interface <code>enp0s3</code>. It’s using static routing, and the metric is set to 100, which is a relatively lower priority for this route.</p>
+</li>
+<li><p><strong><code>169.254.0.0/16 dev enp0s3 scope link metric 1000</code></strong>: This represents the link-local network, which is used when a system cannot obtain an IP address via DHCP. It’s routed through <code>enp0s3</code> and has a higher metric (1000) to indicate lower priority.</p>
+</li>
+<li><p><strong><code>192.168.77.0/24 dev br0 proto kernel scope link src 192.168.77.163</code></strong>: This route indicates that the <code>br0</code> interface is handling the <code>192.168.77.0/24</code> subnet.</p>
+</li>
+<li><p><strong><code>192.168.77.0/24 dev enp0s3 proto kernel scope link src 192.168.77.119 metric 100</code></strong>: This indicates that the <code>enp0s3</code> interface is handling the same subnet but with a different IP address and lower priority.</p>
+</li>
+</ul>
+<h4 id="3-7-3-Adjusting-the-Routing-Table"><a href="#3-7-3-Adjusting-the-Routing-Table" class="headerlink" title="3.7.3 Adjusting the Routing Table"></a>3.7.3 Adjusting the Routing Table</h4><p>In some cases, after setting up a bridge, you may need to adjust the default route. For example, you may want to ensure that the default gateway (<code>192.168.77.1</code>) is routed via the bridge interface (<code>br0</code>) instead of the physical network interface (<code>enp0s3</code>).</p>
+<p>You can achieve this by first deleting the previous default route through <code>enp0s3</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip route del default via 192.168.77.1 dev enp0s3</span><br></pre></td></tr></table></figure>
+
+<p>This will remove the old route pointing to <code>enp0s3</code>. Afterward, add a new default route through the bridge interface (<code>br0</code>), ensuring the traffic goes through the bridge:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip route add default via 192.168.77.1 dev br0 metric 425</span><br></pre></td></tr></table></figure>
+
+<p>Here, we set a metric of <code>425</code> for the new default route, ensuring that it has a higher priority than other routes (lower metric values have higher priority).</p>
+<h4 id="3-7-4-Restart-Network-Manager"><a href="#3-7-4-Restart-Network-Manager" class="headerlink" title="3.7.4 Restart Network Manager"></a>3.7.4 Restart Network Manager</h4><p>After modifying the routes, restart the network service to ensure that all changes take effect properly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-7-5-Verify-Updated-Routing-Table"><a href="#3-7-5-Verify-Updated-Routing-Table" class="headerlink" title="3.7.5 Verify Updated Routing Table"></a>3.7.5 Verify Updated Routing Table</h4><p>Once you’ve made these adjustments, check the routing table again to confirm that the default route is now correctly set to <code>br0</code>. The updated output should look like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:~$ ip route show</span><br><span class="line">default via 192.168.77.1 dev br0 </span><br><span class="line">default via 192.168.77.1 dev br0 proto dhcp metric 425 </span><br><span class="line">169.254.0.0/16 dev enp0s3 scope <span class="built_in">link</span> metric 1000 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 </span><br><span class="line">192.168.77.0/24 dev enp0s3 proto kernel scope <span class="built_in">link</span> src 192.168.77.119 metric 100 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 metric 425</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong><code>default via 192.168.77.1 dev br0</code></strong>: The primary default route now uses the bridge interface <code>br0</code> as the gateway.</p>
+</li>
+<li><p><strong><code>default via 192.168.77.1 dev br0 proto dhcp metric 425</code></strong>: This confirms the DHCP-assigned default route through the bridge with the updated metric of <code>425</code>.</p>
+</li>
+</ul>
+<p>By following these steps, you ensure that your system uses the bridge network as the primary route for all outbound traffic, making it share the same network as the host machine.</p>
+<h4 id="3-7-6-Disable-Firewall"><a href="#3-7-6-Disable-Firewall" class="headerlink" title="3.7.6 Disable Firewall"></a>3.7.6 Disable Firewall</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">disable</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Configure-QEMU-to-Use-Bridge-Networking"><a href="#4-Configure-QEMU-to-Use-Bridge-Networking" class="headerlink" title="4. Configure QEMU to Use Bridge Networking"></a>4. Configure QEMU to Use Bridge Networking</h2><p>Now that you’ve created and configured the bridge interface, configure QEMU to use it.</p>
+<h3 id="4-1-Configure-the-bridge-conf-File"><a href="#4-1-Configure-the-bridge-conf-File" class="headerlink" title="4.1 Configure the bridge.conf File"></a>4.1 Configure the <code>bridge.conf</code> File</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/etc/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> qemu</span><br><span class="line"><span class="built_in">cd</span> qemu</span><br><span class="line"><span class="built_in">sudo</span> vim bridge.conf</span><br><span class="line"><span class="comment"># Fill in the value and save in bridge.conf: allow br0</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-Start-the-QEMU-Virtual-Machine-Using-Bridge-Networking"><a href="#5-Start-the-QEMU-Virtual-Machine-Using-Bridge-Networking" class="headerlink" title="5. Start the QEMU Virtual Machine Using Bridge Networking"></a>5. Start the QEMU Virtual Machine Using Bridge Networking</h2><p>Use the <code>-netdev bridge</code> and <code>-device</code> options to configure the virtual machine to use bridge networking. Here’s an example command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> qemu-system-x86_64 \</span><br><span class="line">-drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">-drive file=fat:rw:hda-contents,format=raw,<span class="keyword">if</span>=ide,index=0 \</span><br><span class="line">-netdev bridge,<span class="built_in">id</span>=net0,br=br0 \</span><br><span class="line">-device e1000,netdev=net0 \</span><br><span class="line">-cpu Penryn,+rdrand \</span><br><span class="line">-debugcon file:debug.log \</span><br><span class="line">-global isa-debugcon.iobase=0x402 \</span><br><span class="line">-s</span><br></pre></td></tr></table></figure>
+
+<p>This command starts a QEMU virtual machine with the <code>br0</code> bridge network, and <code>e1000</code> is the network adapter used within the virtual machine.</p>
+<hr>
+<h2 id="6-Recovering-Original-Ubuntu-Network"><a href="#6-Recovering-Original-Ubuntu-Network" class="headerlink" title="6. Recovering Original Ubuntu Network"></a>6. Recovering Original Ubuntu Network</h2><p>If you need to remove the bridge interface (<code>br0</code>), follow these additional steps:</p>
+<ol>
+<li><p><strong>Shut Down the <code>tap0</code> Interface</strong></p>
+<p>Bring the <code>tap0</code> interface down:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 down</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Delete the <code>tap0</code> Interface</strong></p>
+<p>Delete the <code>tap0</code> interface. You can use the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip tuntap del tap0 mode tap</span><br></pre></td></tr></table></figure>
+
+<p>If this command shows an error, try this alternative command to delete <code>tap0</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> delete tap0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Shut Down the <code>br0</code> Bridge</strong></p>
+<p>Bring the <code>br0</code> interface down:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> br0 down  <span class="comment"># Shut down br0 bridge</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Delete the Bridge</strong></p>
+<p>Delete the <code>br0</code> bridge:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> brctl delbr br0  <span class="comment"># Delete the br0 bridge</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Unbind the <code>enp0s3</code> Network Interface</strong></p>
+<p>Make sure <code>enp0s3</code> is no longer associated with the bridge:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 nomaster  <span class="comment"># Unbind enp0s3 from the br0 bridge</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Restart Network Services</strong></p>
+<p>If the interface is still not functioning, restarting the networking service can help:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Obtain a New IP Address</strong></p>
+<p>After removing the bridge and unbinding the interface, try obtaining a new IP address using DHCP:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dhclient enp0s3</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Check Network Status</strong></p>
+<p>Check the status of the <code>enp0s3</code> interface to ensure it has returned to normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show enp0s3</span><br></pre></td></tr></table></figure></li>
+</ol>
+<hr>
+<p>This guide provides a complete and detailed explanation for setting up bridge networking in QEMU on Ubuntu, and also how to remove the bridge setup when no longer needed.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/UEFI/" rel="tag"><i class="fa fa-tag"></i> UEFI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/" rel="prev" title="[UEFI] Debug OVMF with GDB">
+      <i class="fa fa-chevron-left"></i> [UEFI] Debug OVMF with GDB
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/06/11/Windbg/Blue_screen_debug_method/Blue_screen_debug_method/" rel="next" title="[Windbg] Blue screen debug method">
+      [Windbg] Blue screen debug method <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Overview"><span class="nav-text">1. Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Install-Necessary-Tools"><span class="nav-text">2. Install Necessary Tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Create-and-Configure-the-Bridge-Interface"><span class="nav-text">3. Create and Configure the Bridge Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Create-the-br0-Bridge-Interface"><span class="nav-text">3.1 Create the br0 Bridge Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Add-the-Physical-Network-Interface-to-the-Bridge"><span class="nav-text">3.2 Add the Physical Network Interface to the Bridge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Configure-the-Bridge-Interface-br0-to-Get-an-IP-Address"><span class="nav-text">3.3 Configure the Bridge Interface (br0) to Get an IP Address</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP"><span class="nav-text">3.4 Ensure Both the Bridge and Physical Network Interface Are UP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-Check-the-IP-Configuration-of-the-Bridge-Interface"><span class="nav-text">3.5 Check the IP Configuration of the Bridge Interface</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-6-Check-if-the-Physical-Network-Interface-enp0s3-Is-Associated-with-the-Bridge"><span class="nav-text">3.6 Check if the Physical Network Interface enp0s3 Is Associated with the Bridge</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-7-Verify-IP-Routing"><span class="nav-text">3.7 Verify IP Routing</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-1-View-Current-Routing-Table"><span class="nav-text">3.7.1 View Current Routing Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-2-Explanation-of-the-Routing-Table"><span class="nav-text">3.7.2 Explanation of the Routing Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-3-Adjusting-the-Routing-Table"><span class="nav-text">3.7.3 Adjusting the Routing Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-4-Restart-Network-Manager"><span class="nav-text">3.7.4 Restart Network Manager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-5-Verify-Updated-Routing-Table"><span class="nav-text">3.7.5 Verify Updated Routing Table</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-7-6-Disable-Firewall"><span class="nav-text">3.7.6 Disable Firewall</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Configure-QEMU-to-Use-Bridge-Networking"><span class="nav-text">4. Configure QEMU to Use Bridge Networking</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Configure-the-bridge-conf-File"><span class="nav-text">4.1 Configure the bridge.conf File</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Start-the-QEMU-Virtual-Machine-Using-Bridge-Networking"><span class="nav-text">5. Start the QEMU Virtual Machine Using Bridge Networking</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Recovering-Original-Ubuntu-Network"><span class="nav-text">6. Recovering Original Ubuntu Network</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">69k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:02</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>

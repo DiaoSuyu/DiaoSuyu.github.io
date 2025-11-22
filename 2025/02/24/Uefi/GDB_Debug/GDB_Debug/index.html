@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This topic is used to record how to dump debug logs and debug UEFI firmware on OVMF using GDB with QEMU.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[UEFI] Debug OVMF with GDB">
+<meta property="og:url" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This topic is used to record how to dump debug logs and debug UEFI firmware on OVMF using GDB with QEMU.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/UefiShell1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/DebugLog1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB3.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/DebugLog2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/UefiShell2.png">
+<meta property="article:published_time" content="2025-02-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-23T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="UEFI">
+<meta property="article:tag" content="GDB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/UefiShell1.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[UEFI] Debug OVMF with GDB | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2025/02/24/Uefi/GDB_Debug/GDB_Debug/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [UEFI] Debug OVMF with GDB
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-02-24 00:00:00" itemprop="dateCreated datePublished" datetime="2025-02-24T00:00:00+08:00">2025-02-24</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UEFI/" itemprop="url" rel="index"><span itemprop="name">UEFI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GDB/" itemprop="url" rel="index"><span itemprop="name">GDB</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>5.1k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>5 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This topic is used to record how to dump debug logs and debug UEFI firmware on OVMF using GDB with QEMU.</strong></p>
+</blockquote>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><p>This guide explains how to dump debug logs when debugging on OVMF (Open Virtual Machine Firmware). It covers:</p>
+<ul>
+<li>Adding a debug application to OVMF</li>
+<li>Building the firmware in DEBUG mode</li>
+<li>Running QEMU with debug logging enabled</li>
+<li>Using GDB for remote debugging with symbol loading</li>
+<li>Accessing debug output through the UEFI Shell</li>
+</ul>
+<hr>
+<h2 id="2-Add-Debug-Main-inf-to-OVMF"><a href="#2-Add-Debug-Main-inf-to-OVMF" class="headerlink" title="2. Add Debug_Main.inf to OVMF"></a>2. Add <code>Debug_Main.inf</code> to OVMF</h2><p>To include the <code>Debug_Main</code> application in OVMF, add the following line to the <code>[Components]</code> section of either <code>edk2/OvmfPkg/OvmfPkgIa32.dsc</code> or <code>edk2/OvmfPkg/OvmfPkgX64.dsc</code>:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Components]</span></span><br><span class="line">  SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.inf</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-Build-OVMF"><a href="#3-Build-OVMF" class="headerlink" title="3. Build OVMF"></a>3. Build OVMF</h2><p>Run one of the following commands to build OVMF with the <code>Debug_Main</code> application:</p>
+<ul>
+<li><p>For <em>X64</em> architecture:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build -p OvmfPkg/OvmfPkgX64.dsc -t GCC5 -a X64 -b DEBUG</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>For <em>IA32</em> architecture:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build -p OvmfPkg/OvmfPkgIa32.dsc -t GCC5 -a IA32 -b DEBUG</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>After building, copy the generated <code>Debug_Main.efi</code> and <code>Debug_Main.debug</code> files to either <code>disk.img</code> or the <code>hda-contents</code> folder.</p>
+<hr>
+<h2 id="4-Run-QEMU"><a href="#4-Run-QEMU" class="headerlink" title="4. Run QEMU"></a>4. Run QEMU</h2><h3 id="Option-1-Using-disk-img"><a href="#Option-1-Using-disk-img" class="headerlink" title="Option 1: Using disk.img"></a>Option 1: Using <code>disk.img</code></h3><p>Run the following command to start QEMU with a USB storage device:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">    -drive <span class="keyword">if</span>=none,format=raw,file=disk.img,<span class="built_in">id</span>=usb-drive \</span><br><span class="line">    -device usb-ehci,<span class="built_in">id</span>=usb-ehci \</span><br><span class="line">    -device usb-storage,drive=usb-drive,bus=usb-ehci.0 \</span><br><span class="line">    -debugcon file:debug.log \</span><br><span class="line">    -global isa-debugcon.iobase=0x402 \</span><br><span class="line">    -nographic \</span><br><span class="line">    -net none \</span><br><span class="line">    -s</span><br></pre></td></tr></table></figure>
+
+<h3 id="Option-2-Using-hda-contents"><a href="#Option-2-Using-hda-contents" class="headerlink" title="Option 2: Using hda-contents"></a>Option 2: Using <code>hda-contents</code></h3><p>Run the following command to start QEMU with an IDE storage device:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">    -drive file=fat:rw:hda-contents,format=raw,<span class="keyword">if</span>=ide,index=0 \</span><br><span class="line">    -debugcon file:debug.log \</span><br><span class="line">    -global isa-debugcon.iobase=0x402 \</span><br><span class="line">    -nographic \</span><br><span class="line">    -net none \</span><br><span class="line">    -s</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-Run-Debug-Main-efi"><a href="#5-Run-Debug-Main-efi" class="headerlink" title="5. Run Debug_Main.efi"></a>5. Run <code>Debug_Main.efi</code></h2><p>After starting QEMU, run the <code>Debug_Main.efi</code> application. If everything works correctly, you should see output similar to the following:</p>
+<p><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/UefiShell1.png" alt="UEFI Shell Output"><br><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/DebugLog1.png" alt="Debug Log 1 Output"></p>
+<hr>
+<h2 id="6-Debug-with-GDB"><a href="#6-Debug-with-GDB" class="headerlink" title="6. Debug with GDB"></a>6. Debug with GDB</h2><p>In <code>debug.log</code>, after executing <code>Debug_Main.efi</code>, the driver is loaded at address <code>0x00006700000</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">line 1647: Loading driver at 0x00006700000 EntryPoint=0x0000670117A Debug_Main.efi</span><br></pre></td></tr></table></figure>
+
+<p>After running QEMU with the <code>-s</code> option, GDB can be used for debugging.</p>
+<h3 id="6-1-Start-GDB-and-Load-Symbols"><a href="#6-1-Start-GDB-and-Load-Symbols" class="headerlink" title="6.1 Start GDB and Load Symbols"></a>6.1 Start GDB and Load Symbols</h3><p>Run GDB in the folder where you set the <code>Debug_Main.efi</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_Share/UEFI/Individual/Debuger/hda-contents/ia32$ gdb</span><br></pre></td></tr></table></figure>
+
+<p>Within GDB:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) file Debug_Main.efi</span><br><span class="line">Reading symbols from Debug_Main.efi...</span><br><span class="line">(No debugging symbols found in Debug_Main.efi)</span><br></pre></td></tr></table></figure>
+
+<p>Verify that the symbols are loaded:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) info files</span><br><span class="line">Symbols from &quot;/media/sf_Share/UEFI/Individual/Debuger/hda-contents/ia32/Debug_Main.efi&quot;.</span><br><span class="line">Local exec file:</span><br><span class="line"> `/media/sf_Share/UEFI/Individual/Debuger/hda-contents/ia32/Debug_Main.efi&#x27;, file type pei-i386.</span><br><span class="line"> Entry point: 0x117a</span><br><span class="line"> 0x00000240 - 0x00002040 is .text</span><br><span class="line"> 0x00002040 - 0x00002140 is .data</span><br><span class="line"> 0x00002140 - 0x00002280 is .reloc</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB1.png" alt="GDB 1"></p>
+<h3 id="6-2-Calculate-the-Address-Offsets"><a href="#6-2-Calculate-the-Address-Offsets" class="headerlink" title="6.2 Calculate the Address Offsets"></a>6.2 Calculate the Address Offsets</h3><p>Use the previously obtained load address from <code>debug.log</code> and add the section offsets:</p>
+<ul>
+<li><em>Text section</em>: <code>0x00006700000 + 0x0240 = 0x00006700240</code></li>
+<li><em>Data section</em>: <code>0x00006700240 + 0x2040 = 0x00006702280</code></li>
+</ul>
+<h3 id="6-3-Unload-Debug-Main-efi"><a href="#6-3-Unload-Debug-Main-efi" class="headerlink" title="6.3 Unload Debug_Main.efi"></a>6.3 Unload <code>Debug_Main.efi</code></h3><p>To ensure a clean state before reloading the symbol file, use the following GDB command:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) file</span><br><span class="line">No executable file now.</span><br><span class="line">No symbol file now.</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-Load-Debug-Symbols"><a href="#6-4-Load-Debug-Symbols" class="headerlink" title="6.4 Load Debug Symbols"></a>6.4 Load Debug Symbols</h3><p>After unloading the previous executable, load the symbol file for <code>Debug_Main</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) add-symbol-file Debug_Main.debug 0x00006700240 -s .data 0x00006702280</span><br><span class="line">add symbol table from file &quot;Debug_Main.debug&quot; at</span><br><span class="line"> .text_addr = 0x6700240</span><br><span class="line"> .data_addr = 0x6702280</span><br><span class="line">(y or n) y</span><br><span class="line">Reading symbols from Debug_Main.debug...</span><br></pre></td></tr></table></figure>
+
+<p>This command tells GDB to load the debug symbols from <code>Debug_Main.debug</code>, and the offsets for the <code>.text</code> and <code>.data</code> sections are provided.</p>
+<h3 id="6-5-Set-Breakpoint"><a href="#6-5-Set-Breakpoint" class="headerlink" title="6.5 Set Breakpoint"></a>6.5 Set Breakpoint</h3><p>Once the symbol file is loaded, set a breakpoint at the entry point of <code>Debug_Main</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break Debug_Main</span><br><span class="line">Breakpoint 1 at 0x6701120: file /media/sf_Share/UEFI/edk2/SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.c, line 27.</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-6-Attach-GDB-to-QEMU"><a href="#6-6-Attach-GDB-to-QEMU" class="headerlink" title="6.6 Attach GDB to QEMU"></a>6.6 Attach GDB to QEMU</h3><p>To begin remote debugging, use the following command to connect GDB to QEMU:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(gdb) target remote localhost:1234</span><br><span class="line">Remote debugging using localhost:1234</span><br><span class="line">warning: No executable has been specified and target does not support</span><br><span class="line">determining executable automatically.  Try using the &quot;file&quot; command.</span><br><span class="line">0x0000000007166297 in ?? ()</span><br><span class="line">(gdb) c</span><br><span class="line">Continuing.</span><br></pre></td></tr></table></figure>
+
+<p>GDB will connect to QEMU, and execution will continue until the breakpoint is hit.</p>
+<h3 id="6-7-Restart-Debug-Main-efi-from-the-UEFI-Shell"><a href="#6-7-Restart-Debug-Main-efi-from-the-UEFI-Shell" class="headerlink" title="6.7 Restart Debug_Main.efi from the UEFI Shell"></a>6.7 Restart <code>Debug_Main.efi</code> from the UEFI Shell</h3><p>At this point, everything is set up. Go back to the UEFI Shell, and run <code>Debug_Main.efi</code> again. See the breakpoint hit in the code, and continue debugging.</p>
+<p>After the breakpoint is hit, type <code>c</code> (for continue) to let the program run. See debug output both in the UEFI Shell and in the <code>debug.log</code>.</p>
+<p><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB2.png" alt="GDB 2"><br><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/GDB3.png" alt="GDB 3"></p>
+<p>The <code>debug.log</code> will now also contain new log entries corresponding to the actions performed in <code>Debug_Main.efi</code>:</p>
+<p><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/DebugLog2.png" alt="Debug Log 2 Output"></p>
+<hr>
+<h2 id="7-Notes"><a href="#7-Notes" class="headerlink" title="7. Notes"></a>7. Notes</h2><ul>
+<li>Ensure that <code>OVMF.fd</code>, <code>disk.img</code>, or <code>hda-contents</code> are correctly configured and accessible.</li>
+<li>The <code>debug.log</code> file will contain debug output from QEMU and can be used for troubleshooting.</li>
+<li>If you encounter issues, verify that the <code>Debug_Main.efi</code> application is correctly built and copied to the appropriate location.</li>
+<li>Use <code>objdump -x Debug_Main.efi</code> to inspect symbol information.</li>
+</ul>
+<hr>
+<h2 id="Appendix-Print-Debug-Information-to-UEFI-Shell"><a href="#Appendix-Print-Debug-Information-to-UEFI-Shell" class="headerlink" title="Appendix: Print Debug Information to UEFI Shell"></a>Appendix: Print Debug Information to UEFI Shell</h2><p>To print debug information directly to the UEFI Shell, modify the <code>dsc</code> file as follows:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Components]</span></span><br><span class="line">  SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.inf &#123;</span><br><span class="line">    &lt;LibraryClasses&gt;</span><br><span class="line">      DebugLib|MdePkg/Library/UefiDebugLibConOut/UefiDebugLibConOut.inf</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>This change redirects debug output to the UEFI Shell console, like this:<br><img src="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/UefiShell2.png" alt="UEFI Shell Output"></p>
+<p>This update moves the <code>Print Debug Information to UEFI Shell</code> section into an appendix and retains the clarity of the remaining guide for debugging OVMF with GDB.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/UEFI/" rel="tag"><i class="fa fa-tag"></i> UEFI</a>
+              <a href="/tags/GDB/" rel="tag"><i class="fa fa-tag"></i> GDB</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/" rel="prev" title="[UEFI] Debug OVMF with Intel UDK Debugger">
+      <i class="fa fa-chevron-left"></i> [UEFI] Debug OVMF with Intel UDK Debugger
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/05/01/Uefi/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/Configuring_Bridge_Networking_for_QEMU_on_Ubuntu/" rel="next" title="[UEFI] Configuring Bridge Networking for QEMU on Ubuntu">
+      [UEFI] Configuring Bridge Networking for QEMU on Ubuntu <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Overview"><span class="nav-text">1. Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Add-Debug-Main-inf-to-OVMF"><span class="nav-text">2. Add Debug_Main.inf to OVMF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Build-OVMF"><span class="nav-text">3. Build OVMF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Run-QEMU"><span class="nav-text">4. Run QEMU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Option-1-Using-disk-img"><span class="nav-text">Option 1: Using disk.img</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Option-2-Using-hda-contents"><span class="nav-text">Option 2: Using hda-contents</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Run-Debug-Main-efi"><span class="nav-text">5. Run Debug_Main.efi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Debug-with-GDB"><span class="nav-text">6. Debug with GDB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Start-GDB-and-Load-Symbols"><span class="nav-text">6.1 Start GDB and Load Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Calculate-the-Address-Offsets"><span class="nav-text">6.2 Calculate the Address Offsets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Unload-Debug-Main-efi"><span class="nav-text">6.3 Unload Debug_Main.efi</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-Load-Debug-Symbols"><span class="nav-text">6.4 Load Debug Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-Set-Breakpoint"><span class="nav-text">6.5 Set Breakpoint</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-Attach-GDB-to-QEMU"><span class="nav-text">6.6 Attach GDB to QEMU</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-Restart-Debug-Main-efi-from-the-UEFI-Shell"><span class="nav-text">6.7 Restart Debug_Main.efi from the UEFI Shell</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Notes"><span class="nav-text">7. Notes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix-Print-Debug-Information-to-UEFI-Shell"><span class="nav-text">Appendix: Print Debug Information to UEFI Shell</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">69k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:02</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This topic is used to record how to use Intel UDK Debugger on Linux for debugging OVMF and UEFI applications.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[UEFI] Debug OVMF with Intel UDK Debugger">
+<meta property="og:url" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This topic is used to record how to use Intel UDK Debugger on Linux for debugging OVMF and UEFI applications.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Check_GDB.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install3.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install4.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install5.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install6.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install7.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install8.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug3.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug4.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug5.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug6.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug7.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug8.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug9.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug10.png">
+<meta property="article:published_time" content="2025-02-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-19T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="UEFI">
+<meta property="article:tag" content="Intel UDK Debugger">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Check_GDB.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[UEFI] Debug OVMF with Intel UDK Debugger | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [UEFI] Debug OVMF with Intel UDK Debugger
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2025-02-20 00:00:00" itemprop="dateCreated datePublished" datetime="2025-02-20T00:00:00+08:00">2025-02-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UEFI/" itemprop="url" rel="index"><span itemprop="name">UEFI</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Intel-UDK-Debugger/" itemprop="url" rel="index"><span itemprop="name">Intel UDK Debugger</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This topic is used to record how to use Intel UDK Debugger on Linux for debugging OVMF and UEFI applications.</strong></p>
+</blockquote>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1. Overview"></a>1. Overview</h2><p>This guide provides step-by-step instructions on how to use the <strong>Intel UDK Debugger</strong> on Linux to debug OVMF (Open Virtual Machine Firmware) and UEFI applications. It covers:</p>
+<ul>
+<li>Checking GDB configuration and installing Intel UDK Debugger</li>
+<li>Adding CPU breakpoints to source code</li>
+<li>Building OVMF with debugging support</li>
+<li>Integrating debugging with QEMU and Intel UDK Debugger</li>
+<li>Debugging with GDB and Intel UDK Debugger</li>
+</ul>
+<hr>
+<h2 id="2-Check-GDB-and-Install-Intel-UDK-Debugger"><a href="#2-Check-GDB-and-Install-Intel-UDK-Debugger" class="headerlink" title="2. Check GDB and Install Intel UDK Debugger"></a>2. Check GDB and Install Intel UDK Debugger</h2><p>Before starting, ensure that your GDB supports <code>--with-expat</code>. If not, upgrade GDB to a compatible version.</p>
+<p>Run the following command to check GDB configuration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb -configuration</span><br></pre></td></tr></table></figure>
+
+<p>Example output:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">This GDB was configured as follows:</span><br><span class="line">   configure --host=x86_64-linux-gnu --target=x86_64-linux-gnu</span><br><span class="line">      --with-auto-load-dir=$debugdir:$datadir/auto-load</span><br><span class="line">      --with-auto-load-safe-path=$debugdir:$datadir/auto-load</span><br><span class="line">      --with-expat</span><br><span class="line">      --with-gdb-datadir=/usr/share/gdb (relocatable)</span><br><span class="line">      --with-jit-reader-dir=/usr/lib/gdb (relocatable)</span><br><span class="line">      --without-libunwind-ia64</span><br><span class="line">      --with-lzma</span><br><span class="line">      --with-babeltrace</span><br><span class="line">      --with-intel-pt</span><br><span class="line">      --with-mpfr</span><br><span class="line">      --with-xxhash</span><br><span class="line">      --with-python=/usr (relocatable)</span><br><span class="line">      --with-python-libdir=/usr/lib (relocatable)</span><br><span class="line">      --with-debuginfod</span><br><span class="line">      --without-guile</span><br><span class="line">      --enable-source-highlight</span><br><span class="line">      --with-separate-debug-dir=/usr/lib/Debug (relocatable)</span><br><span class="line">      --with-system-gdbinit=/etc/gdb/gdbinit</span><br><span class="line">      --with-system-gdbinit-dir=/etc/gdb/gdbinit.d</span><br></pre></td></tr></table></figure>
+
+<p>If <code>--with-expat</code> is present, proceed to install the Intel UDK Debugger.</p>
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Check_GDB.png" alt="Check GDB"></p>
+<h3 id="2-1-Install-Intel-UDK-Debugger"><a href="#2-1-Install-Intel-UDK-Debugger" class="headerlink" title="2.1 Install Intel UDK Debugger"></a>2.1 Install Intel UDK Debugger</h3><ol>
+<li><p>Make the installer executable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x UDK_Debugger_Tool_v1_5_1.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Run the installer:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./UDK_Debugger_Tool_v1_5_1.bin</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>Follow the installation prompts as shown in the screenshots below:</p>
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install1.png" alt="Install UDK 1"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install2.png" alt="Install UDK 2"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install3.png" alt="Install UDK 3"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install4.png" alt="Install UDK 4"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install5.png" alt="Install UDK 5"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install6.png" alt="Install UDK 6"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install7.png" alt="Install UDK 7"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install8.png" alt="Install UDK 8"></p>
+<hr>
+<h2 id="3-Add-CpuBreakpoint-to-the-Source-Code"><a href="#3-Add-CpuBreakpoint-to-the-Source-Code" class="headerlink" title="3. Add CpuBreakpoint() to the Source Code"></a>3. Add <code>CpuBreakpoint()</code> to the Source Code</h2><p>To enable debugging, insert a CPU breakpoint in the UEFI application’s source code. For example, in <code>Debug_Main.c</code>:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Insert a CPU breakpoint for debugging. This will cause the debugger to break execution at this point.</span></span><br><span class="line">CpuBreakpoint ();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-Build-OVMF-and-Debug-Main-efi"><a href="#4-Build-OVMF-and-Debug-Main-efi" class="headerlink" title="4. Build OVMF and Debug_Main.efi"></a>4. Build OVMF and Debug_Main.efi</h2><p>To include the <code>Debug_Main</code> application in OVMF, modify the <code>edk2/OvmfPkg/OvmfPkgX64.dsc</code> file as follows:</p>
+<h3 id="4-1-Modify-OvmfPkgX64-dsc"><a href="#4-1-Modify-OvmfPkgX64-dsc" class="headerlink" title="4.1 Modify OvmfPkgX64.dsc"></a>4.1 Modify <code>OvmfPkgX64.dsc</code></h3><p>Add the following lines to the <code>[Components]</code> section:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Components]</span></span><br><span class="line">  SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.inf</span><br></pre></td></tr></table></figure>
+
+<p>Enable source-level debugging by adding:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINE <span class="attr">SOURCE_DEBUG_ENABLE</span> = <span class="literal">TRUE</span></span><br></pre></td></tr></table></figure>
+
+<p>Move the <code>PcdFSBClock</code> setting from <code>[PcdsDynamicDefault]</code> to <code>[PcdsFixedAtBuild]</code>:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[PcdsFixedAtBuild]</span></span><br><span class="line">  gEfiMdePkgTokenSpaceGuid.PcdFSBClock|1000000000</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-Build-OVMF"><a href="#4-2-Build-OVMF" class="headerlink" title="4.2 Build OVMF"></a>4.2 Build OVMF</h3><p>Run the following command to build OVMF with debugging support:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build -p OvmfPkg/OvmfPkgX64.dsc -t GCC5 -a X64 -b NOOPT -DSOURCE_DEBUG_ENABLE=TRUE -DDEBUG_ON_SERIAL_PORT=TRUE</span><br></pre></td></tr></table></figure>
+
+<p>After building, copy the generated <code>Debug_Main.efi</code> and <code>Debug_Main.debug</code> files to the <code>hda-contents</code> folder.</p>
+<hr>
+<h2 id="5-Integrate-Debugging-with-QEMU-and-Intel-UDK-Debugger"><a href="#5-Integrate-Debugging-with-QEMU-and-Intel-UDK-Debugger" class="headerlink" title="5. Integrate Debugging with QEMU and Intel UDK Debugger"></a>5. Integrate Debugging with QEMU and Intel UDK Debugger</h2><h3 id="5-1-Create-Pipes-for-Communication"><a href="#5-1-Create-Pipes-for-Communication" class="headerlink" title="5.1 Create Pipes for Communication"></a>5.1 Create Pipes for Communication</h3><p>Create named pipes for communication between QEMU and Intel UDK Debugger:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkfifo</span> /tmp/serial.in</span><br><span class="line"><span class="built_in">mkfifo</span> /tmp/serial.out</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-Start-Intel-UDK-Debugger"><a href="#5-2-Start-Intel-UDK-Debugger" class="headerlink" title="5.2 Start Intel UDK Debugger"></a>5.2 Start Intel UDK Debugger</h3><p>Run the following command to start the Intel UDK Debugger:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /opt/intel/udkdebugger/bin/udk-gdb-server</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-Start-GDB"><a href="#5-3-Start-GDB" class="headerlink" title="5.3 Start GDB"></a>5.3 Start GDB</h3><p>Open a new terminal and start GDB:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-4-Start-QEMU"><a href="#5-4-Start-QEMU" class="headerlink" title="5.4 Start QEMU"></a>5.4 Start QEMU</h3><p>Run QEMU with the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">    -drive file=fat:rw:hda-contents,format=raw,<span class="keyword">if</span>=ide,index=0 \</span><br><span class="line">    -net none \</span><br><span class="line">    -serial pipe:/tmp/serial</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug1.png" alt="Debug 1"></p>
+<hr>
+<h2 id="6-Debugging-with-GDB-and-Intel-UDK-Debugger"><a href="#6-Debugging-with-GDB-and-Intel-UDK-Debugger" class="headerlink" title="6. Debugging with GDB and Intel UDK Debugger"></a>6. Debugging with GDB and Intel UDK Debugger</h2><h3 id="6-1-Connect-GDB-to-Intel-UDK-Debugger"><a href="#6-1-Connect-GDB-to-Intel-UDK-Debugger" class="headerlink" title="6.1 Connect GDB to Intel UDK Debugger"></a>6.1 Connect GDB to Intel UDK Debugger</h3><p>When QEMU starts, it will pause execution. In the GDB terminal, connect to the Intel UDK Debugger:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) target remote ubuntu-VirtualBox:1234</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug2.png" alt="Debug 2"></p>
+<h3 id="6-2-Continue-to-Boot"><a href="#6-2-Continue-to-Boot" class="headerlink" title="6.2 Continue to Boot"></a>6.2 Continue to Boot</h3><p>Continue to boot the QEMU into UEFI Shell:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) c</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug3.png" alt="Debug 3"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug4.png" alt="Debug 4"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug5.png" alt="Debug 5"></p>
+<h3 id="6-3-Load-Debug-Symbols"><a href="#6-3-Load-Debug-Symbols" class="headerlink" title="6.3 Load Debug Symbols"></a>6.3 Load Debug Symbols</h3><p>Run <code>Debug_Main.efi</code> and load the debug symbols for <code>Debug_Main.efi</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) <span class="built_in">source</span> /opt/intel/udkdebugger/script/udk_gdb_script</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug6.png" alt="Debug 6"></p>
+<h3 id="6-4-View-Source-Code"><a href="#6-4-View-Source-Code" class="headerlink" title="6.4 View Source Code"></a>6.4 View Source Code</h3><p>To view the source code of <code>Debug_Main.efi</code>, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l Debug_Main</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug7.png" alt="Debug 7"></p>
+<h3 id="6-5-Step-Through-Code"><a href="#6-5-Step-Through-Code" class="headerlink" title="6.5 Step Through Code"></a>6.5 Step Through Code</h3><p>Use the following commands to step through the code:</p>
+<ul>
+<li><code>n</code> (next): Execute the next line of code.</li>
+<li><code>c</code> (continue): Continue execution until the next breakpoint.</li>
+</ul>
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug8.png" alt="Debug 8"></p>
+<h3 id="6-6-Inspect-Variables"><a href="#6-6-Inspect-Variables" class="headerlink" title="6.6 Inspect Variables"></a>6.6 Inspect Variables</h3><p>To inspect the value of a variable, use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p &lt;variable_name&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug9.png" alt="Debug 9"></p>
+<h3 id="6-7-Complete-Execution"><a href="#6-7-Complete-Execution" class="headerlink" title="6.7 Complete Execution"></a>6.7 Complete Execution</h3><p>To allow the application to complete execution, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug10.png" alt="Debug 10"></p>
+<hr>
+<h2 id="7-Additional-Resources"><a href="#7-Additional-Resources" class="headerlink" title="7. Additional Resources"></a>7. Additional Resources</h2><p>For more detailed instructions, refer to the <strong>UDK_Debugger_Tool_User_Manual</strong>.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/UEFI/" rel="tag"><i class="fa fa-tag"></i> UEFI</a>
+              <a href="/tags/Intel-UDK-Debugger/" rel="tag"><i class="fa fa-tag"></i> Intel UDK Debugger</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/09/19/Windbg/Dual_machine_network_commissioning/Dual_machine_network_commissioning/" rel="prev" title="[Windbg] Use windbg for dual-machine debugging">
+      <i class="fa fa-chevron-left"></i> [Windbg] Use windbg for dual-machine debugging
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/02/24/Uefi/GDB_Debug/GDB_Debug/" rel="next" title="[UEFI] Debug OVMF with GDB">
+      [UEFI] Debug OVMF with GDB <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Overview"><span class="nav-text">1. Overview</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Check-GDB-and-Install-Intel-UDK-Debugger"><span class="nav-text">2. Check GDB and Install Intel UDK Debugger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-Install-Intel-UDK-Debugger"><span class="nav-text">2.1 Install Intel UDK Debugger</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Add-CpuBreakpoint-to-the-Source-Code"><span class="nav-text">3. Add CpuBreakpoint() to the Source Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Build-OVMF-and-Debug-Main-efi"><span class="nav-text">4. Build OVMF and Debug_Main.efi</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Modify-OvmfPkgX64-dsc"><span class="nav-text">4.1 Modify OvmfPkgX64.dsc</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Build-OVMF"><span class="nav-text">4.2 Build OVMF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Integrate-Debugging-with-QEMU-and-Intel-UDK-Debugger"><span class="nav-text">5. Integrate Debugging with QEMU and Intel UDK Debugger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-Create-Pipes-for-Communication"><span class="nav-text">5.1 Create Pipes for Communication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Start-Intel-UDK-Debugger"><span class="nav-text">5.2 Start Intel UDK Debugger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-Start-GDB"><span class="nav-text">5.3 Start GDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-Start-QEMU"><span class="nav-text">5.4 Start QEMU</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Debugging-with-GDB-and-Intel-UDK-Debugger"><span class="nav-text">6. Debugging with GDB and Intel UDK Debugger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-Connect-GDB-to-Intel-UDK-Debugger"><span class="nav-text">6.1 Connect GDB to Intel UDK Debugger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Continue-to-Boot"><span class="nav-text">6.2 Continue to Boot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-Load-Debug-Symbols"><span class="nav-text">6.3 Load Debug Symbols</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-View-Source-Code"><span class="nav-text">6.4 View Source Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-Step-Through-Code"><span class="nav-text">6.5 Step Through Code</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-Inspect-Variables"><span class="nav-text">6.6 Inspect Variables</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-7-Complete-Execution"><span class="nav-text">6.7 Complete Execution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Additional-Resources"><span class="nav-text">7. Additional Resources</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">69k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:02</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>
