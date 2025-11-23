@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="This document records how to support WMI in UEFI BIOS.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[WMI] 1. Support WMI in UEFI BIOS">
+<meta property="og:url" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="This document records how to support WMI in UEFI BIOS.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/wmi-architecture.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/generate_dll.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/signin_dll.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_2.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_3.png">
+<meta property="article:published_time" content="2024-10-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-10-10T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="WMI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/wmi-architecture.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[WMI] 1. Support WMI in UEFI BIOS | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [WMI] 1. Support WMI in UEFI BIOS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-10-11 00:00:00" itemprop="dateCreated datePublished" datetime="2024-10-11T00:00:00+08:00">2024-10-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/WMI/" itemprop="url" rel="index"><span itemprop="name">WMI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>15k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>14 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>This document records how to support WMI in UEFI BIOS.</strong></p>
+</blockquote>
+<h2 id="1-Introduce"><a href="#1-Introduce" class="headerlink" title="1. Introduce"></a>1. Introduce</h2><p><img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/wmi-architecture.png" alt="wmi-architecture.png" title="wmi-architecture.png"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">                            +----------------+</span><br><span class="line">                            |  Application   |</span><br><span class="line">                            +----------------+</span><br><span class="line">                                    ^</span><br><span class="line">                                    |</span><br><span class="line">                                    v</span><br><span class="line">                            +----------------+        +----------------+</span><br><span class="line">                            |    WMI Core    |        |                |</span><br><span class="line">                            |  (WmiAcpi.sys) | &lt;----&gt; |  MOF Database  |</span><br><span class="line">                            |   (Acpi.sys)   |        |                |</span><br><span class="line">                            +----------------+        +----------------+</span><br><span class="line">                                    ^</span><br><span class="line">                                    |</span><br><span class="line">                                    v</span><br><span class="line">            +--------------------------------------------------+</span><br><span class="line">            |             UEFI BIOS - ACPI ASL Code            |</span><br><span class="line">            | Device(AMW0)                                     |</span><br><span class="line">            | &#123;                                                |</span><br><span class="line">            |     Name(_HID, &quot;PNP0C14&quot;)                        |</span><br><span class="line">            |     Name(_UID, &quot;WmiStudy&quot;)                       |</span><br><span class="line">            |     Name(_WDG, Buffer() &#123;&#125;)                      |</span><br><span class="line">            |     // WQxx (Data Block Query)                   |</span><br><span class="line">            |     // WSxx (Data Block Set)                     |</span><br><span class="line">            |     // WMxx (Method Execution)                   |</span><br><span class="line">            |     // WExx (Event Enable and Disable)           |</span><br><span class="line">            |     // WCxx (Data Collection Enable and Disable) |</span><br><span class="line">            | &#125;                                                |</span><br><span class="line">            +--------------------------------------------------+</span><br><span class="line">                                    ^</span><br><span class="line">                                    |</span><br><span class="line">                                    v</span><br><span class="line">                    +--------------------------------+</span><br><span class="line">                    |  UEFI BIOS - Specific Function |</span><br><span class="line">                    +--------------------------------+</span><br><span class="line"></span><br><span class="line">Brief description:</span><br><span class="line">1. Application: Your software that is used to control WMI, like VB/C++/Python, etc.</span><br><span class="line">2. WMI Core: It is mainly composed by WmiAcpi.sys and Acpi.sys, Use the WmiAcpi.sys to get the MOF information under the PNP0C14 in ASL code, then report the MOF information to Acpi.sys</span><br><span class="line">3. UEFI BIOS - ACPI ASL Code: You need to declare &quot;PNP0C14&quot; and other code according to WMI white paper</span><br><span class="line">4. UEFI BIOS - Specific Function: The fucntion that is used to do for your specific things</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Porting-Guid"><a href="#2-Porting-Guid" class="headerlink" title="2. Porting Guid"></a>2. Porting Guid</h2><ul>
+<li><p>You can only choose one method bewteen Method 1 and 2, can not use both method at the same time</p>
+<h3 id="Method-1-Transfer-mof-to-dll-and-Sign-up-into-register-list"><a href="#Method-1-Transfer-mof-to-dll-and-Sign-up-into-register-list" class="headerlink" title="Method 1: Transfer .mof to .dll and Sign up into register list"></a>Method 1: Transfer <em>.mof</em> to <em>.dll</em> and Sign up into register list</h3><ul>
+<li><p>Write your <em>.mof</em> file, Below is used for reference</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// WMI internal classes</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">// Define an internal event class that inherits from __ExtrinsicEvent</span><br><span class="line">class WMIEvent : __ExtrinsicEvent</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// A method class that manipulates unsigned long integers</span><br><span class="line">[WMI,</span><br><span class="line"> Dynamic,</span><br><span class="line"> Provider(&quot;WmiProv&quot;),</span><br><span class="line"> Locale(&quot;MS\\0x409&quot;),</span><br><span class="line"> Description(&quot;Class used to operate methods on a ULong&quot;),</span><br><span class="line"> guid(&quot;&#123;ABBC0F6F-8EA1-11d1-00A0-C90629100000&#125;&quot;)</span><br><span class="line">]</span><br><span class="line">class A_SamTest_MULong</span><br><span class="line">&#123;</span><br><span class="line">    [key, read]</span><br><span class="line">    string InstanceName;</span><br><span class="line"></span><br><span class="line">    [read] boolean Active;</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(1),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Return the contents of a ULong&quot;)</span><br><span class="line">    ] void GetULong([out, Description(&quot;Ulong Data&quot;)] uint32 Data);</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(2),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Set the contents of a ULong&quot;)</span><br><span class="line">    ] void SetULong([in, Description(&quot;Ulong Data&quot;)] uint32 Data);</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(3),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Generate an event containing ULong data&quot;)</span><br><span class="line">    ] void FireULong([in, Description(&quot;WMI requires a parameter&quot;)] uint32 Hack);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Open WmiStudy.sln by Visual Studio and compile <em>.mof</em> to <em>.dll</em><br><img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/generate_dll.png" alt="generate_dll.png" title="generate_dll.png"></p>
+</li>
+<li><p>Sign up .dll into register list</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WmiAcpi</span><br><span class="line">MofImagePath C:\Windows\System32\WmiStudy.dll # You can also put the .dll anywhere else</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/signin_dll.png" alt="signin_dll.png" title="signin_dll.png"></p>
+</li>
+<li><p>Declare declare “PNP0C14” into DSDT or SSDT then update the new UEFI BIOS Rom to your test mechine, Below is used for reference</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">Device(AMW0)</span><br><span class="line">&#123;</span><br><span class="line">   // PNP0C14 is PNP id assigned to WMI mapper</span><br><span class="line">    Name(_HID, &quot;PNP0C14&quot;)</span><br><span class="line">    Name(_UID, &quot;WmiStudy&quot;)</span><br><span class="line"></span><br><span class="line">     // Description of data, events and methods supported by this ASL device.</span><br><span class="line">    Name(_WDG, Buffer() &#123;</span><br><span class="line">        // ULONG</span><br><span class="line">        // &#123;ABBC0F6f-8EA1-11d1-00A0-C90629100000&#125;</span><br><span class="line">        0x6f, 0x0f, 0xBC, 0xAB, 0xa1, 0x8e, 0xd1, 0x11, 0x00, 0xa0, 0xc9, 0x06, 0x29, 0x10, 0, 0,</span><br><span class="line">        66, 67,        // Object Id (BC)</span><br><span class="line">        4,             // Instance Count</span><br><span class="line">        0x02,          // Flags (WMIACPI_REGFLAG_METHOD)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    // Storage for 4 instances of ULONG</span><br><span class="line">    Name(SAC0, 0)</span><br><span class="line">    Name(SAC1, 1)</span><br><span class="line">    Name(SAC2, 2)</span><br><span class="line">    Name(SAC3, 3)</span><br><span class="line"></span><br><span class="line">    // Event Control Flag</span><br><span class="line">    Name(ECD2, 0)</span><br><span class="line"></span><br><span class="line">    // Get Command (SETC)</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    Method(GETC, 1)</span><br><span class="line">    &#123;</span><br><span class="line">        // Return data corresponding to instance specified</span><br><span class="line">        if (LEqual(Arg0, Zero)) &#123;</span><br><span class="line">            Return(SAC0)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 1)) &#123;</span><br><span class="line">            Return(SAC1)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 2)) &#123;</span><br><span class="line">            Return(SAC2)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 3)) &#123;</span><br><span class="line">            Return(SAC3)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Set Command (SETC)</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    // Arg1 has the data passed</span><br><span class="line">    Method(SETC, 2)</span><br><span class="line">    &#123;</span><br><span class="line">        // Return data corresponding to instance specified</span><br><span class="line">        if (LEqual(Arg0, Zero)) &#123;</span><br><span class="line">            Store(Arg1, SAC0)</span><br><span class="line">            Return(SAC0)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 1)) &#123;</span><br><span class="line">            Store(Arg1, SAC1)</span><br><span class="line">            Return(SAC1)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 2)) &#123;</span><br><span class="line">            Store(Arg1, SAC2)</span><br><span class="line">            Return(SAC2)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 3)) &#123;</span><br><span class="line">            Store(Arg1, SAC3)</span><br><span class="line">            Return(SAC3)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Validate Instance (VINS)</span><br><span class="line">    // Validate that instance index is between 0 and 3</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    Method(VINS, 1)</span><br><span class="line">    &#123;</span><br><span class="line">        if (LLess(Arg0, Zero))</span><br><span class="line">        &#123;</span><br><span class="line">            Name(Foo, &quot;WMIACPI: ASL: VINS called with InstanceIndex = &quot;)</span><br><span class="line">            Store(Foo, Debug)</span><br><span class="line">            Store(Arg0, Debug)</span><br><span class="line">            Fatal(0xa0, 27, 0)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (LGreater(Arg0, 3))</span><br><span class="line">        &#123;</span><br><span class="line">            Name(Foo1, &quot;WMIACPI: ASL: VINS called with InstanceIndex = &quot;)</span><br><span class="line">            Store(Foo1, Debug)</span><br><span class="line">            Store(Arg0, Debug)</span><br><span class="line">            Fatal(0xa0, 28, 0)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // WMI Method &#x27;BC&#x27; (WMBC)</span><br><span class="line">    // ULONG Method data block</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    // Arg1 has the method id</span><br><span class="line">    // Arg2 has the data passed</span><br><span class="line">    Method(WMBC, 3) &#123;</span><br><span class="line">        // MethodId 1 - Get</span><br><span class="line">        if (LEqual(Arg1, 1))</span><br><span class="line">        &#123;</span><br><span class="line">            Return(GETC(Arg0))</span><br><span class="line">        &#125;</span><br><span class="line">        // MethodId 2 - Set</span><br><span class="line">        if (LEqual(Arg1, 2))</span><br><span class="line">        &#123;</span><br><span class="line">            SETC(Arg0, Arg2)</span><br><span class="line">            Store(0x01, ECD2)</span><br><span class="line">            Return(0)</span><br><span class="line">        &#125;</span><br><span class="line">        // MethodId 3 - Event Generate</span><br><span class="line">        if (LEqual(Arg1, 3))</span><br><span class="line">        &#123;</span><br><span class="line">            VINS(Arg0)</span><br><span class="line">            if (LEqual(ECD2, Zero))</span><br><span class="line">            &#123;</span><br><span class="line">                // ERROR - Event Control was not enabled</span><br><span class="line">                Name(Foo, &quot;WMIACPI: ASL: WMBC called, but ECD2 is 0\n&quot;)</span><br><span class="line">                Store(Foo, Debug)</span><br><span class="line">                Fatal(0xa0, 31, 0)</span><br><span class="line">            &#125;</span><br><span class="line">            Notify(AMW0, 0xd2)</span><br><span class="line">            Store(0x00, ECD2)</span><br><span class="line">            Return(0)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Method-2-Transfer-mof-to-x-and-save-the-value-of-x-into-ASL-CODE"><a href="#Method-2-Transfer-mof-to-x-and-save-the-value-of-x-into-ASL-CODE" class="headerlink" title="Method 2: Transfer .mof to .x and save the value of .x into ASL CODE"></a>Method 2: Transfer <em>.mof</em> to <em>.x</em> and save the value of <em>.x</em> into ASL CODE</h3><ul>
+<li><p>Write your <em>.mof</em> file, Below is used for reference</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">//</span><br><span class="line">// WMI internal classes</span><br><span class="line">//</span><br><span class="line"></span><br><span class="line">// Define an internal event class that inherits from __ExtrinsicEvent</span><br><span class="line">class WMIEvent : __ExtrinsicEvent</span><br><span class="line">&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// A method class that manipulates unsigned long integers</span><br><span class="line">[WMI,</span><br><span class="line"> Dynamic,</span><br><span class="line"> Provider(&quot;WmiProv&quot;),</span><br><span class="line"> Locale(&quot;MS\\0x409&quot;),</span><br><span class="line"> Description(&quot;Class used to operate methods on a ULong&quot;),</span><br><span class="line"> guid(&quot;&#123;ABBC0F6F-8EA1-11d1-00A0-C90629100000&#125;&quot;)</span><br><span class="line">]</span><br><span class="line">class A_SamTest_MULong</span><br><span class="line">&#123;</span><br><span class="line">    [key, read]</span><br><span class="line">    string InstanceName;</span><br><span class="line"></span><br><span class="line">    [read] boolean Active;</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(1),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Return the contents of a ULong&quot;)</span><br><span class="line">    ] void GetULong([out, Description(&quot;Ulong Data&quot;)] uint32 Data);</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(2),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Set the contents of a ULong&quot;)</span><br><span class="line">    ] void SetULong([in, Description(&quot;Ulong Data&quot;)] uint32 Data);</span><br><span class="line"></span><br><span class="line">    [WmiMethodId(3),</span><br><span class="line">     Implemented,</span><br><span class="line">     read, write,</span><br><span class="line">     Description(&quot;Generate an event containing ULong data&quot;)</span><br><span class="line">    ] void FireULong([in, Description(&quot;WMI requires a parameter&quot;)] uint32 Hack);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Compile <em>.mof</em> to <em>.bmf</em> in CMD</p>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\mofcomp.exe -WMI -B:WmiStudy.bmf WmiStudy.mof</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Compile <em>.bmf</em> to <em>.x</em> in CMD</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\wmimofck.exe -xWmiStudy.x WmiStudy.bmf</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Declare “PNP0C14”, Copy the value in the <em>.x</em> to <em>Name(WQBA, Buffer())</em> in the asl code into DSDT or SSDT then update the new UEFI BIOS Rom to your test mechine, Below is used for reference</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br></pre></td><td class="code"><pre><span class="line">Device(AMW0)</span><br><span class="line">&#123;</span><br><span class="line">   // PNP0C14 is PNP id assigned to WMI mapper</span><br><span class="line">    Name(_HID, &quot;PNP0C14&quot;)</span><br><span class="line">    Name(_UID, &quot;WmiStudy&quot;)</span><br><span class="line"></span><br><span class="line">     // Description of data, events and methods supported by this ASL device.</span><br><span class="line">    Name(_WDG, Buffer() &#123;</span><br><span class="line">        // ULONG</span><br><span class="line">        // &#123;ABBC0F6f-8EA1-11d1-00A0-C90629100000&#125;</span><br><span class="line">        0x6f, 0x0f, 0xBC, 0xAB, 0xa1, 0x8e, 0xd1, 0x11, 0x00, 0xa0, 0xc9, 0x06, 0x29, 0x10, 0, 0,</span><br><span class="line">        66, 67,        // Object Id (BC)</span><br><span class="line">        4,             // Instance Count</span><br><span class="line">        0x02,          // Flags (WMIACPI_REGFLAG_METHOD)</span><br><span class="line"></span><br><span class="line">        // This GUID for returning the MOF data</span><br><span class="line">        0x21, 0x12, 0x90, 0x05, 0x66, 0xd5, 0xd1, 0x11, 0xb2, 0xf0, 0x00, 0xa0, 0xc9, 0x06, 0x29, 0x10,</span><br><span class="line">        66, 65,        // Object ID (BA)</span><br><span class="line">        1,             // Instance Count</span><br><span class="line">        0x00,          // Flags</span><br><span class="line"></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    // Storage for 4 instances of ULONG</span><br><span class="line">    Name(SAC0, 0)</span><br><span class="line">    Name(SAC1, 1)</span><br><span class="line">    Name(SAC2, 2)</span><br><span class="line">    Name(SAC3, 3)</span><br><span class="line"></span><br><span class="line">    // Event Control Flag</span><br><span class="line">    Name(ECD2, 0)</span><br><span class="line"></span><br><span class="line">    // Get Command (SETC)</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    Method(GETC, 1)</span><br><span class="line">    &#123;</span><br><span class="line">        // Return data corresponding to instance specified</span><br><span class="line">        if (LEqual(Arg0, Zero)) &#123;</span><br><span class="line">            Return(SAC0)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 1)) &#123;</span><br><span class="line">            Return(SAC1)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 2)) &#123;</span><br><span class="line">            Return(SAC2)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 3)) &#123;</span><br><span class="line">            Return(SAC3)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Set Command (SETC)</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    // Arg1 has the data passed</span><br><span class="line">    Method(SETC, 2)</span><br><span class="line">    &#123;</span><br><span class="line">        // Return data corresponding to instance specified</span><br><span class="line">        if (LEqual(Arg0, Zero)) &#123;</span><br><span class="line">            Store(Arg1, SAC0)</span><br><span class="line">            Return(SAC0)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 1)) &#123;</span><br><span class="line">            Store(Arg1, SAC1)</span><br><span class="line">            Return(SAC1)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 2)) &#123;</span><br><span class="line">            Store(Arg1, SAC2)</span><br><span class="line">            Return(SAC2)</span><br><span class="line">        &#125;</span><br><span class="line">        if (LEqual(Arg0, 3)) &#123;</span><br><span class="line">            Store(Arg1, SAC3)</span><br><span class="line">            Return(SAC3)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Validate Instance (VINS)</span><br><span class="line">    // Validate that instance index is between 0 and 3</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    Method(VINS, 1)</span><br><span class="line">    &#123;</span><br><span class="line">        if (LLess(Arg0, Zero))</span><br><span class="line">        &#123;</span><br><span class="line">            Name(Foo, &quot;WMIACPI: ASL: VINS called with InstanceIndex = &quot;)</span><br><span class="line">            Store(Foo, Debug)</span><br><span class="line">            Store(Arg0, Debug)</span><br><span class="line">            Fatal(0xa0, 27, 0)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (LGreater(Arg0, 3))</span><br><span class="line">        &#123;</span><br><span class="line">            Name(Foo1, &quot;WMIACPI: ASL: VINS called with InstanceIndex = &quot;)</span><br><span class="line">            Store(Foo1, Debug)</span><br><span class="line">            Store(Arg0, Debug)</span><br><span class="line">            Fatal(0xa0, 28, 0)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // WMI Method &#x27;BC&#x27; (WMBC)</span><br><span class="line">    // ULONG Method data block</span><br><span class="line">    // Arg0 has the instance being queried</span><br><span class="line">    // Arg1 has the method id</span><br><span class="line">    // Arg2 has the data passed</span><br><span class="line">    Method(WMBC, 3) &#123;</span><br><span class="line">        // MethodId 1 - Get</span><br><span class="line">        if (LEqual(Arg1, 1))</span><br><span class="line">        &#123;</span><br><span class="line">            Return(GETC(Arg0))</span><br><span class="line">        &#125;</span><br><span class="line">        // MethodId 2 - Set</span><br><span class="line">        if (LEqual(Arg1, 2))</span><br><span class="line">        &#123;</span><br><span class="line">            SETC(Arg0, Arg2)</span><br><span class="line">            Store(0x01, ECD2)</span><br><span class="line">            Return(0)</span><br><span class="line">        &#125;</span><br><span class="line">        // MethodId 3 - Event Generate</span><br><span class="line">        if (LEqual(Arg1, 3))</span><br><span class="line">        &#123;</span><br><span class="line">            VINS(Arg0)</span><br><span class="line">            if (LEqual(ECD2, Zero))</span><br><span class="line">            &#123;</span><br><span class="line">                // ERROR - Event Control was not enabled</span><br><span class="line">                Name(Foo, &quot;WMIACPI: ASL: WMBC called, but ECD2 is 0\n&quot;)</span><br><span class="line">                Store(Foo, Debug)</span><br><span class="line">                Fatal(0xa0, 31, 0)</span><br><span class="line">            &#125;</span><br><span class="line">            Notify(AMW0, 0xd2)</span><br><span class="line">            Store(0x00, ECD2)</span><br><span class="line">            Return(0)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Name(WQBA, Buffer() &#123;</span><br><span class="line">        0x46, 0x4f, 0x4d, 0x42, 0x01, 0x00, 0x00, 0x00, 0xaf, 0x03, 0x00, 0x00, 0x54, 0x0c, 0x00, 0x00,</span><br><span class="line">        0x44, 0x53, 0x00, 0x01, 0x1a, 0x7d, 0xda, 0x54, 0x28, 0x40, 0x86, 0x00, 0x01, 0x06, 0x18, 0x42,</span><br><span class="line">        0x10, 0x05, 0x10, 0x22, 0x21, 0x04, 0x12, 0x01, 0xa1, 0xc8, 0x2c, 0x0c, 0x86, 0x10, 0x38, 0x2e,</span><br><span class="line">        0x84, 0x1c, 0x40, 0x48, 0x1c, 0x14, 0x4a, 0x08, 0x84, 0xfa, 0x13, 0xc8, 0xaf, 0x00, 0x84, 0x0e,</span><br><span class="line">        0x05, 0xc8, 0x14, 0x60, 0x50, 0x80, 0x53, 0x04, 0x11, 0xf4, 0x2a, 0xc0, 0xa6, 0x00, 0x93, 0x02,</span><br><span class="line">        0x2c, 0x0a, 0xd0, 0x2e, 0xc0, 0xb2, 0x00, 0xdd, 0x02, 0xa4, 0xc3, 0x12, 0x91, 0xe0, 0x28, 0x31,</span><br><span class="line">        0xe0, 0x28, 0x9d, 0xd8, 0xc2, 0x0d, 0x1b, 0xbc, 0x50, 0x14, 0xcd, 0x20, 0x4a, 0x82, 0xca, 0x05,</span><br><span class="line">        0xf8, 0x46, 0x10, 0x78, 0xb9, 0x02, 0x24, 0x4f, 0x40, 0x9a, 0x05, 0x18, 0x16, 0x60, 0x5d, 0x80,</span><br><span class="line">        0xec, 0x21, 0x50, 0xa9, 0x43, 0x40, 0xc9, 0x19, 0x02, 0x6a, 0x00, 0xad, 0x4e, 0x40, 0xf8, 0x95,</span><br><span class="line">        0x4e, 0x09, 0x49, 0x10, 0xce, 0x58, 0xc5, 0xe3, 0x6b, 0x16, 0x4d, 0xcf, 0x49, 0xce, 0x31, 0xe4,</span><br><span class="line">        0x78, 0x5c, 0xe8, 0x41, 0xf0, 0xd8, 0x2a, 0x40, 0x58, 0x98, 0x21, 0x4b, 0xe8, 0x5a, 0x0d, 0x43,</span><br><span class="line">        0x35, 0x8c, 0x85, 0xba, 0x18, 0x35, 0x6a, 0xa4, 0x6c, 0x40, 0x86, 0x28, 0x09, 0x0e, 0x35, 0x6a,</span><br><span class="line">        0x4b, 0x14, 0x60, 0x7e, 0x1c, 0x9a, 0x5d, 0xdb, 0x63, 0x21, 0x90, 0x4c, 0xda, 0x50, 0x50, 0x52,</span><br><span class="line">        0x20, 0x34, 0xb6, 0x33, 0xf5, 0x8c, 0x22, 0x1e, 0xa9, 0x61, 0x12, 0x78, 0x14, 0x91, 0x8d, 0xc6,</span><br><span class="line">        0xa1, 0xb1, 0xc3, 0xf0, 0x30, 0x83, 0x1d, 0xc4, 0x61, 0x1c, 0x73, 0xe4, 0x04, 0x9e, 0xd0, 0x91,</span><br><span class="line">        0x1e, 0x79, 0x61, 0xf3, 0x14, 0x6a, 0x8c, 0xe6, 0xa0, 0x88, 0xfc, 0xa3, 0x00, 0x7a, 0x4c, 0x61,</span><br><span class="line">        0x8f, 0x36, 0xf6, 0xf9, 0x5a, 0xf8, 0x60, 0x85, 0x71, 0x04, 0xc7, 0x95, 0xe0, 0xff, 0x7f, 0xe6,</span><br><span class="line">        0x67, 0x70, 0x0a, 0xd1, 0x22, 0x14, 0x74, 0x0f, 0x10, 0x46, 0xcc, 0x43, 0x8a, 0x12, 0x30, 0x5e,</span><br><span class="line">        0x8c, 0x10, 0x51, 0x8f, 0xca, 0x80, 0x81, 0x82, 0x04, 0x3a, 0xab, 0x18, 0x51, 0x8a, 0x06, 0x13,</span><br><span class="line">        0x64, 0x60, 0x4f, 0xc0, 0x18, 0xf1, 0x42, 0x3c, 0x0d, 0x1c, 0x95, 0x71, 0x7a, 0x1e, 0x0c, 0x99,</span><br><span class="line">        0xc4, 0xf1, 0x60, 0xbe, 0x11, 0xc2, 0xd2, 0x34, 0x0e, 0xd4, 0x04, 0x76, 0x7f, 0x2a, 0xd0, 0x63,</span><br><span class="line">        0x22, 0xc2, 0xe1, 0x9c, 0x5a, 0x8d, 0x02, 0xb4, 0x41, 0xc8, 0xd6, 0x19, 0x42, 0x47, 0x82, 0x58,</span><br><span class="line">        0x8d, 0xa1, 0x08, 0x22, 0x42, 0xd0, 0x28, 0xc6, 0x8b, 0x10, 0x2a, 0x44, 0x94, 0xa8, 0x27, 0x19,</span><br><span class="line">        0x24, 0x6a, 0x65, 0x20, 0x42, 0x0b, 0x66, 0x04, 0x66, 0x7f, 0x10, 0x24, 0xdc, 0xb1, 0x40, 0x12,</span><br><span class="line">        0x40, 0x14, 0x69, 0x34, 0xa8, 0x33, 0x83, 0x8f, 0x06, 0x3e, 0x16, 0x3c, 0x2a, 0x78, 0x72, 0x27,</span><br><span class="line">        0x16, 0xe4, 0x74, 0x8f, 0xef, 0x49, 0xe2, 0x99, 0xc0, 0xa3, 0x67, 0x97, 0x05, 0x7f, 0x13, 0x7c,</span><br><span class="line">        0x48, 0xc0, 0xbb, 0x06, 0xd4, 0xed, 0xe0, 0xd9, 0x80, 0x0d, 0x33, 0x1c, 0x66, 0x88, 0x9e, 0x72,</span><br><span class="line">        0xb8, 0x13, 0x38, 0x44, 0x06, 0xe8, 0x11, 0x3d, 0x16, 0x60, 0xa7, 0x76, 0x32, 0xcf, 0x04, 0xaf,</span><br><span class="line">        0x15, 0xcd, 0x5e, 0x28, 0x08, 0xc1, 0xf1, 0xf8, 0x2e, 0xc1, 0x86, 0xcd, 0x4e, 0x05, 0x1e, 0x04,</span><br><span class="line">        0x1f, 0x99, 0xa1, 0x3d, 0xd2, 0xd3, 0x7a, 0x27, 0xf0, 0x91, 0xc2, 0x04, 0x16, 0x7b, 0x22, 0xa1,</span><br><span class="line">        0xe3, 0x01, 0xbf, 0xe2, 0xf3, 0x07, 0xb9, 0x38, 0x78, 0xbe, 0x3e, 0x8e, 0x60, 0x0f, 0x27, 0xb8,</span><br><span class="line">        0xff, 0xff, 0xcd, 0x03, 0x07, 0xf2, 0x00, 0xe2, 0x91, 0x7b, 0x08, 0xef, 0x0e, 0x1e, 0x56, 0xa0,</span><br><span class="line">        0xa3, 0x78, 0x4e, 0xc0, 0x1e, 0x50, 0x80, 0x47, 0x08, 0x0f, 0x07, 0x02, 0x26, 0x7d, 0xad, 0xb2,</span><br><span class="line">        0xb1, 0x56, 0x1f, 0x3a, 0xa8, 0xd8, 0x43, 0x82, 0x3c, 0x1e, 0x25, 0xc8, 0x70, 0xb0, 0x12, 0xc1,</span><br><span class="line">        0x74, 0xb2, 0xe1, 0xe2, 0x28, 0x24, 0x0d, 0x42, 0xe3, 0xf1, 0x90, 0x08, 0x1c, 0x05, 0xf1, 0xf8,</span><br><span class="line">        0x1d, 0x14, 0x42, 0x4e, 0x8e, 0x02, 0xa8, 0x03, 0x80, 0x0f, 0x1c, 0x6f, 0x18, 0x86, 0x48, 0xe0,</span><br><span class="line">        0x60, 0x10, 0x3a, 0x3d, 0xf8, 0xbc, 0x80, 0x9f, 0xcb, 0x81, 0x9d, 0x97, 0x67, 0x61, 0x81, 0x07,</span><br><span class="line">        0x10, 0xd0, 0xcc, 0xec, 0x24, 0xcf, 0x8c, 0xad, 0xf0, 0x48, 0x70, 0xe3, 0xf0, 0xf7, 0x85, 0x0e,</span><br><span class="line">        0x81, 0xdc, 0x0b, 0xe2, 0x25, 0xe0, 0xe7, 0x03, 0xf8, 0x77, 0x0f, 0x9f, 0x6a, 0xec, 0xec, 0xb4,</span><br><span class="line">        0x21, 0x02, 0x8f, 0x09, 0x77, 0x3e, 0x80, 0x07, 0xe4, 0xeb, 0x80, 0x8f, 0x3b, 0x8f, 0x04, 0x6c,</span><br><span class="line">        0x0e, 0x4f, 0x3c, 0x3e, 0xef, 0x30, 0x78, 0x2e, 0x62, 0xe0, 0xb2, 0x00, 0x22, 0x59, 0xe3, 0x42,</span><br><span class="line">        0xfd, 0xff, 0xc7, 0xe9, 0xc3, 0x0c, 0xc3, 0x7e, 0x4f, 0xc1, 0x0c, 0xea, 0x55, 0xc2, 0xa7, 0x00,</span><br><span class="line">        0xc3, 0x7a, 0xe4, 0x1c, 0xd6, 0x68, 0x61, 0x0f, 0xf8, 0x31, 0xc2, 0x57, 0x10, 0xcf, 0xcc, 0x97,</span><br><span class="line">        0x17, 0x1f, 0x3e, 0xc0, 0x02, 0x88, 0xf7, 0x7e, 0x07, 0x20, 0x13, 0x30, 0x20, 0x1b, 0xcf, 0xd3,</span><br><span class="line">        0x00, 0x58, 0x86, 0x79, 0x6a, 0x9e, 0x79, 0xb0, 0x07, 0x1a, 0x8f, 0xce, 0xf7, 0x1a, 0x83, 0xc6,</span><br><span class="line">        0xf3, 0x1c, 0x8c, 0xe1, 0x83, 0x0d, 0x3b, 0x4d, 0x3c, 0xd8, 0x40, 0x3a, 0x4d, 0x40, 0x99, 0xfa,</span><br><span class="line">        0xd3, 0x04, 0xb0, 0xbe, 0x2a, 0x78, 0xe0, 0xfc, 0x34, 0x01, 0x9c, 0xff, 0xff, 0xa7, 0x09, 0xe0,</span><br><span class="line">        0xb7, 0x72, 0x9f, 0x26, 0xc0, 0x75, 0x06, 0xf0, 0x69, 0x02, 0xb8, 0x0a, 0x3e, 0x0d, 0x80, 0xe6,</span><br><span class="line">        0xe0, 0xc0, 0xee, 0x12, 0x60, 0x0c, 0x74, 0x96, 0x40, 0x4b, 0x1f, 0xb4, 0x4e, 0x5b, 0x67, 0x71,</span><br><span class="line">        0x68, 0x06, 0xc5, 0x09, 0x3e, 0x4b, 0xa0, 0xa4, 0x1e, 0xe7, 0x7c, 0x96, 0x40, 0x1d, 0x27, 0x0c,</span><br><span class="line">        0x66, 0x10, 0x0f, 0xdc, 0xb1, 0xcf, 0x12, 0x50, 0x8e, 0x45, 0xa7, 0x73, 0x54, 0xef, 0x57, 0x09,</span><br><span class="line">        0x1c, 0xf3, 0x2c, 0x01, 0x8a, 0x53, 0x51, 0x28, 0xf6, 0xff, 0x1f, 0x2e, 0xfc, 0x83, 0x1e, 0x5b,</span><br><span class="line">        0xe0, 0xc1, 0xd9, 0xf8, 0xcd, 0x81, 0xa0, 0x78, 0xb0, 0x9e, 0xaa, 0x51, 0x63, 0x3c, 0xb8, 0xf9,</span><br><span class="line">        0xda, 0xc6, 0x0e, 0x78, 0xfc, 0x48, 0x01, 0x38, 0x39, 0x9a, 0xf8, 0x48, 0x01, 0x2e, 0x48, 0x1f,</span><br><span class="line">        0x29, 0x80, 0xeb, 0xf9, 0xf0, 0xa1, 0x00, 0x2c, 0xe7, 0x2e, 0x83, 0xbc, 0x15, 0xe2, 0x0e, 0x6a,</span><br><span class="line">        0xc6, 0x88, 0xf2, 0x8a, 0xc9, 0xcf, 0x15, 0x18, 0xb4, 0x67, 0x00, 0x1f, 0xe8, 0xd8, 0xad, 0x02,</span><br><span class="line">        0x07, 0x73, 0x58, 0x6f, 0x2f, 0xfc, 0xff, 0xaf, 0xd0, 0xa6, 0x4f, 0x8d, 0x46, 0xad, 0x1a, 0x94,</span><br><span class="line">        0xa9, 0x51, 0xa6, 0x41, 0xad, 0x3e, 0x95, 0x1a, 0x33, 0x36, 0x22, 0xcb, 0x5b, 0xaf, 0x06, 0xec,</span><br><span class="line">        0x70, 0x20, 0x54, 0xec, 0xf2, 0x65, 0xe4, 0x7c, 0x61, 0x10, 0x01, 0x39, 0xe6, 0xf9, 0x4c, 0x40,</span><br><span class="line">        0x0e, 0x7d, 0x42, 0xa3, 0x52, 0x0f, 0x9f, 0x02, 0xb2, 0x70, 0x10, 0x01, 0xf9, 0xff, 0x0f</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="3-Debug"><a href="#3-Debug" class="headerlink" title="3. Debug"></a>3. Debug</h2><ul>
+<li><p>Reboot your test mechine if you finished part 2</p>
+</li>
+<li><p>Open <em>WMICodeCreator.exe</em>, you will see the <em>class: A_SamTest_MULong</em> under <em>Namespace: root\WMI</em> in the <em>bar: Query for data from a WMI class</em>, you can debug under the <em>bar: Execute a method</em> or use <em>Visual studio</em> to open projects in the Application\A_SamTest_MULong(Corresponds to the method 1 or 2 you are using)<br>  <img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_1.png" alt="debug_1.png" title="debug_1.png"><br>  <img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_2.png" alt="debug_2.png" title="debug_2.png"><br>  <img src="/2024/10/11/WMI/1.%20Support%20WMI%20in%20BIOS/Support_WMI_in_BIOS/debug_3.png" alt="debug_3.png" title="debug_3.png"></p>
+</li>
+<li><p>If your WMI class does not appear in <em>WMICodeCreator.exe</em>, please follow the steps below in CMD, then reboot your test mechine</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. net stop winmgmt                     # stop WMI service</span><br><span class="line">2. winmgmt /salvagerepository           # clean WMI repository</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="keyword">if</span> <span class="built_in">command</span> 2 execution  failed, please retry <span class="built_in">command</span> 3</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">3. <span class="built_in">cd</span> %windir%\System32\wbem</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">3. rd /S /Q repository</span></span><br><span class="line">4. net start winmgmt                    # start WMI service</span><br><span class="line">5. for %i in (*.dll) do regsvr32 /s %i  # Re-register for the WMI service</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page">1. Windows Management Instrumentation</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/previous-versions/windows/hardware/design/dn614028(v%3dvs.85)">2. Windows Instrumentation: WMI and ACPI</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/building-and-deploying-the-localized-mof-file">3. Building and Deploying the Localized MOF File</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/implementing-dynamic-mof-data">4. Implementing Dynamic MOF Data</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/compiling-a-driver-s-mof-file">5. Compiling a Driver’s MOF File</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/using-wmimofck-exe">6. Using Wmimofck.exe</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/WMI/" rel="tag"><i class="fa fa-tag"></i> WMI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/09/19/Windbg/Dual_machine_network_commissioning/Dual_machine_network_commissioning/" rel="prev" title="[Windbg] Use windbg for dual-machine debugging">
+      <i class="fa fa-chevron-left"></i> [Windbg] Use windbg for dual-machine debugging
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/" rel="next" title="[UEFI] Debug OVMF with Intel UDK Debugger">
+      [UEFI] Debug OVMF with Intel UDK Debugger <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Introduce"><span class="nav-text">1. Introduce</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Porting-Guid"><span class="nav-text">2. Porting Guid</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-1-Transfer-mof-to-dll-and-Sign-up-into-register-list"><span class="nav-text">Method 1: Transfer .mof to .dll and Sign up into register list</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method-2-Transfer-mof-to-x-and-save-the-value-of-x-into-ASL-CODE"><span class="nav-text">Method 2: Transfer .mof to .x and save the value of .x into ASL CODE</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Debug"><span class="nav-text">3. Debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-text">Reference</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">84k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:16</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>
