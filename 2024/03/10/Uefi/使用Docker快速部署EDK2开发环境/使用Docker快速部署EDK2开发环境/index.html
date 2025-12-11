@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="本主题用于记录使用Docker快速部署EDK2开发环境。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[UEFI] 使用Docker快速部署EDK2开发环境">
+<meta property="og:url" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="本主题用于记录使用Docker快速部署EDK2开发环境。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/d2eb3272b3f263a94aa4f04e48466116.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/de4e9ece4a17743e4c6ba4f5c3ffefed.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/fccb17ceef6a23117cd75f9a270e02b1.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/73d7b921921e45abbc1575bb9e07e935.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/386ca3e4d6e262a91a3ed2a5e181de64.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/9b8470df882c6f5d10ac22ee15461457.png">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/31c70ede993f1919fb5c2c131b9a70cc.png">
+<meta property="article:published_time" content="2024-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-09T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="UEFI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/d2eb3272b3f263a94aa4f04e48466116.png">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[UEFI] 使用Docker快速部署EDK2开发环境 | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [UEFI] 使用Docker快速部署EDK2开发环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-03-10 00:00:00" itemprop="dateCreated datePublished" datetime="2024-03-10T00:00:00+08:00">2024-03-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UEFI/" itemprop="url" rel="index"><span itemprop="name">UEFI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>4.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>使用Docker快速部署EDK2开发环境。</strong></p>
+</blockquote>
+<p>最近换了<code>OA</code>，重新配置<code>EDK2</code>开发环境让我窒息，因此我决定把整个<code>EDK2</code>的开发环境打包在<code>Docker</code>镜像中，方便在不同设备上快速构建开发环境，也方便后续对开发环境镜像更新。</p>
+<h2 id="1-Linux下的部署方法"><a href="#1-Linux下的部署方法" class="headerlink" title="1. Linux下的部署方法"></a>1. Linux下的部署方法</h2><blockquote>
+<p>主逻辑：</p>
+<ol>
+<li>安装Docker，基于Ubuntu 20.04</li>
+<li>创建Dockerfile</li>
+<li>编译Docker镜像</li>
+<li>启动Docker容器</li>
+</ol>
+</blockquote>
+<h3 id="1-1-安装Docker"><a href="#1-1-安装Docker" class="headerlink" title="1.1 安装Docker"></a>1.1 安装Docker</h3><h4 id="1-1-1-卸载旧版本-如果适用"><a href="#1-1-1-卸载旧版本-如果适用" class="headerlink" title="1.1.1 卸载旧版本 (如果适用)"></a>1.1.1 卸载旧版本 (如果适用)</h4><p>如果你之前安装过旧版本的 <code>Docker</code>，首先需要卸载它们。可以使用以下命令来执行卸载：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-2-更新-apt-软件包索引"><a href="#1-1-2-更新-apt-软件包索引" class="headerlink" title="1.1.2 更新 apt 软件包索引"></a>1.1.2 更新 apt 软件包索引</h4><p>确保你的系统上的 <code>apt</code> 软件包索引是最新的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-3-安装依赖软件包"><a href="#1-1-3-安装依赖软件包" class="headerlink" title="1.1.3 安装依赖软件包"></a>1.1.3 安装依赖软件包</h4><p><code>Docker</code> 需要一些依赖软件包来正常运行，你可以通过以下命令安装它们：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y \</span><br><span class="line">apt-transport-https \</span><br><span class="line">ca-certificates \</span><br><span class="line">curl \</span><br><span class="line">gnupg-agent \</span><br><span class="line">software-properties-common</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-4-添加-Docker-的官方-GPG-密钥"><a href="#1-1-4-添加-Docker-的官方-GPG-密钥" class="headerlink" title="1.1.4 添加 Docker 的官方 GPG 密钥"></a>1.1.4 添加 Docker 的官方 GPG 密钥</h4><p>添加 <code>Docker</code> 官方 <code>GPG</code> 密钥以验证下载的 <code>Docker</code> 软件包的完整性：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-5-添加-Docker-APT-仓库"><a href="#1-1-5-添加-Docker-APT-仓库" class="headerlink" title="1.1.5 添加 Docker APT 仓库"></a>1.1.5 添加 Docker APT 仓库</h4><p>添加 <code>Docker APT</code> 仓库以便于从它安装 <code>Docker</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository \</span><br><span class="line"> &quot;deb \[arch=amd64\] https://download.docker.com/linux/ubuntu\</span><br><span class="line"><span class="meta prompt_"> $</span><span class="language-bash">(lsb\_release -cs) \</span></span><br><span class="line"><span class="language-bash"> stable<span class="string">&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-6-更新-apt-软件包索引"><a href="#1-1-6-更新-apt-软件包索引" class="headerlink" title="1.1.6 更新 apt 软件包索引"></a>1.1.6 更新 apt 软件包索引</h4><p>再次更新 <code>apt</code> 软件包索引以确保你已经添加的 <code>Docker</code> 仓库已经被包含：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-7-安装-Docker"><a href="#1-1-7-安装-Docker" class="headerlink" title="1.1.7 安装 Docker"></a>1.1.7 安装 Docker</h4><p>安装 <code>Docker</code> 软件包：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-8-检查安装情况"><a href="#1-1-8-检查安装情况" class="headerlink" title="1.1.8 检查安装情况"></a>1.1.8 检查安装情况</h4><p>现在 <code>Docker</code> 已经安装完成。你可以通过运行以下命令来验证 <code>Docker</code> 是否已经正确安装：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker --version</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/d2eb3272b3f263a94aa4f04e48466116.png" alt="figure"></p>
+<h3 id="1-2-创建Dockerfile"><a href="#1-2-创建Dockerfile" class="headerlink" title="1.2 创建Dockerfile"></a>1.2 创建Dockerfile</h3><p>构建<code>Dockerfile</code>有两种情况，1：拉取<code>github</code>上<code>EDK2</code>的最新<code>source</code>，并直接基于<code>ubuntu20.04</code>进行实时环境搭建并编译镜像；2：直接将本地已搭建好的<code>EDK2</code>的开发环境打包成镜像。我把两种方案都做一遍，但实际工作中只需要任选其一即可，没有优劣，看实际需要决定。</p>
+<h4 id="1-2-1-拉取EDK2最新source并编译docker镜像"><a href="#1-2-1-拉取EDK2最新source并编译docker镜像" class="headerlink" title="1.2.1 拉取EDK2最新source并编译docker镜像"></a>1.2.1 拉取EDK2最新source并编译docker镜像</h4><p>在<code>ubuntu</code>的桌面上新建名为<code>docker</code>的文件夹并创建<code>Dockerfile</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir docker</span><br><span class="line">cd docker/</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure>
+
+<p>开始修改<code>Dockerfile</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit Dockerfile</span><br></pre></td></tr></table></figure>
+
+<p>复制下方内容并粘贴到<code>Dockerfile</code>中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用基础的 Ubuntu 镜像</span></span><br><span class="line">FROM ubuntu:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置工作目录</span></span><br><span class="line">WORKDIR /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 apt 软件包索引并安装所需软件包</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">uuid-dev \</span><br><span class="line">nasm \</span><br><span class="line">bison \</span><br><span class="line">flex \</span><br><span class="line">build-essential \</span><br><span class="line">x11proto-xext-dev \</span><br><span class="line">libx11-dev \</span><br><span class="line">libxext-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载 EDK2 及其他必要开发包</span>  </span><br><span class="line">RUN git clone http://github.com/tianocore/edk2.git &amp;&amp; \</span><br><span class="line">git clone http://github.com/tianocore/edk2-libc.git &amp;&amp; \</span><br><span class="line">git clone http://github.com/acpica/acpica.git</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 SubModule</span></span><br><span class="line">RUN cd edk2 &amp;&amp; git submodule update --init</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译 BaseTools</span></span><br><span class="line">RUN make -C edk2/BaseTools PYTHON\_COMMAND=/usr/bin/python3</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译 ACPICA</span></span><br><span class="line">RUN make -C acpica/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置开发工具地址</span></span><br><span class="line">RUN echo &quot;export WORKSPACE=\$PWD&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export PACKAGES\_PATH=\$PWD/edk2:\$PWD/edk2-libc&quot;&gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export IASL\_PREFIX=/workspace/acpica/generate/unix/bin/&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export PYTHON\_COMMAND=/usr/bin/python3&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;source edk2/edksetup.sh&quot; &gt;&gt; /workspace/myexport.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置脚本可执行权限</span></span><br><span class="line">RUN chmod +x /workspace/myexport.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置环境变量</span></span><br><span class="line">ENV WORKSPACE=/workspace</span><br><span class="line">ENV PACKAGES\_PATH=/workspace/edk2:/workspace/edk2-libc</span><br><span class="line">ENV IASL\_PREFIX=/workspace/acpica/generate/unix/bin/</span><br><span class="line">ENV PYTHON\_COMMAND=/usr/bin/python3</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/de4e9ece4a17743e4c6ba4f5c3ffefed.png" alt="figure"></p>
+<p>其实这个部分的逻辑就是之前我基于<code>linux</code>手动搭建开发环境的逻辑，只是通过<code>Dockerfile</code>的方式来自动完成，具体可以对比我之前的文章：<code>[UEFI]Windows和Linux下的环境搭建</code></p>
+<h4 id="1-2-2-打包本地开发环境并编译为镜像文件"><a href="#1-2-2-打包本地开发环境并编译为镜像文件" class="headerlink" title="1.2.2 打包本地开发环境并编译为镜像文件"></a>1.2.2 打包本地开发环境并编译为镜像文件</h4><p>我的<code>EDK2</code>开发环境放置在<code>_/home/dsy/Desktop/UEFIWorkspace/_</code>下，在这个文件夹下创建<code>Dockerfile</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure>
+
+<p>开始修改<code>Dockerfile</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit Dockerfile</span><br></pre></td></tr></table></figure>
+
+<p>复制下方内容并粘贴到<code>Dockerfile</code>中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用基础的 Ubuntu 镜像</span></span><br><span class="line">FROM ubuntu:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置工作目录</span></span><br><span class="line">WORKDIR /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 apt 软件包索引并安装所需软件包</span>  </span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">uuid-dev \</span><br><span class="line">nasm \</span><br><span class="line">bison \</span><br><span class="line">flex \</span><br><span class="line">build-essential \</span><br><span class="line">x11proto-xext-dev \</span><br><span class="line">libx11-dev \</span><br><span class="line">libxext-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将所需要的文件夹下的所有文件拷贝到容器的 /workspace 目录下</span>  </span><br><span class="line">COPY edk2 /workspace/edk2</span><br><span class="line">COPY edk2-libc /workspace/edk2-libc</span><br><span class="line">COPY edk2-platforms /workspace/edk2-platforms</span><br><span class="line">COPY acpica /workspace/acpica</span><br><span class="line">COPY myexport.sh /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将当前文件夹下所有文件和文件夹都拷贝到容器的 /workspace 目录下</span>  </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">COPY . /workspace</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/fccb17ceef6a23117cd75f9a270e02b1.png" alt="figure"></p>
+<p>需要明确，我的<code>EDK2</code>开发环境是放置在 <code>/home/dsy/Desktop/UEFIWorkspace/</code> 下的，你们要确认自己的环境位置再针对修改上方路径。</p>
+<h3 id="1-3-编译Docker镜像"><a href="#1-3-编译Docker镜像" class="headerlink" title="1.3 编译Docker镜像"></a>1.3 编译Docker镜像</h3><p>同样，我把刚刚<code>1.2</code>中的两种不同情况也分开编译。</p>
+<h4 id="1-3-1-拉取EDK2的最新source并编译为镜像文件"><a href="#1-3-1-拉取EDK2的最新source并编译为镜像文件" class="headerlink" title="1.3.1 拉取EDK2的最新source并编译为镜像文件"></a>1.3.1 拉取EDK2的最新source并编译为镜像文件</h4><p>拉取<code>EDK2</code>的<code>github source</code>并编译为<code>Docker</code>镜像，命名为<code>edk2\_dev\_env</code>，版本号为<code>1.0</code>，前方的镜像命名必须为小写，缩写含义为(<code>EDK2\_Development\_Environment</code>)：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker build -t edk2\_dev\_env:1.0 .</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/73d7b921921e45abbc1575bb9e07e935.png" alt="figure"></p>
+<h4 id="1-3-2-打包本地开发环境并编译为镜像文件"><a href="#1-3-2-打包本地开发环境并编译为镜像文件" class="headerlink" title="1.3.2 打包本地开发环境并编译为镜像文件"></a>1.3.2 打包本地开发环境并编译为镜像文件</h4><p>直接在<code>_/home/dsy/Desktop/UEFIWorkspace/_</code>，开始编译<code>Docker</code>镜像，命名为<code>edk2\_dev\_env\_local</code>，版本号为<code>1.0</code>，前方的镜像命名必须为小写，缩写含义为<code>(EDK2\_Development\_Environment\_Local)</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker build -t edk2\_dev\_env\_local:1.0 .</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/386ca3e4d6e262a91a3ed2a5e181de64.png" alt="figure"></p>
+<h3 id="1-4-启动Docker容器"><a href="#1-4-启动Docker容器" class="headerlink" title="1.4 启动Docker容器"></a>1.4 启动Docker容器</h3><h4 id="1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像"><a href="#1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像" class="headerlink" title="1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像"></a>1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --name container\_edk2\_dev\_env edk2\_dev\_env:1.0</span><br></pre></td></tr></table></figure>
+
+<p> 接下来就可以正常执行<code>uefi</code>代码编译和开发了。</p>
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/9b8470df882c6f5d10ac22ee15461457.png" alt="figure"></p>
+<h4 id="1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像"><a href="#1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像" class="headerlink" title="1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像"></a>1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --name container\_edk2\_dev\_env\_local edk2\_dev\_env\_local:1.0</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/31c70ede993f1919fb5c2c131b9a70cc.png" alt="figure"></p>
+<h2 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h2><hr>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo docker ps -a                                   #显示所有正在运行和已停止的 Docker 容器的列表</span><br><span class="line">sudo docker rm container\_name/id                   #删除容器(提供名称或ID)</span><br><span class="line">sudo docker restart container\_name/id              #重新启动容器(提供名称或ID)</span><br><span class="line">sudo docker exec -it container\_name/id /bin/bash   #以命令行的形式执行容器</span><br><span class="line">sudo docker images                                  #显示所有Docker镜像的列表</span><br><span class="line">sudo docker rmi image\_name/id                      #删除镜像(提供名称或ID)</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/UEFI/" rel="tag"><i class="fa fa-tag"></i> UEFI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/" rel="prev" title="[Gerrit] 1. Install Gerrit">
+      <i class="fa fa-chevron-left"></i> [Gerrit] 1. Install Gerrit
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/06/29/Gerrit/Setup_SOP/2.%20Configure%20Gerrit%20on%20Website/Configure_Gerrit_on_Website/" rel="next" title="[Gerrit] 2. Configure Gerrit on Website">
+      [Gerrit] 2. Configure Gerrit on Website <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Linux%E4%B8%8B%E7%9A%84%E9%83%A8%E7%BD%B2%E6%96%B9%E6%B3%95"><span class="nav-text">1. Linux下的部署方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E5%AE%89%E8%A3%85Docker"><span class="nav-text">1.1 安装Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-%E5%8D%B8%E8%BD%BD%E6%97%A7%E7%89%88%E6%9C%AC-%E5%A6%82%E6%9E%9C%E9%80%82%E7%94%A8"><span class="nav-text">1.1.1 卸载旧版本 (如果适用)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-%E6%9B%B4%E6%96%B0-apt-%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%B4%A2%E5%BC%95"><span class="nav-text">1.1.2 更新 apt 软件包索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-3-%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96%E8%BD%AF%E4%BB%B6%E5%8C%85"><span class="nav-text">1.1.3 安装依赖软件包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-4-%E6%B7%BB%E5%8A%A0-Docker-%E7%9A%84%E5%AE%98%E6%96%B9-GPG-%E5%AF%86%E9%92%A5"><span class="nav-text">1.1.4 添加 Docker 的官方 GPG 密钥</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-5-%E6%B7%BB%E5%8A%A0-Docker-APT-%E4%BB%93%E5%BA%93"><span class="nav-text">1.1.5 添加 Docker APT 仓库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-6-%E6%9B%B4%E6%96%B0-apt-%E8%BD%AF%E4%BB%B6%E5%8C%85%E7%B4%A2%E5%BC%95"><span class="nav-text">1.1.6 更新 apt 软件包索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-7-%E5%AE%89%E8%A3%85-Docker"><span class="nav-text">1.1.7 安装 Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-8-%E6%A3%80%E6%9F%A5%E5%AE%89%E8%A3%85%E6%83%85%E5%86%B5"><span class="nav-text">1.1.8 检查安装情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E5%88%9B%E5%BB%BADockerfile"><span class="nav-text">1.2 创建Dockerfile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-%E6%8B%89%E5%8F%96EDK2%E6%9C%80%E6%96%B0source%E5%B9%B6%E7%BC%96%E8%AF%91docker%E9%95%9C%E5%83%8F"><span class="nav-text">1.2.1 拉取EDK2最新source并编译docker镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-%E6%89%93%E5%8C%85%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%B9%B6%E7%BC%96%E8%AF%91%E4%B8%BA%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-text">1.2.2 打包本地开发环境并编译为镜像文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E7%BC%96%E8%AF%91Docker%E9%95%9C%E5%83%8F"><span class="nav-text">1.3 编译Docker镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-1-%E6%8B%89%E5%8F%96EDK2%E7%9A%84%E6%9C%80%E6%96%B0source%E5%B9%B6%E7%BC%96%E8%AF%91%E4%B8%BA%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-text">1.3.1 拉取EDK2的最新source并编译为镜像文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-2-%E6%89%93%E5%8C%85%E6%9C%AC%E5%9C%B0%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E5%B9%B6%E7%BC%96%E8%AF%91%E4%B8%BA%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-text">1.3.2 打包本地开发环境并编译为镜像文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-%E5%90%AF%E5%8A%A8Docker%E5%AE%B9%E5%99%A8"><span class="nav-text">1.4 启动Docker容器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-1-%E5%90%AF%E5%8A%A81-3-1%E4%B8%AD%E7%94%9F%E6%88%90%E7%9A%84edk2-dev-env-1-0%E9%95%9C%E5%83%8F"><span class="nav-text">1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-2-%E5%90%AF%E5%8A%A81-3-2%E4%B8%AD%E7%94%9F%E6%88%90%E7%9A%84edk2-dev-env-local-1-0%E9%95%9C%E5%83%8F"><span class="nav-text">1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-text">2. 常用命令</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:41</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>

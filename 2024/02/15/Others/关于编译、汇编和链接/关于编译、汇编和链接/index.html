@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="本主题用于记录什么是编译、汇编和链接。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[Code] 关于编译、汇编和链接">
+<meta property="og:url" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="本主题用于记录什么是编译、汇编和链接。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/c557c2bbc780e6d0ec6178f7241a0a5a.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/bd7e54b627968b9baeef9ad0d9a3642e.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/cf64b754b2dfb7695768cbb223d2f074.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/e1992dd61e77175a9d306eb41c16851f.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/ccbed0a25cd5731d62810bbfcff32b1f.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/029f7b318276474307361c7d83972a18.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/778d912fdd32f048cdff006a57c502c3.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/bef851c058a66215ca69809038b67cc8.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/8ea0a81f5ba0f9265b42c1a658051cd9.jpeg">
+<meta property="article:published_time" content="2024-02-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-02-14T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="Code">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/c557c2bbc780e6d0ec6178f7241a0a5a.jpeg">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[Code] 关于编译、汇编和链接 | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [Code] 关于编译、汇编和链接
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2024-02-15T00:00:00+08:00">2024-02-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Code/" itemprop="url" rel="index"><span itemprop="name">Code</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>1.8k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>本主题用于记录什么是编译、汇编和链接。</strong></p>
+</blockquote>
+<h2 id="1-GCC的命令格式"><a href="#1-GCC的命令格式" class="headerlink" title="1. GCC的命令格式"></a>1. GCC的命令格式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc [options] [filenames]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">选项</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">-E</td>
+<td align="left">只做预处理</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">-c</td>
+<td align="left">只做编译，不进行链接，目的是为了生成目标文件‘.o’</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">-S</td>
+<td align="left">生成汇编代码</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">-o file</td>
+<td align="left">将输出生成的内容保存至file描述的的文件中</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">-g</td>
+<td align="left">在输出文件中加入支持调试的信息</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">-v</td>
+<td align="left">显示输出详细的命令执行过程信息</td>
+</tr>
+</tbody></table>
+<h2 id="2-GCC的执行步骤"><a href="#2-GCC的执行步骤" class="headerlink" title="2. GCC的执行步骤"></a>2. GCC的执行步骤</h2><p><img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/c557c2bbc780e6d0ec6178f7241a0a5a.jpeg" alt="figure"></p>
+<p>1、编译(cc1,cc1是C语言的编译器)：编译器完成“预处理”和“编译”，“预处理”主要指的是处理源文件中以“#”开头的预处理指令，比如#include、#define等；“编译”则针对预处理的结果进行一系列的词法分析、语法分析、语义分析，优化后生成汇编指令，存放在.o为后缀的目标文件中。</p>
+<p>2、汇编(as)：汇编器将汇编语言代码转换为CPU可以执行的指令。</p>
+<p>3、链接(ld)：链接器将汇编器生成的目标文件和一些标准库(比如libc)文件组合，形成最终可执行的应用程序。</p>
+<h2 id="3-ELF文件格式"><a href="#3-ELF文件格式" class="headerlink" title="3. ELF文件格式"></a>3. ELF文件格式</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/GrayOnDream/article/details/124564129">ELF文件格式简介</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43844521/article/details/129811818">Linux- 浅谈ELF目标文件格式</a></p>
+<p>  <img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/bd7e54b627968b9baeef9ad0d9a3642e.jpeg" alt="figure"></p>
+<h2 id="练习1"><a href="#练习1" class="headerlink" title="练习1"></a>练习1</h2><p>1、编写⼀个简单的打印 <code>hello, world!</code> 的程序源文件: <code>hello.c</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim hello.c</span><br></pre></td></tr></table></figure>
+
+<p>2、对源文件进⾏本地编译，⽣成针对⽀持<code>x86\_64</code>指令集架构处理器的⽬标文件<code>hello.o</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c hello.c -o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>-o hello.o</code>可以省略，不指定输出文件名的话，会默认生成同名的<code>hello.o</code></p>
+<p>  <img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/cf64b754b2dfb7695768cbb223d2f074.jpeg" alt="figure"></p>
+<p>3、查看<code>hello.o</code>的文件的文件头信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -h hello.o</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/e1992dd61e77175a9d306eb41c16851f.jpeg" alt="figure"></p>
+<p>4、查看<code>hello.o</code>的<code>Section header table</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">readelf -SW hello.o</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/ccbed0a25cd5731d62810bbfcff32b1f.jpeg" alt="figure"></p>
+<p>5、对<code>hello.o</code>反汇编，并查看<code>hello.c</code>的C程序源码和机器指令的对应关系</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -c hello.c</span><br><span class="line">objdump -S hello.o</span><br></pre></td></tr></table></figure>
+
+<p>  <img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/029f7b318276474307361c7d83972a18.jpeg" alt="figure"></p>
+<h2 id="练习2"><a href="#练习2" class="headerlink" title="练习2"></a>练习2</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line">    <span class="type">int</span> global_init = <span class="number">0x11111111</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> global_const = <span class="number">0x22222222</span>;</span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> static_var = <span class="number">0x33333333</span>;</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> static_var_uninit;</span><br><span class="line">    <span class="type">int</span> auto_var = <span class="number">0x44444444</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world!\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Q:<br>请问编译为.o文件后，<code>global\_init</code>, <code>global\_const</code>, <code>static\_var</code>, <code>static\_var\_uninit</code>, <code>auto\_var</code>这些变量分别存放在那些<code>section</code>⾥，<code>&quot;hello world!\n&quot;</code>这个字符串⼜在哪⾥？</p>
+<p>A:<br><code>global\_init</code>：存放在<code>.data</code>中。由于它被初始化了，所以会存放在<code>.data</code>中。<br><code>global\_const</code>：存放在<code>.rodata</code>中，因为它是一个常量，不可修改。<br><code>static\_var</code>：存放在<code>.data</code>中。由于它是一个静态变量且被初始化了，所以会存放在<code>.data</code>中。<br><code>static\_var\_uninit</code>：存放在<code>.bss</code>中，因为它是一个静态变量但未被初始化，<code>.bss</code>存放未初始化的全局和静态变量。<br><code>auto\_var</code>：在函数内部声明的局部变量通常存放在栈上，而不是<code>.o</code>文件中的<code>sections</code>中。<br><code>&quot;hello world!\n&quot;</code>：存放在<code>.rodat</code>a中，因为它是一个常量字符串，不可修改。</p>
+<p><strong>验证：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">gcc -g -c test.c</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">objdump -S test.o</span></span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">objdump -s test.o</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/778d912fdd32f048cdff006a57c502c3.jpeg" alt="figure"></p>
+<p><img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/bef851c058a66215ca69809038b67cc8.jpeg" alt="figure"></p>
+<p><img src="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/8ea0a81f5ba0f9265b42c1a658051cd9.jpeg" alt="figure"></p>
+<p>如上所示：<br>int <strong>global_init</strong> = 0x11111111，static int <strong>static_var</strong> = 0x33333333，存放在.data中。<br>const int <strong>global_const</strong> = 0x22222222，__”hello world!\n”__，存放在.rodata中。<br>static int __static_var_uninit__，未被初始化，但int类型的变量通常占用4个字节，因此可以合理确认存放在.bss中。<br>int <strong>auto_var</strong> = 0x44444444，存放在堆栈上，可以看到被放置在rbp指向的地址。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Code/" rel="tag"><i class="fa fa-tag"></i> Code</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/" rel="prev" title="[UEFI] Windows下调试UEFI程序">
+      <i class="fa fa-chevron-left"></i> [UEFI] Windows下调试UEFI程序
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/02/24/Gerrit/Setup_SOP/1.%20Install%20Gerrit/Install_Gerrit/" rel="next" title="[Gerrit] 1. Install Gerrit">
+      [Gerrit] 1. Install Gerrit <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-GCC%E7%9A%84%E5%91%BD%E4%BB%A4%E6%A0%BC%E5%BC%8F"><span class="nav-text">1. GCC的命令格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-GCC%E7%9A%84%E6%89%A7%E8%A1%8C%E6%AD%A5%E9%AA%A4"><span class="nav-text">2. GCC的执行步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-ELF%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="nav-text">3. ELF文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A01"><span class="nav-text">练习1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%83%E4%B9%A02"><span class="nav-text">练习2</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:41</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>

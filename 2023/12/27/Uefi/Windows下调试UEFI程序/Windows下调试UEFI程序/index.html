@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<!-- <Sam_Diao20251112+> -->
+<!-- for Google Ad check -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6652369323666765"
+     crossorigin="anonymous"></script>
+<!-- <Sam_Diao20251112-> -->
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"diaosuyu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":true,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
+  </script>
+
+  <meta name="description" content="本主题用于记录在 Windows 下调试UEFI程序。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[UEFI] Windows下调试UEFI程序">
+<meta property="og:url" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="Suyu Diao&#39;s Blog">
+<meta property="og:description" content="本主题用于记录在 Windows 下调试UEFI程序。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/ae2135fc36c72bf21aa6b1dbffd8ab5b.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/843d07da0dc1f9dd8afaf1466e48d5a4.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/13fd92faed89be0cf46dfe41df2ea52a.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f48a71590c4a5baa87c50114ef1ac43c.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/e04245740de70c03843f55181767e2b4.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/87902d0ca9a9d777488646554dca2538.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/edb62689ffc07d0ad6354beafd155d37.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/39fe5ce586b73be1932cd21c152f8916.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/a0e4a73ec2df9d7b29c7b2028f5ca3c0.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3c30c4fb2ac24855fc83758414176fae.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/72a43df811ddaa95e218970c2d528208.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/a74a05ba367525d31970e27b44756950.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/6211ab4d995f75352c2c387d8aa193e2.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/ec579c50d3eb71d5117ff86334a61e82.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/13f95cd63c331c1e9eb2cf8bcbe77df5.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/8d0ed79665d22a5a826a9e241a1f3df6.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/83ccc55bcffc357e56e5a140b9754e52.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/51751a155ee85f2d364422a2d3ae3a98.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/92ca108d70c98505e24c0135d68f35f8.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f4483861836bfec84e053b2ae775962b.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/bc981e6db3e55976338bedfda84d7ff1.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/adb2fca3df407a9e925a573f9253722f.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/12b8f80c58a67ccc1cd5c787201a9531.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/9b7de3dfe25486cbc77400852a9458fc.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3907d20a2d90f1c84ed8f36d3935762e.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/124029f726ecef2af13156a918aff04f.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/7b9c5f2c45c85b1b1e9d38ce62060e72.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3d5c44f84222896480c146073594ece6.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/117c0df91b839f14e82d74a91038243c.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/1312bf1679f7b207113fcd4a79549b53.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/d6e3c07261e9b5cbdc05cc079317323a.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f1c4407c0799a763664ecb9e33f14692.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/6aa9a0cd0dbdb2a4d0a874924638b331.jpeg">
+<meta property="og:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/59b7b60322a76197bf85fb7066f197e1.jpeg">
+<meta property="article:published_time" content="2023-12-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-12-26T16:00:00.000Z">
+<meta property="article:author" content="Suyu Diao">
+<meta property="article:tag" content="UEFI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/ae2135fc36c72bf21aa6b1dbffd8ab5b.jpeg">
+
+<link rel="canonical" href="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>[UEFI] Windows下调试UEFI程序 | Suyu Diao's Blog</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?6e493267a2b248c2a14880f1c2bdefb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Suyu Diao's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">It is never too late to learn</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://diaosuyu.github.io/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/portrait.png">
+      <meta itemprop="name" content="Suyu Diao">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Suyu Diao's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          [UEFI] Windows下调试UEFI程序
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-12-27 00:00:00" itemprop="dateCreated datePublished" datetime="2023-12-27T00:00:00+08:00">2023-12-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UEFI/" itemprop="url" rel="index"><span itemprop="name">UEFI</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              <span>8 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p><strong>本主题用于记录在 Windows 下调试UEFI程序。</strong></p>
+</blockquote>
+<p>本文的调试代码均以<code>edk2\\MdeModulePkg\\Application\\HelloWorld\\</code>为例</p>
+<h2 id="1-Windows下的调试方法"><a href="#1-Windows下的调试方法" class="headerlink" title="1. Windows下的调试方法"></a>1. Windows下的调试方法</h2><h3 id="1-1-使用Visual-Studio-2019进行调试"><a href="#1-1-使用Visual-Studio-2019进行调试" class="headerlink" title="1.1 使用Visual Studio 2019进行调试"></a>1.1 使用<code>Visual Studio 2019</code>进行调试</h3><blockquote>
+<p>主逻辑：</p>
+<ol>
+<li>在VS2019中新建Makefile工程</li>
+<li>设置工程文件的目标路径</li>
+<li>修改工程文件的配置参数</li>
+<li>添加需要调试的代码</li>
+<li>编译代码并调试</li>
+</ol>
+</blockquote>
+<h4 id="1-1-1-新建Makefile工程"><a href="#1-1-1-新建Makefile工程" class="headerlink" title="1.1.1 新建Makefile工程"></a>1.1.1 新建Makefile工程</h4><p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/ae2135fc36c72bf21aa6b1dbffd8ab5b.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/843d07da0dc1f9dd8afaf1466e48d5a4.jpeg" alt="figure"></p>
+<h4 id="1-1-2-设置目标路径"><a href="#1-1-2-设置目标路径" class="headerlink" title="1.1.2 设置目标路径"></a>1.1.2 设置目标路径</h4><p>我放在<code>C:\\UEFIWorkspace\\edk2\\MdeModulePkg\\Application\\HelloWorld\\</code>下</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/13fd92faed89be0cf46dfe41df2ea52a.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f48a71590c4a5baa87c50114ef1ac43c.jpeg" alt="figure"></p>
+<p>下方的needtomodfiy是在1.3节里会被修改的，可以直接理解成占位符。</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/e04245740de70c03843f55181767e2b4.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/87902d0ca9a9d777488646554dca2538.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/edb62689ffc07d0ad6354beafd155d37.jpeg" alt="figure"></p>
+<p>注：上方的工作目录需要格外注意两点：第一，尽量使用绝对路径；第二，地址后的’\‘不能省略。</p>
+<h4 id="1-1-3-修改工程文件"><a href="#1-1-3-修改工程文件" class="headerlink" title="1.1.3 修改工程文件"></a>1.1.3 修改工程文件</h4><p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/39fe5ce586b73be1932cd21c152f8916.jpeg" alt="figure"></p>
+<p>找到<code>Win32</code>和<code>X64</code>下的<code>NMakeBuildCommandLine</code>、<code>NMakeCleanCommandLine</code>和<code>NMakeReBuildCommandLine</code>，把<code>needtomodify</code>部分按照如下修改：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/a0e4a73ec2df9d7b29c7b2028f5ca3c0.jpeg" alt="figure"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br></pre></td><td class="code"><pre><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Debug|Win32&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;WIN32;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Release|Win32&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Debug|X64&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;X64;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Release|X64&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;X64;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-4-添加代码"><a href="#1-1-4-添加代码" class="headerlink" title="1.1.4 添加代码"></a>1.1.4 添加代码</h4><p>添加<code>HelloWorld.c</code>到<code>Source</code>下</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3c30c4fb2ac24855fc83758414176fae.jpeg" alt="figure"></p>
+<h4 id="1-1-5-编译代码并调试"><a href="#1-1-5-编译代码并调试" class="headerlink" title="1.1.5 编译代码并调试"></a>1.1.5 编译代码并调试</h4><p>在代码处增加一处断点用于调试</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/72a43df811ddaa95e218970c2d528208.jpeg" alt="figure"></p>
+<p>F5开始编译并调试，过程中注意观察log</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/a74a05ba367525d31970e27b44756950.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/6211ab4d995f75352c2c387d8aa193e2.jpeg" alt="figure"></p>
+<h3 id="1-2-使用WINDBG进行调试"><a href="#1-2-使用WINDBG进行调试" class="headerlink" title="1.2 使用WINDBG进行调试"></a>1.2 使用<code>WINDBG</code>进行调试</h3><blockquote>
+<p>主逻辑：</p>
+<ol>
+<li>安装WINDBG、QEMU、Intel UDK Debugger Tool、OSFMount、UltralSO</li>
+<li>创建QEMU虚拟硬盘</li>
+<li>编译OVMF镜像文件和HelloWorld.efi</li>
+<li>调试</li>
+</ol>
+</blockquote>
+<h4 id="1-2-1-安装必要工具"><a href="#1-2-1-安装必要工具" class="headerlink" title="1.2.1 安装必要工具"></a>1.2.1 安装必要工具</h4><h5 id="1-2-1-1-WINDBG"><a href="#1-2-1-1-WINDBG" class="headerlink" title="1.2.1.1 WINDBG"></a>1.2.1.1 WINDBG</h5><p>我使用的<code>WINDBG</code>版本是<code>6.12.0002.633</code>，这个部分在最开始就装好，因为后续在安装<code>Intel UDK Debugger Tool</code>的时候会检测<code>WINDBG</code>是否存在，否则会无法安装。</p>
+<h5 id="1-2-1-2-QEMU"><a href="#1-2-1-2-QEMU" class="headerlink" title="1.2.1.2 QEMU"></a>1.2.1.2 QEMU</h5><p>我使用的<code>QEMU</code>版本是<code>0.13.0</code>，记得要把<code>QEMU</code>的实际安装地址编写进环境变量里。</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/ec579c50d3eb71d5117ff86334a61e82.jpeg" alt="figure"></p>
+<h5 id="1-2-1-3-Intel-UDK-Debugger-Tool"><a href="#1-2-1-3-Intel-UDK-Debugger-Tool" class="headerlink" title="1.2.1.3 Intel UDK Debugger Tool"></a>1.2.1.3 Intel UDK Debugger Tool</h5><p>Install地址不要修改，保持默认！</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/13f95cd63c331c1e9eb2cf8bcbe77df5.jpeg" alt="figure"></p>
+<p>设置<code>Channel</code>的时候要宣称<code>Pipe</code>，<code>Port</code>自定义为<code>QemuPipeDbg</code>。</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/8d0ed79665d22a5a826a9e241a1f3df6.jpeg" alt="figure"></p>
+<h5 id="1-2-1-4-OSFMount、UltralSO"><a href="#1-2-1-4-OSFMount、UltralSO" class="headerlink" title="1.2.1.4 OSFMount、UltralSO"></a>1.2.1.4 OSFMount、UltralSO</h5><p>我使用的<code>OSFMount</code>版本是<code>3.1</code></p>
+<p>我使用的<code>UltralSO</code>版本是<code>9.7.6.3829</code></p>
+<h4 id="1-2-2-创建QEMU虚拟硬盘"><a href="#1-2-2-创建QEMU虚拟硬盘" class="headerlink" title="1.2.2 创建QEMU虚拟硬盘"></a>1.2.2 创建QEMU虚拟硬盘</h4><h5 id="1-2-2-1-打开UltralSO创建硬盘镜像"><a href="#1-2-2-1-打开UltralSO创建硬盘镜像" class="headerlink" title="1.2.2.1 打开UltralSO创建硬盘镜像"></a>1.2.2.1 打开UltralSO创建硬盘镜像</h5><p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/83ccc55bcffc357e56e5a140b9754e52.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/51751a155ee85f2d364422a2d3ae3a98.jpeg" alt="figure"></p>
+<p>镜像大小根据自己的需要设定，我选择设定为512MB，然后将镜像另存为HDD_BOOT.IMA</p>
+<h5 id="1-2-2-2-打开OSFMount挂载虚拟硬盘并导入调试程序"><a href="#1-2-2-2-打开OSFMount挂载虚拟硬盘并导入调试程序" class="headerlink" title="1.2.2.2 打开OSFMount挂载虚拟硬盘并导入调试程序"></a>1.2.2.2 打开OSFMount挂载虚拟硬盘并导入调试程序</h5><p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/92ca108d70c98505e24c0135d68f35f8.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f4483861836bfec84e053b2ae775962b.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/bc981e6db3e55976338bedfda84d7ff1.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/adb2fca3df407a9e925a573f9253722f.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/12b8f80c58a67ccc1cd5c787201a9531.jpeg" alt="figure"></p>
+<p>挂载完毕如上，此时在我的电脑下会出现一个新的硬盘，盘符为<code>HDD\_BOOT</code>。</p>
+<h4 id="1-2-3-编译OVMF镜像文件和HelloWorld-efi-使用x86-64-Native-Tools-Command-Prompt-for-VS2019"><a href="#1-2-3-编译OVMF镜像文件和HelloWorld-efi-使用x86-64-Native-Tools-Command-Prompt-for-VS2019" class="headerlink" title="1.2.3 编译OVMF镜像文件和HelloWorld.efi(使用x86&#x2F;64 Native Tools Command Prompt for VS2019)"></a>1.2.3 编译OVMF镜像文件和HelloWorld.efi(使用x86&#x2F;64 Native Tools Command Prompt for VS2019)</h4><h5 id="1-2-3-1-编译OVMF镜像文件"><a href="#1-2-3-1-编译OVMF镜像文件" class="headerlink" title="1.2.3.1 编译OVMF镜像文件"></a>1.2.3.1 编译OVMF镜像文件</h5><p>基于OVMF镜像镜像源码级调试，编译<code>edk2\\OvmfPkg</code>。</p>
+<p>32位：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgIA32.dsc -t VS2019 -a IA32 -b NOOPT -D SOURCE\_DEBUG\_ENABLE</span><br></pre></td></tr></table></figure>
+
+<p>64位：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgX64.dsc -t VS2019 -a X64 -b NOOPT -D SOURCE\_DEBUG\_ENABLE</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-2-3-2-编译HelloWorld-efi"><a href="#1-2-3-2-编译HelloWorld-efi" class="headerlink" title="1.2.3.2 编译HelloWorld.efi"></a>1.2.3.2 编译HelloWorld.efi</h5><p>32位：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32</span><br></pre></td></tr></table></figure>
+
+<p>64位：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-4-调试"><a href="#1-2-4-调试" class="headerlink" title="1.2.4 调试"></a>1.2.4 调试</h4><h5 id="1-2-4-1-文件准备"><a href="#1-2-4-1-文件准备" class="headerlink" title="1.2.4.1 文件准备"></a>1.2.4.1 文件准备</h5><p>在<code>UEFIWorkspace</code>下新建一个文件夹并命名为<code>QemuDebug</code>。</p>
+<p>将32位或者64位的<code>OVMF.fd</code>复制到<code>QemuDebug</code>文件夹下。</p>
+<p>将32位或者64位的<code>HelloWorld.efi</code>复制到<code>HDD\_BOOT</code>的盘符下，然后将<code>HDD\_BOOT.IMA</code>复制到<code>QemuDebug</code>文件夹下，想偷懒的话可以直接将<code>HDD\_BOOT.IMA</code>在<code>1.2.2.1</code>节中的另存为默认地址放置在<code>QemuDebug</code>文件夹下，这样就不需要再手动的搬移<code>HDD\_BOOT.IMA</code>，做完这一步以后，把<code>HDD\_BOOT</code>弹出，否则会在下面正式调试的时候报错。</p>
+<p>从<code>QEMU</code>的根目录下复制<code>qemu-x86\_64.bat</code>到<code>QemuDebug</code>文件夹下，并修改这个批处理文件如下：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/9b7de3dfe25486cbc77400852a9458fc.jpeg" alt="figure"></p>
+<p>即，注释掉最后一行，并添加新的命令，其中<code>QemuPipeDbg</code>要与<code>1.2.1.3</code>节中设置<code>Pipe Port</code>名称<code>match</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace\\Tools\\QEMU\\qemu-system-x86\_64.exe -bios OVMF.fd -usbdevice disk:HDD\_BOOT.IMA -serial pipe:QemuPipeDbg</span><br></pre></td></tr></table></figure>
+
+<p>至此，文件准备完毕，<code>QemuDebug</code>文件夹下将会存在以下三个文件：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3907d20a2d90f1c84ed8f36d3935762e.jpeg" alt="figure"></p>
+<h5 id="1-2-4-2-开始调试"><a href="#1-2-4-2-开始调试" class="headerlink" title="1.2.4.2 开始调试"></a>1.2.4.2 开始调试</h5><p>运行<code>Start WinDbg with Intel UDK Debugger Tool</code>，<code>UDK Debugger</code>和<code>WINDBG</code>会一起弹出，如下：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/124029f726ecef2af13156a918aff04f.jpeg" alt="figure"></p>
+<p>打开<code>CMD</code>，<code>cd</code>到<code>C:\\UEFIWorkspace\\QemuDebug\\</code>下，并运行<code>qemu-x86\_64.bat</code>：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/7b9c5f2c45c85b1b1e9d38ce62060e72.jpeg" alt="figure"></p>
+<p>此时，<code>QEMU</code>的窗口已经弹出，<code>WINDBG</code>也会很快<code>connected</code>并进入第一个断点，此时在<code>command bar</code>中输入<code>g</code>，用于继续运行，等待<code>QEMU</code>进入<code>UEFI SHELL</code>：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3d5c44f84222896480c146073594ece6.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/117c0df91b839f14e82d74a91038243c.jpeg" alt="figure"></p>
+<p>为了要对<code>HelloWorld.efi</code>进行源码级调试，此时需要在<code>WINDBG</code>中暂时中断连接，并在<code>command bar</code>中输入<code>bu helloworld</code>，然后输入<code>g</code>继续连接：</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/1312bf1679f7b207113fcd4a79549b53.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/d6e3c07261e9b5cbdc05cc079317323a.jpeg" alt="figure"></p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/f1c4407c0799a763664ecb9e33f14692.jpeg" alt="figure"></p>
+<p>在UEFI SHELL下定位到FS0:，运行HelloWorld.efi</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/6aa9a0cd0dbdb2a4d0a874924638b331.jpeg" alt="figure"></p>
+<p>此时可以看到，<code>efi</code>的源代码自己跳出了，并且断点在函数的第一行，此时输入<code>g</code>，继续运行</p>
+<p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/59b7b60322a76197bf85fb7066f197e1.jpeg" alt="figure"></p>
+<p> 至此，整个<code>WINDBG</code>的通道就已经建立了，根据不同的函数自行调试即可。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/UEFI/" rel="tag"><i class="fa fa-tag"></i> UEFI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/03/10/Others/%E3%80%90%E8%84%9A%E6%9C%AC%E3%80%91%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/" rel="prev" title="[脚本] 利用OneDrive实时同步零碎文件">
+      <i class="fa fa-chevron-left"></i> [脚本] 利用OneDrive实时同步零碎文件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/" rel="next" title="[Code] 关于编译、汇编和链接">
+      [Code] 关于编译、汇编和链接 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="utterances-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Windows%E4%B8%8B%E7%9A%84%E8%B0%83%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-text">1. Windows下的调试方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BD%BF%E7%94%A8Visual-Studio-2019%E8%BF%9B%E8%A1%8C%E8%B0%83%E8%AF%95"><span class="nav-text">1.1 使用Visual Studio 2019进行调试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-%E6%96%B0%E5%BB%BAMakefile%E5%B7%A5%E7%A8%8B"><span class="nav-text">1.1.1 新建Makefile工程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-%E8%AE%BE%E7%BD%AE%E7%9B%AE%E6%A0%87%E8%B7%AF%E5%BE%84"><span class="nav-text">1.1.2 设置目标路径</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-3-%E4%BF%AE%E6%94%B9%E5%B7%A5%E7%A8%8B%E6%96%87%E4%BB%B6"><span class="nav-text">1.1.3 修改工程文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-4-%E6%B7%BB%E5%8A%A0%E4%BB%A3%E7%A0%81"><span class="nav-text">1.1.4 添加代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-5-%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81%E5%B9%B6%E8%B0%83%E8%AF%95"><span class="nav-text">1.1.5 编译代码并调试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E4%BD%BF%E7%94%A8WINDBG%E8%BF%9B%E8%A1%8C%E8%B0%83%E8%AF%95"><span class="nav-text">1.2 使用WINDBG进行调试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E5%B7%A5%E5%85%B7"><span class="nav-text">1.2.1 安装必要工具</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-1-WINDBG"><span class="nav-text">1.2.1.1 WINDBG</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-2-QEMU"><span class="nav-text">1.2.1.2 QEMU</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-3-Intel-UDK-Debugger-Tool"><span class="nav-text">1.2.1.3 Intel UDK Debugger Tool</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-4-OSFMount%E3%80%81UltralSO"><span class="nav-text">1.2.1.4 OSFMount、UltralSO</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-%E5%88%9B%E5%BB%BAQEMU%E8%99%9A%E6%8B%9F%E7%A1%AC%E7%9B%98"><span class="nav-text">1.2.2 创建QEMU虚拟硬盘</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-1-%E6%89%93%E5%BC%80UltralSO%E5%88%9B%E5%BB%BA%E7%A1%AC%E7%9B%98%E9%95%9C%E5%83%8F"><span class="nav-text">1.2.2.1 打开UltralSO创建硬盘镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-2-%E6%89%93%E5%BC%80OSFMount%E6%8C%82%E8%BD%BD%E8%99%9A%E6%8B%9F%E7%A1%AC%E7%9B%98%E5%B9%B6%E5%AF%BC%E5%85%A5%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="nav-text">1.2.2.2 打开OSFMount挂载虚拟硬盘并导入调试程序</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-%E7%BC%96%E8%AF%91OVMF%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6%E5%92%8CHelloWorld-efi-%E4%BD%BF%E7%94%A8x86-64-Native-Tools-Command-Prompt-for-VS2019"><span class="nav-text">1.2.3 编译OVMF镜像文件和HelloWorld.efi(使用x86&#x2F;64 Native Tools Command Prompt for VS2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-3-1-%E7%BC%96%E8%AF%91OVMF%E9%95%9C%E5%83%8F%E6%96%87%E4%BB%B6"><span class="nav-text">1.2.3.1 编译OVMF镜像文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-3-2-%E7%BC%96%E8%AF%91HelloWorld-efi"><span class="nav-text">1.2.3.2 编译HelloWorld.efi</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-4-%E8%B0%83%E8%AF%95"><span class="nav-text">1.2.4 调试</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-4-1-%E6%96%87%E4%BB%B6%E5%87%86%E5%A4%87"><span class="nav-text">1.2.4.1 文件准备</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-4-2-%E5%BC%80%E5%A7%8B%E8%B0%83%E8%AF%95"><span class="nav-text">1.2.4.2 开始调试</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Suyu Diao"
+      src="/images/portrait.png">
+  <p class="site-author-name" itemprop="name">Suyu Diao</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/DiaoSuyu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;DiaoSuyu" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:dsy19960820@gmail.com" title="E-Mail → mailto:dsy19960820@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-nd.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Suyu Diao</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="Symbols count total">111k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">1:41</span>
+</div>
+
+<!-- <Sam_Diao20251112+> -->
+
+
+<span id="timeDate">load date...</span>
+<span id="times">load time...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("1/1/2024 00:00:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "This blog has been operating sately for "+ dnum +" days ";
+        document.getElementById("times").innerHTML = hnum + " hours " + mnum + " minutes  " + snum + " seconds";
+    }
+setInterval("createtime()",250);
+</script>
+<!-- <Sam_Diao20251112-> -->
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+
+<script>
+NexT.utils.loadComments(document.querySelector('#utterances-container'), () => {
+    // if (typeof parcelRequire === 'function') { return; }
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.src = 'https://utteranc.es/client.js';
+    js.async = true;
+    js.crossorigin = 'anonymous';
+    js.setAttribute('repo', 'DiaoSuyu/blog-comments');
+    js.setAttribute('issue-term', 'pathname');
+    js.setAttribute('theme', 'github-light');
+    document.getElementById('utterances-container').appendChild(js);
+});
+</script>
+</body>
+</html>
