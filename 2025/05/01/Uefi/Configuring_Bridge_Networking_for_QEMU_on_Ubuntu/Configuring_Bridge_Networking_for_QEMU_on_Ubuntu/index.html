@@ -254,7 +254,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
               </span>
-              <span>8.5k</span>
+              <span>8.4k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -285,49 +285,81 @@
 </ul>
 <hr>
 <h2 id="2-Install-Necessary-Tools"><a href="#2-Install-Necessary-Tools" class="headerlink" title="2. Install Necessary Tools"></a>2. Install Necessary Tools</h2><p>First, install the tools required for configuring bridge networking and User Mode Linux (UML) utilities:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get install bridge-utils  <span class="comment"># Virtual bridge configuration tools</span></span><br><span class="line"><span class="built_in">sudo</span> apt-get install uml-utilities <span class="comment"># UML (User-mode Linux)</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo apt-get install bridge-utils  # Virtual bridge configuration tools
+sudo apt-get install uml-utilities # UML (User-mode Linux)
+</code></pre>
 <hr>
 <h2 id="3-Create-and-Configure-the-Bridge-Interface"><a href="#3-Create-and-Configure-the-Bridge-Interface" class="headerlink" title="3. Create and Configure the Bridge Interface"></a>3. Create and Configure the Bridge Interface</h2><h3 id="3-1-Create-the-br0-Bridge-Interface"><a href="#3-1-Create-the-br0-Bridge-Interface" class="headerlink" title="3.1 Create the br0 Bridge Interface"></a>3.1 Create the <code>br0</code> Bridge Interface</h3><p>You can create a new bridge interface using the <code>ip</code> command. If you already have a bridge interface, skip this step.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> add name br0 <span class="built_in">type</span> bridge</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo ip link add name br0 type bridge
+</code></pre>
 <h3 id="3-2-Add-the-Physical-Network-Interface-to-the-Bridge"><a href="#3-2-Add-the-Physical-Network-Interface-to-the-Bridge" class="headerlink" title="3.2 Add the Physical Network Interface to the Bridge"></a>3.2 Add the Physical Network Interface to the Bridge</h3><p>Assuming your physical network interface is <code>enp0s3</code>, add it to the <code>br0</code> bridge interface. This allows QEMU to share the network connection.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 master br0</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo ip link set enp0s3 master br0
+</code></pre>
 <h3 id="3-3-Configure-the-Bridge-Interface-br0-to-Get-an-IP-Address"><a href="#3-3-Configure-the-Bridge-Interface-br0-to-Get-an-IP-Address" class="headerlink" title="3.3 Configure the Bridge Interface (br0) to Get an IP Address"></a>3.3 Configure the Bridge Interface (<code>br0</code>) to Get an IP Address</h3><ul>
 <li><p><strong>Obtain a Dynamic IP Address:</strong></p>
 <p>Use DHCP to get an IP address:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dhclient br0</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo dhclient br0
+</code></pre>
 </li>
 <li><p><strong>Configure a Static IP Address:</strong></p>
 <p>To set a static IP, use the following commands, assuming the static IP is <code>192.168.77.163</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip addr add 192.168.77.163/24 dev br0</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo ip addr add 192.168.77.163/24 dev br0
+</code></pre>
 </li>
 <li><p><strong>Configure a <code>tap</code> Interface:</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip tuntap add dev tap0 mode tap</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 master br0</span><br></pre></td></tr></table></figure></li>
+<pre><code class="language-bash">sudo ip tuntap add dev tap0 mode tap
+sudo ip link set tap0 master br0
+</code></pre>
+</li>
 </ul>
-<h3 id="3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP"><a href="#3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP" class="headerlink" title="3.4 Ensure Both the Bridge and Physical Network Interface Are UP"></a>3.4 Ensure Both the Bridge and Physical Network Interface Are <code>UP</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> br0 up</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 up</span><br><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 up</span><br></pre></td></tr></table></figure>
-
+<h3 id="3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP"><a href="#3-4-Ensure-Both-the-Bridge-and-Physical-Network-Interface-Are-UP" class="headerlink" title="3.4 Ensure Both the Bridge and Physical Network Interface Are UP"></a>3.4 Ensure Both the Bridge and Physical Network Interface Are <code>UP</code></h3><pre><code class="language-bash">sudo ip link set br0 up
+sudo ip link set enp0s3 up
+sudo ip link set tap0 up
+</code></pre>
 <h3 id="3-5-Check-the-IP-Configuration-of-the-Bridge-Interface"><a href="#3-5-Check-the-IP-Configuration-of-the-Bridge-Interface" class="headerlink" title="3.5 Check the IP Configuration of the Bridge Interface"></a>3.5 Check the IP Configuration of the Bridge Interface</h3><p>Use the following command to check if <code>br0</code> has been assigned an IP address:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show br0</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">ip addr show br0
+</code></pre>
 <p>If the bridge is configured correctly, you should see the IP address assigned to <code>br0</code>, and the QEMU virtual machine should be able to access the same network as the physical machine.</p>
 <h3 id="3-6-Check-if-the-Physical-Network-Interface-enp0s3-Is-Associated-with-the-Bridge"><a href="#3-6-Check-if-the-Physical-Network-Interface-enp0s3-Is-Associated-with-the-Bridge" class="headerlink" title="3.6 Check if the Physical Network Interface enp0s3 Is Associated with the Bridge"></a>3.6 Check if the Physical Network Interface <code>enp0s3</code> Is Associated with the Bridge</h3><p>Run the following command to check if <code>enp0s3</code> is correctly added to the bridge <code>br0</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">ip addr show
+</code></pre>
 <p>You should see output similar to this:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br><span class="line">    inet 127.0.0.1/8 scope host lo</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 ::1/128 scope host </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000</span><br><span class="line">    link/ether 08:00:27:39:5c:2c brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.77.119/24 brd 192.168.77.255 scope global noprefixroute enp0s3</span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">    inet6 fe80::4c94:9b80:38a0:cea1/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line">12: tap0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000</span><br><span class="line">    link/ether d2:20:61:63:21:f9 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">14: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000</span><br><span class="line">    link/ether 46:5d:c4:0f:f8:80 brd ff:ff:ff:ff:ff:ff</span><br><span class="line">    inet 192.168.77.163/24 brd 192.168.77.255 scope global dynamic br0</span><br><span class="line">       valid_lft 86121sec preferred_lft 86121sec</span><br><span class="line">    inet6 fe80::e6aa:8ec2:3b62:2d9f/64 scope link noprefixroute </span><br><span class="line">       valid_lft forever preferred_lft forever</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp0s3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel master br0 state UP group default qlen 1000
+    link/ether 08:00:27:39:5c:2c brd ff:ff:ff:ff:ff:ff
+    inet 192.168.77.119/24 brd 192.168.77.255 scope global noprefixroute enp0s3
+       valid_lft forever preferred_lft forever
+    inet6 fe80::4c94:9b80:38a0:cea1/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+12: tap0: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    link/ether d2:20:61:63:21:f9 brd ff:ff:ff:ff:ff:ff
+14: br0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 46:5d:c4:0f:f8:80 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.77.163/24 brd 192.168.77.255 scope global dynamic br0
+       valid_lft 86121sec preferred_lft 86121sec
+    inet6 fe80::e6aa:8ec2:3b62:2d9f/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+</code></pre>
 <p>As shown, both <code>br0</code> and <code>enp0s3</code> should have their own IP addresses, and the status should be <code>UP</code>.</p>
 <p>Sure, here’s a more detailed version of the “Verify IP Routing” section:</p>
 <hr>
 <h3 id="3-7-Verify-IP-Routing"><a href="#3-7-Verify-IP-Routing" class="headerlink" title="3.7 Verify IP Routing"></a>3.7 Verify IP Routing</h3><p>After setting up the bridge and configuring your network interfaces, it’s important to verify the IP routing configuration to ensure that the traffic will correctly flow through the bridge network.</p>
 <h4 id="3-7-1-View-Current-Routing-Table"><a href="#3-7-1-View-Current-Routing-Table" class="headerlink" title="3.7.1 View Current Routing Table"></a>3.7.1 View Current Routing Table</h4><p>To view the current routing table, use the following command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip route show</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">ip route show
+</code></pre>
 <p>This command will display the routing information for your system. The expected output might look something like this:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:~$ ip route show</span><br><span class="line">default via 192.168.77.1 dev br0 </span><br><span class="line">default via 192.168.77.1 dev enp0s3 proto static metric 100 </span><br><span class="line">169.254.0.0/16 dev enp0s3 scope <span class="built_in">link</span> metric 1000 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 </span><br><span class="line">192.168.77.0/24 dev enp0s3 proto kernel scope <span class="built_in">link</span> src 192.168.77.119 metric 100</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">ubuntu@ubuntu-VirtualBox:~$ ip route show
+default via 192.168.77.1 dev br0 
+default via 192.168.77.1 dev enp0s3 proto static metric 100 
+169.254.0.0/16 dev enp0s3 scope link metric 1000 
+192.168.77.0/24 dev br0 proto kernel scope link src 192.168.77.163 
+192.168.77.0/24 dev enp0s3 proto kernel scope link src 192.168.77.119 metric 100
+</code></pre>
 <h4 id="3-7-2-Explanation-of-the-Routing-Table"><a href="#3-7-2-Explanation-of-the-Routing-Table" class="headerlink" title="3.7.2 Explanation of the Routing Table"></a>3.7.2 Explanation of the Routing Table</h4><ul>
 <li><p><strong><code>default via 192.168.77.1 dev br0</code></strong>: This shows the default route for all outbound traffic, which is routed through the bridge interface <code>br0</code> to the gateway <code>192.168.77.1</code>.</p>
 </li>
@@ -342,18 +374,24 @@
 </ul>
 <h4 id="3-7-3-Adjusting-the-Routing-Table"><a href="#3-7-3-Adjusting-the-Routing-Table" class="headerlink" title="3.7.3 Adjusting the Routing Table"></a>3.7.3 Adjusting the Routing Table</h4><p>In some cases, after setting up a bridge, you may need to adjust the default route. For example, you may want to ensure that the default gateway (<code>192.168.77.1</code>) is routed via the bridge interface (<code>br0</code>) instead of the physical network interface (<code>enp0s3</code>).</p>
 <p>You can achieve this by first deleting the previous default route through <code>enp0s3</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip route del default via 192.168.77.1 dev enp0s3</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo ip route del default via 192.168.77.1 dev enp0s3
+</code></pre>
 <p>This will remove the old route pointing to <code>enp0s3</code>. Afterward, add a new default route through the bridge interface (<code>br0</code>), ensuring the traffic goes through the bridge:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip route add default via 192.168.77.1 dev br0 metric 425</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo ip route add default via 192.168.77.1 dev br0 metric 425
+</code></pre>
 <p>Here, we set a metric of <code>425</code> for the new default route, ensuring that it has a higher priority than other routes (lower metric values have higher priority).</p>
 <h4 id="3-7-4-Restart-Network-Manager"><a href="#3-7-4-Restart-Network-Manager" class="headerlink" title="3.7.4 Restart Network Manager"></a>3.7.4 Restart Network Manager</h4><p>After modifying the routes, restart the network service to ensure that all changes take effect properly:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo systemctl restart NetworkManager
+</code></pre>
 <h4 id="3-7-5-Verify-Updated-Routing-Table"><a href="#3-7-5-Verify-Updated-Routing-Table" class="headerlink" title="3.7.5 Verify Updated Routing Table"></a>3.7.5 Verify Updated Routing Table</h4><p>Once you’ve made these adjustments, check the routing table again to confirm that the default route is now correctly set to <code>br0</code>. The updated output should look like this:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:~$ ip route show</span><br><span class="line">default via 192.168.77.1 dev br0 </span><br><span class="line">default via 192.168.77.1 dev br0 proto dhcp metric 425 </span><br><span class="line">169.254.0.0/16 dev enp0s3 scope <span class="built_in">link</span> metric 1000 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 </span><br><span class="line">192.168.77.0/24 dev enp0s3 proto kernel scope <span class="built_in">link</span> src 192.168.77.119 metric 100 </span><br><span class="line">192.168.77.0/24 dev br0 proto kernel scope <span class="built_in">link</span> src 192.168.77.163 metric 425</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">ubuntu@ubuntu-VirtualBox:~$ ip route show
+default via 192.168.77.1 dev br0 
+default via 192.168.77.1 dev br0 proto dhcp metric 425 
+169.254.0.0/16 dev enp0s3 scope link metric 1000 
+192.168.77.0/24 dev br0 proto kernel scope link src 192.168.77.163 
+192.168.77.0/24 dev enp0s3 proto kernel scope link src 192.168.77.119 metric 100 
+192.168.77.0/24 dev br0 proto kernel scope link src 192.168.77.163 metric 425
+</code></pre>
 <ul>
 <li><p><strong><code>default via 192.168.77.1 dev br0</code></strong>: The primary default route now uses the bridge interface <code>br0</code> as the gateway.</p>
 </li>
@@ -361,54 +399,75 @@
 </li>
 </ul>
 <p>By following these steps, you ensure that your system uses the bridge network as the primary route for all outbound traffic, making it share the same network as the host machine.</p>
-<h4 id="3-7-6-Disable-Firewall"><a href="#3-7-6-Disable-Firewall" class="headerlink" title="3.7.6 Disable Firewall"></a>3.7.6 Disable Firewall</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ufw <span class="built_in">disable</span></span><br></pre></td></tr></table></figure>
-
+<h4 id="3-7-6-Disable-Firewall"><a href="#3-7-6-Disable-Firewall" class="headerlink" title="3.7.6 Disable Firewall"></a>3.7.6 Disable Firewall</h4><pre><code class="language-bash">sudo ufw disable
+</code></pre>
 <hr>
 <h2 id="4-Configure-QEMU-to-Use-Bridge-Networking"><a href="#4-Configure-QEMU-to-Use-Bridge-Networking" class="headerlink" title="4. Configure QEMU to Use Bridge Networking"></a>4. Configure QEMU to Use Bridge Networking</h2><p>Now that you’ve created and configured the bridge interface, configure QEMU to use it.</p>
-<h3 id="4-1-Configure-the-bridge-conf-File"><a href="#4-1-Configure-the-bridge-conf-File" class="headerlink" title="4.1 Configure the bridge.conf File"></a>4.1 Configure the <code>bridge.conf</code> File</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /usr/local/etc/</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> qemu</span><br><span class="line"><span class="built_in">cd</span> qemu</span><br><span class="line"><span class="built_in">sudo</span> vim bridge.conf</span><br><span class="line"><span class="comment"># Fill in the value and save in bridge.conf: allow br0</span></span><br></pre></td></tr></table></figure>
-
+<h3 id="4-1-Configure-the-bridge-conf-File"><a href="#4-1-Configure-the-bridge-conf-File" class="headerlink" title="4.1 Configure the bridge.conf File"></a>4.1 Configure the <code>bridge.conf</code> File</h3><pre><code class="language-bash">cd /usr/local/etc/
+sudo mkdir qemu
+cd qemu
+sudo vim bridge.conf
+# Fill in the value and save in bridge.conf: allow br0
+</code></pre>
 <hr>
 <h2 id="5-Start-the-QEMU-Virtual-Machine-Using-Bridge-Networking"><a href="#5-Start-the-QEMU-Virtual-Machine-Using-Bridge-Networking" class="headerlink" title="5. Start the QEMU Virtual Machine Using Bridge Networking"></a>5. Start the QEMU Virtual Machine Using Bridge Networking</h2><p>Use the <code>-netdev bridge</code> and <code>-device</code> options to configure the virtual machine to use bridge networking. Here’s an example command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> qemu-system-x86_64 \</span><br><span class="line">-drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">-drive file=fat:rw:hda-contents,format=raw,<span class="keyword">if</span>=ide,index=0 \</span><br><span class="line">-netdev bridge,<span class="built_in">id</span>=net0,br=br0 \</span><br><span class="line">-device e1000,netdev=net0 \</span><br><span class="line">-cpu Penryn,+rdrand \</span><br><span class="line">-debugcon file:debug.log \</span><br><span class="line">-global isa-debugcon.iobase=0x402 \</span><br><span class="line">-s</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo qemu-system-x86_64 \
+-drive if=pflash,format=raw,file=OVMF.fd,id=BIOS-OVMF \
+-drive file=fat:rw:hda-contents,format=raw,if=ide,index=0 \
+-netdev bridge,id=net0,br=br0 \
+-device e1000,netdev=net0 \
+-cpu Penryn,+rdrand \
+-debugcon file:debug.log \
+-global isa-debugcon.iobase=0x402 \
+-s
+</code></pre>
 <p>This command starts a QEMU virtual machine with the <code>br0</code> bridge network, and <code>e1000</code> is the network adapter used within the virtual machine.</p>
 <hr>
 <h2 id="6-Recovering-Original-Ubuntu-Network"><a href="#6-Recovering-Original-Ubuntu-Network" class="headerlink" title="6. Recovering Original Ubuntu Network"></a>6. Recovering Original Ubuntu Network</h2><p>If you need to remove the bridge interface (<code>br0</code>), follow these additional steps:</p>
 <ol>
 <li><p><strong>Shut Down the <code>tap0</code> Interface</strong></p>
 <p>Bring the <code>tap0</code> interface down:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> tap0 down</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo ip link set tap0 down
+</code></pre>
 </li>
 <li><p><strong>Delete the <code>tap0</code> Interface</strong></p>
 <p>Delete the <code>tap0</code> interface. You can use the following command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip tuntap del tap0 mode tap</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo ip tuntap del tap0 mode tap
+</code></pre>
 <p>If this command shows an error, try this alternative command to delete <code>tap0</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> delete tap0</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo ip link delete tap0
+</code></pre>
 </li>
 <li><p><strong>Shut Down the <code>br0</code> Bridge</strong></p>
 <p>Bring the <code>br0</code> interface down:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> br0 down  <span class="comment"># Shut down br0 bridge</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo ip link set br0 down  # Shut down br0 bridge
+</code></pre>
 </li>
 <li><p><strong>Delete the Bridge</strong></p>
 <p>Delete the <code>br0</code> bridge:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> brctl delbr br0  <span class="comment"># Delete the br0 bridge</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo brctl delbr br0  # Delete the br0 bridge
+</code></pre>
 </li>
 <li><p><strong>Unbind the <code>enp0s3</code> Network Interface</strong></p>
 <p>Make sure <code>enp0s3</code> is no longer associated with the bridge:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ip <span class="built_in">link</span> <span class="built_in">set</span> enp0s3 nomaster  <span class="comment"># Unbind enp0s3 from the br0 bridge</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo ip link set enp0s3 nomaster  # Unbind enp0s3 from the br0 bridge
+</code></pre>
 </li>
 <li><p><strong>Restart Network Services</strong></p>
 <p>If the interface is still not functioning, restarting the networking service can help:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart NetworkManager</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo systemctl restart NetworkManager
+</code></pre>
 </li>
 <li><p><strong>Obtain a New IP Address</strong></p>
 <p>After removing the bridge and unbinding the interface, try obtaining a new IP address using DHCP:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dhclient enp0s3</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo dhclient enp0s3
+</code></pre>
 </li>
 <li><p><strong>Check Network Status</strong></p>
 <p>Check the status of the <code>enp0s3</code> interface to ensure it has returned to normal:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip addr show enp0s3</span><br></pre></td></tr></table></figure></li>
+<pre><code class="language-bash">ip addr show enp0s3
+</code></pre>
+</li>
 </ol>
 <hr>
 <p>This guide provides a complete and detailed explanation for setting up bridge networking in QEMU on Ubuntu, and also how to remove the bridge setup when no longer needed.</p>
@@ -513,20 +572,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -577,12 +636,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -672,6 +731,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

@@ -311,71 +311,102 @@
 <hr>
 <h2 id="2-Check-GDB-and-Install-Intel-UDK-Debugger"><a href="#2-Check-GDB-and-Install-Intel-UDK-Debugger" class="headerlink" title="2. Check GDB and Install Intel UDK Debugger"></a>2. Check GDB and Install Intel UDK Debugger</h2><p>Before starting, ensure that your GDB supports <code>--with-expat</code>. If not, upgrade GDB to a compatible version.</p>
 <p>Run the following command to check GDB configuration:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb -configuration</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">gdb -configuration
+</code></pre>
 <p>Example output:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">This GDB was configured as follows:</span><br><span class="line">   configure --host=x86_64-linux-gnu --target=x86_64-linux-gnu</span><br><span class="line">      --with-auto-load-dir=$debugdir:$datadir/auto-load</span><br><span class="line">      --with-auto-load-safe-path=$debugdir:$datadir/auto-load</span><br><span class="line">      --with-expat</span><br><span class="line">      --with-gdb-datadir=/usr/share/gdb (relocatable)</span><br><span class="line">      --with-jit-reader-dir=/usr/lib/gdb (relocatable)</span><br><span class="line">      --without-libunwind-ia64</span><br><span class="line">      --with-lzma</span><br><span class="line">      --with-babeltrace</span><br><span class="line">      --with-intel-pt</span><br><span class="line">      --with-mpfr</span><br><span class="line">      --with-xxhash</span><br><span class="line">      --with-python=/usr (relocatable)</span><br><span class="line">      --with-python-libdir=/usr/lib (relocatable)</span><br><span class="line">      --with-debuginfod</span><br><span class="line">      --without-guile</span><br><span class="line">      --enable-source-highlight</span><br><span class="line">      --with-separate-debug-dir=/usr/lib/Debug (relocatable)</span><br><span class="line">      --with-system-gdbinit=/etc/gdb/gdbinit</span><br><span class="line">      --with-system-gdbinit-dir=/etc/gdb/gdbinit.d</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-plaintext">This GDB was configured as follows:
+   configure --host=x86_64-linux-gnu --target=x86_64-linux-gnu
+      --with-auto-load-dir=$debugdir:$datadir/auto-load
+      --with-auto-load-safe-path=$debugdir:$datadir/auto-load
+      --with-expat
+      --with-gdb-datadir=/usr/share/gdb (relocatable)
+      --with-jit-reader-dir=/usr/lib/gdb (relocatable)
+      --without-libunwind-ia64
+      --with-lzma
+      --with-babeltrace
+      --with-intel-pt
+      --with-mpfr
+      --with-xxhash
+      --with-python=/usr (relocatable)
+      --with-python-libdir=/usr/lib (relocatable)
+      --with-debuginfod
+      --without-guile
+      --enable-source-highlight
+      --with-separate-debug-dir=/usr/lib/Debug (relocatable)
+      --with-system-gdbinit=/etc/gdb/gdbinit
+      --with-system-gdbinit-dir=/etc/gdb/gdbinit.d
+</code></pre>
 <p>If <code>--with-expat</code> is present, proceed to install the Intel UDK Debugger.</p>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Check_GDB.png" alt="Check GDB"></p>
 <h3 id="2-1-Install-Intel-UDK-Debugger"><a href="#2-1-Install-Intel-UDK-Debugger" class="headerlink" title="2.1 Install Intel UDK Debugger"></a>2.1 Install Intel UDK Debugger</h3><ol>
 <li><p>Make the installer executable:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> +x UDK_Debugger_Tool_v1_5_1.bin</span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">sudo chmod +x UDK_Debugger_Tool_v1_5_1.bin
+</code></pre>
 </li>
 <li><p>Run the installer:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./UDK_Debugger_Tool_v1_5_1.bin</span><br></pre></td></tr></table></figure></li>
+<pre><code class="language-bash">sudo ./UDK_Debugger_Tool_v1_5_1.bin
+</code></pre>
+</li>
 </ol>
 <p>Follow the installation prompts as shown in the screenshots below:</p>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install1.png" alt="Install UDK 1"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install2.png" alt="Install UDK 2"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install3.png" alt="Install UDK 3"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install4.png" alt="Install UDK 4"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install5.png" alt="Install UDK 5"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install6.png" alt="Install UDK 6"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install7.png" alt="Install UDK 7"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Install8.png" alt="Install UDK 8"></p>
 <hr>
 <h2 id="3-Add-CpuBreakpoint-to-the-Source-Code"><a href="#3-Add-CpuBreakpoint-to-the-Source-Code" class="headerlink" title="3. Add CpuBreakpoint() to the Source Code"></a>3. Add <code>CpuBreakpoint()</code> to the Source Code</h2><p>To enable debugging, insert a CPU breakpoint in the UEFI application’s source code. For example, in <code>Debug_Main.c</code>:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Insert a CPU breakpoint for debugging. This will cause the debugger to break execution at this point.</span></span><br><span class="line">CpuBreakpoint ();</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-c">// Insert a CPU breakpoint for debugging. This will cause the debugger to break execution at this point.
+CpuBreakpoint ();
+</code></pre>
 <hr>
 <h2 id="4-Build-OVMF-and-Debug-Main-efi"><a href="#4-Build-OVMF-and-Debug-Main-efi" class="headerlink" title="4. Build OVMF and Debug_Main.efi"></a>4. Build OVMF and Debug_Main.efi</h2><p>To include the <code>Debug_Main</code> application in OVMF, modify the <code>edk2/OvmfPkg/OvmfPkgX64.dsc</code> file as follows:</p>
 <h3 id="4-1-Modify-OvmfPkgX64-dsc"><a href="#4-1-Modify-OvmfPkgX64-dsc" class="headerlink" title="4.1 Modify OvmfPkgX64.dsc"></a>4.1 Modify <code>OvmfPkgX64.dsc</code></h3><p>Add the following lines to the <code>[Components]</code> section:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[Components]</span></span><br><span class="line">  SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.inf</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-ini">[Components]
+  SamModulePkg/Applications/DemoApp/Debug_Main/Debug_Main.inf
+</code></pre>
 <p>Enable source-level debugging by adding:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEFINE <span class="attr">SOURCE_DEBUG_ENABLE</span> = <span class="literal">TRUE</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-ini">DEFINE SOURCE_DEBUG_ENABLE = TRUE
+</code></pre>
 <p>Move the <code>PcdFSBClock</code> setting from <code>[PcdsDynamicDefault]</code> to <code>[PcdsFixedAtBuild]</code>:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[PcdsFixedAtBuild]</span></span><br><span class="line">  gEfiMdePkgTokenSpaceGuid.PcdFSBClock|1000000000</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-ini">[PcdsFixedAtBuild]
+  gEfiMdePkgTokenSpaceGuid.PcdFSBClock|1000000000
+</code></pre>
 <h3 id="4-2-Build-OVMF"><a href="#4-2-Build-OVMF" class="headerlink" title="4.2 Build OVMF"></a>4.2 Build OVMF</h3><p>Run the following command to build OVMF with debugging support:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">build -p OvmfPkg/OvmfPkgX64.dsc -t GCC5 -a X64 -b NOOPT -DSOURCE_DEBUG_ENABLE=TRUE -DDEBUG_ON_SERIAL_PORT=TRUE</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">build -p OvmfPkg/OvmfPkgX64.dsc -t GCC5 -a X64 -b NOOPT -DSOURCE_DEBUG_ENABLE=TRUE -DDEBUG_ON_SERIAL_PORT=TRUE
+</code></pre>
 <p>After building, copy the generated <code>Debug_Main.efi</code> and <code>Debug_Main.debug</code> files to the <code>hda-contents</code> folder.</p>
 <hr>
 <h2 id="5-Integrate-Debugging-with-QEMU-and-Intel-UDK-Debugger"><a href="#5-Integrate-Debugging-with-QEMU-and-Intel-UDK-Debugger" class="headerlink" title="5. Integrate Debugging with QEMU and Intel UDK Debugger"></a>5. Integrate Debugging with QEMU and Intel UDK Debugger</h2><h3 id="5-1-Create-Pipes-for-Communication"><a href="#5-1-Create-Pipes-for-Communication" class="headerlink" title="5.1 Create Pipes for Communication"></a>5.1 Create Pipes for Communication</h3><p>Create named pipes for communication between QEMU and Intel UDK Debugger:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkfifo</span> /tmp/serial.in</span><br><span class="line"><span class="built_in">mkfifo</span> /tmp/serial.out</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">mkfifo /tmp/serial.in
+mkfifo /tmp/serial.out
+</code></pre>
 <h3 id="5-2-Start-Intel-UDK-Debugger"><a href="#5-2-Start-Intel-UDK-Debugger" class="headerlink" title="5.2 Start Intel UDK Debugger"></a>5.2 Start Intel UDK Debugger</h3><p>Run the following command to start the Intel UDK Debugger:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /opt/intel/udkdebugger/bin/udk-gdb-server</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">sudo /opt/intel/udkdebugger/bin/udk-gdb-server
+</code></pre>
 <h3 id="5-3-Start-GDB"><a href="#5-3-Start-GDB" class="headerlink" title="5.3 Start GDB"></a>5.3 Start GDB</h3><p>Open a new terminal and start GDB:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">gdb
+</code></pre>
 <h3 id="5-4-Start-QEMU"><a href="#5-4-Start-QEMU" class="headerlink" title="5.4 Start QEMU"></a>5.4 Start QEMU</h3><p>Run QEMU with the following command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-x86_64 \</span><br><span class="line">    -drive <span class="keyword">if</span>=pflash,format=raw,file=OVMF.fd,<span class="built_in">id</span>=BIOS-OVMF \</span><br><span class="line">    -drive file=fat:rw:hda-contents,format=raw,<span class="keyword">if</span>=ide,index=0 \</span><br><span class="line">    -net none \</span><br><span class="line">    -serial pipe:/tmp/serial</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">qemu-system-x86_64 \
+    -drive if=pflash,format=raw,file=OVMF.fd,id=BIOS-OVMF \
+    -drive file=fat:rw:hda-contents,format=raw,if=ide,index=0 \
+    -net none \
+    -serial pipe:/tmp/serial
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug1.png" alt="Debug 1"></p>
 <hr>
 <h2 id="6-Debugging-with-GDB-and-Intel-UDK-Debugger"><a href="#6-Debugging-with-GDB-and-Intel-UDK-Debugger" class="headerlink" title="6. Debugging with GDB and Intel UDK Debugger"></a>6. Debugging with GDB and Intel UDK Debugger</h2><h3 id="6-1-Connect-GDB-to-Intel-UDK-Debugger"><a href="#6-1-Connect-GDB-to-Intel-UDK-Debugger" class="headerlink" title="6.1 Connect GDB to Intel UDK Debugger"></a>6.1 Connect GDB to Intel UDK Debugger</h3><p>When QEMU starts, it will pause execution. In the GDB terminal, connect to the Intel UDK Debugger:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) target remote ubuntu-VirtualBox:1234</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">(gdb) target remote ubuntu-VirtualBox:1234
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug2.png" alt="Debug 2"></p>
 <h3 id="6-2-Continue-to-Boot"><a href="#6-2-Continue-to-Boot" class="headerlink" title="6.2 Continue to Boot"></a>6.2 Continue to Boot</h3><p>Continue to boot the QEMU into UEFI Shell:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) c</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">(gdb) c
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug3.png" alt="Debug 3"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug4.png" alt="Debug 4"><br><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug5.png" alt="Debug 5"></p>
 <h3 id="6-3-Load-Debug-Symbols"><a href="#6-3-Load-Debug-Symbols" class="headerlink" title="6.3 Load Debug Symbols"></a>6.3 Load Debug Symbols</h3><p>Run <code>Debug_Main.efi</code> and load the debug symbols for <code>Debug_Main.efi</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) <span class="built_in">source</span> /opt/intel/udkdebugger/script/udk_gdb_script</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">(gdb) source /opt/intel/udkdebugger/script/udk_gdb_script
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug6.png" alt="Debug 6"></p>
 <h3 id="6-4-View-Source-Code"><a href="#6-4-View-Source-Code" class="headerlink" title="6.4 View Source Code"></a>6.4 View Source Code</h3><p>To view the source code of <code>Debug_Main.efi</code>, run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l Debug_Main</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">l Debug_Main
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug7.png" alt="Debug 7"></p>
 <h3 id="6-5-Step-Through-Code"><a href="#6-5-Step-Through-Code" class="headerlink" title="6.5 Step Through Code"></a>6.5 Step Through Code</h3><p>Use the following commands to step through the code:</p>
 <ul>
@@ -384,12 +415,12 @@
 </ul>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug8.png" alt="Debug 8"></p>
 <h3 id="6-6-Inspect-Variables"><a href="#6-6-Inspect-Variables" class="headerlink" title="6.6 Inspect Variables"></a>6.6 Inspect Variables</h3><p>To inspect the value of a variable, use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p &lt;variable_name&gt;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">p &lt;variable_name&gt;
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug9.png" alt="Debug 9"></p>
 <h3 id="6-7-Complete-Execution"><a href="#6-7-Complete-Execution" class="headerlink" title="6.7 Complete Execution"></a>6.7 Complete Execution</h3><p>To allow the application to complete execution, run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-bash">c
+</code></pre>
 <p><img src="/2025/02/20/Uefi/Intel_UDK_Debugger/Intel_UDK_Debugger/Debug10.png" alt="Debug 10"></p>
 <hr>
 <h2 id="7-Additional-Resources"><a href="#7-Additional-Resources" class="headerlink" title="7. Additional Resources"></a>7. Additional Resources</h2><p>For more detailed instructions, refer to the <strong>UDK_Debugger_Tool_User_Manual</strong>.</p>
@@ -495,20 +526,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -559,12 +590,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -654,6 +685,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

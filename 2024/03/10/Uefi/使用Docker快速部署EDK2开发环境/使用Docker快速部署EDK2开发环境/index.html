@@ -262,7 +262,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
               </span>
-              <span>4.4k</span>
+              <span>4.3k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -294,71 +294,161 @@
 </ol>
 </blockquote>
 <h3 id="1-1-安装Docker"><a href="#1-1-安装Docker" class="headerlink" title="1.1 安装Docker"></a>1.1 安装Docker</h3><h4 id="1-1-1-卸载旧版本-如果适用"><a href="#1-1-1-卸载旧版本-如果适用" class="headerlink" title="1.1.1 卸载旧版本 (如果适用)"></a>1.1.1 卸载旧版本 (如果适用)</h4><p>如果你之前安装过旧版本的 <code>Docker</code>，首先需要卸载它们。可以使用以下命令来执行卸载：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo apt-get remove docker docker-engine docker.io containerd runc
+</code></pre>
 <h4 id="1-1-2-更新-apt-软件包索引"><a href="#1-1-2-更新-apt-软件包索引" class="headerlink" title="1.1.2 更新 apt 软件包索引"></a>1.1.2 更新 apt 软件包索引</h4><p>确保你的系统上的 <code>apt</code> 软件包索引是最新的：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo apt-get update
+</code></pre>
 <h4 id="1-1-3-安装依赖软件包"><a href="#1-1-3-安装依赖软件包" class="headerlink" title="1.1.3 安装依赖软件包"></a>1.1.3 安装依赖软件包</h4><p><code>Docker</code> 需要一些依赖软件包来正常运行，你可以通过以下命令安装它们：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y \</span><br><span class="line">apt-transport-https \</span><br><span class="line">ca-certificates \</span><br><span class="line">curl \</span><br><span class="line">gnupg-agent \</span><br><span class="line">software-properties-common</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo apt-get install -y \
+apt-transport-https \
+ca-certificates \
+curl \
+gnupg-agent \
+software-properties-common
+</code></pre>
 <h4 id="1-1-4-添加-Docker-的官方-GPG-密钥"><a href="#1-1-4-添加-Docker-的官方-GPG-密钥" class="headerlink" title="1.1.4 添加 Docker 的官方 GPG 密钥"></a>1.1.4 添加 Docker 的官方 GPG 密钥</h4><p>添加 <code>Docker</code> 官方 <code>GPG</code> 密钥以验证下载的 <code>Docker</code> 软件包的完整性：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+</code></pre>
 <h4 id="1-1-5-添加-Docker-APT-仓库"><a href="#1-1-5-添加-Docker-APT-仓库" class="headerlink" title="1.1.5 添加 Docker APT 仓库"></a>1.1.5 添加 Docker APT 仓库</h4><p>添加 <code>Docker APT</code> 仓库以便于从它安装 <code>Docker</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository \</span><br><span class="line"> &quot;deb \[arch=amd64\] https://download.docker.com/linux/ubuntu\</span><br><span class="line"><span class="meta prompt_"> $</span><span class="language-bash">(lsb\_release -cs) \</span></span><br><span class="line"><span class="language-bash"> stable<span class="string">&quot;</span></span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo add-apt-repository \
+ &quot;deb \[arch=amd64\] https://download.docker.com/linux/ubuntu\
+ $(lsb\_release -cs) \
+ stable&quot;
+</code></pre>
 <h4 id="1-1-6-更新-apt-软件包索引"><a href="#1-1-6-更新-apt-软件包索引" class="headerlink" title="1.1.6 更新 apt 软件包索引"></a>1.1.6 更新 apt 软件包索引</h4><p>再次更新 <code>apt</code> 软件包索引以确保你已经添加的 <code>Docker</code> 仓库已经被包含：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo apt-get update
+</code></pre>
 <h4 id="1-1-7-安装-Docker"><a href="#1-1-7-安装-Docker" class="headerlink" title="1.1.7 安装 Docker"></a>1.1.7 安装 Docker</h4><p>安装 <code>Docker</code> 软件包：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+</code></pre>
 <h4 id="1-1-8-检查安装情况"><a href="#1-1-8-检查安装情况" class="headerlink" title="1.1.8 检查安装情况"></a>1.1.8 检查安装情况</h4><p>现在 <code>Docker</code> 已经安装完成。你可以通过运行以下命令来验证 <code>Docker</code> 是否已经正确安装：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker --version</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo docker --version
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/d2eb3272b3f263a94aa4f04e48466116.png" alt="figure"></p>
 <h3 id="1-2-创建Dockerfile"><a href="#1-2-创建Dockerfile" class="headerlink" title="1.2 创建Dockerfile"></a>1.2 创建Dockerfile</h3><p>构建<code>Dockerfile</code>有两种情况，1：拉取<code>github</code>上<code>EDK2</code>的最新<code>source</code>，并直接基于<code>ubuntu20.04</code>进行实时环境搭建并编译镜像；2：直接将本地已搭建好的<code>EDK2</code>的开发环境打包成镜像。我把两种方案都做一遍，但实际工作中只需要任选其一即可，没有优劣，看实际需要决定。</p>
 <h4 id="1-2-1-拉取EDK2最新source并编译docker镜像"><a href="#1-2-1-拉取EDK2最新source并编译docker镜像" class="headerlink" title="1.2.1 拉取EDK2最新source并编译docker镜像"></a>1.2.1 拉取EDK2最新source并编译docker镜像</h4><p>在<code>ubuntu</code>的桌面上新建名为<code>docker</code>的文件夹并创建<code>Dockerfile</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir docker</span><br><span class="line">cd docker/</span><br><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">mkdir docker
+cd docker/
+touch Dockerfile
+</code></pre>
 <p>开始修改<code>Dockerfile</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit Dockerfile</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo gedit Dockerfile
+</code></pre>
 <p>复制下方内容并粘贴到<code>Dockerfile</code>中：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用基础的 Ubuntu 镜像</span></span><br><span class="line">FROM ubuntu:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置工作目录</span></span><br><span class="line">WORKDIR /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 apt 软件包索引并安装所需软件包</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">uuid-dev \</span><br><span class="line">nasm \</span><br><span class="line">bison \</span><br><span class="line">flex \</span><br><span class="line">build-essential \</span><br><span class="line">x11proto-xext-dev \</span><br><span class="line">libx11-dev \</span><br><span class="line">libxext-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载 EDK2 及其他必要开发包</span>  </span><br><span class="line">RUN git clone http://github.com/tianocore/edk2.git &amp;&amp; \</span><br><span class="line">git clone http://github.com/tianocore/edk2-libc.git &amp;&amp; \</span><br><span class="line">git clone http://github.com/acpica/acpica.git</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 SubModule</span></span><br><span class="line">RUN cd edk2 &amp;&amp; git submodule update --init</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译 BaseTools</span></span><br><span class="line">RUN make -C edk2/BaseTools PYTHON\_COMMAND=/usr/bin/python3</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编译 ACPICA</span></span><br><span class="line">RUN make -C acpica/</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置开发工具地址</span></span><br><span class="line">RUN echo &quot;export WORKSPACE=\$PWD&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export PACKAGES\_PATH=\$PWD/edk2:\$PWD/edk2-libc&quot;&gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export IASL\_PREFIX=/workspace/acpica/generate/unix/bin/&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;export PYTHON\_COMMAND=/usr/bin/python3&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \</span><br><span class="line"> echo &quot;source edk2/edksetup.sh&quot; &gt;&gt; /workspace/myexport.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置脚本可执行权限</span></span><br><span class="line">RUN chmod +x /workspace/myexport.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置环境变量</span></span><br><span class="line">ENV WORKSPACE=/workspace</span><br><span class="line">ENV PACKAGES\_PATH=/workspace/edk2:/workspace/edk2-libc</span><br><span class="line">ENV IASL\_PREFIX=/workspace/acpica/generate/unix/bin/</span><br><span class="line">ENV PYTHON\_COMMAND=/usr/bin/python3</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell"># 使用基础的 Ubuntu 镜像
+FROM ubuntu:latest
 
+# 设置工作目录
+WORKDIR /workspace
+
+# 更新 apt 软件包索引并安装所需软件包
+RUN apt-get update &amp;&amp; apt-get install -y \
+git \
+python3 \
+uuid-dev \
+nasm \
+bison \
+flex \
+build-essential \
+x11proto-xext-dev \
+libx11-dev \
+libxext-dev
+
+# 下载 EDK2 及其他必要开发包  
+RUN git clone http://github.com/tianocore/edk2.git &amp;&amp; \
+git clone http://github.com/tianocore/edk2-libc.git &amp;&amp; \
+git clone http://github.com/acpica/acpica.git
+
+# 更新 SubModule
+RUN cd edk2 &amp;&amp; git submodule update --init
+
+# 编译 BaseTools
+RUN make -C edk2/BaseTools PYTHON\_COMMAND=/usr/bin/python3
+
+# 编译 ACPICA
+RUN make -C acpica/
+
+# 设置开发工具地址
+RUN echo &quot;export WORKSPACE=\$PWD&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \
+ echo &quot;export PACKAGES\_PATH=\$PWD/edk2:\$PWD/edk2-libc&quot;&gt;&gt; /workspace/myexport.sh &amp;&amp; \
+ echo &quot;export IASL\_PREFIX=/workspace/acpica/generate/unix/bin/&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \
+ echo &quot;export PYTHON\_COMMAND=/usr/bin/python3&quot; &gt;&gt; /workspace/myexport.sh &amp;&amp; \
+ echo &quot;source edk2/edksetup.sh&quot; &gt;&gt; /workspace/myexport.sh
+
+# 设置脚本可执行权限
+RUN chmod +x /workspace/myexport.sh
+
+# 设置环境变量
+ENV WORKSPACE=/workspace
+ENV PACKAGES\_PATH=/workspace/edk2:/workspace/edk2-libc
+ENV IASL\_PREFIX=/workspace/acpica/generate/unix/bin/
+ENV PYTHON\_COMMAND=/usr/bin/python3
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/de4e9ece4a17743e4c6ba4f5c3ffefed.png" alt="figure"></p>
 <p>其实这个部分的逻辑就是之前我基于<code>linux</code>手动搭建开发环境的逻辑，只是通过<code>Dockerfile</code>的方式来自动完成，具体可以对比我之前的文章：<code>[UEFI]Windows和Linux下的环境搭建</code></p>
 <h4 id="1-2-2-打包本地开发环境并编译为镜像文件"><a href="#1-2-2-打包本地开发环境并编译为镜像文件" class="headerlink" title="1.2.2 打包本地开发环境并编译为镜像文件"></a>1.2.2 打包本地开发环境并编译为镜像文件</h4><p>我的<code>EDK2</code>开发环境放置在<code>_/home/dsy/Desktop/UEFIWorkspace/_</code>下，在这个文件夹下创建<code>Dockerfile</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch Dockerfile</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">touch Dockerfile
+</code></pre>
 <p>开始修改<code>Dockerfile</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit Dockerfile</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo gedit Dockerfile
+</code></pre>
 <p>复制下方内容并粘贴到<code>Dockerfile</code>中：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">使用基础的 Ubuntu 镜像</span></span><br><span class="line">FROM ubuntu:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置工作目录</span></span><br><span class="line">WORKDIR /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 apt 软件包索引并安装所需软件包</span>  </span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">git \</span><br><span class="line">python3 \</span><br><span class="line">uuid-dev \</span><br><span class="line">nasm \</span><br><span class="line">bison \</span><br><span class="line">flex \</span><br><span class="line">build-essential \</span><br><span class="line">x11proto-xext-dev \</span><br><span class="line">libx11-dev \</span><br><span class="line">libxext-dev</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将所需要的文件夹下的所有文件拷贝到容器的 /workspace 目录下</span>  </span><br><span class="line">COPY edk2 /workspace/edk2</span><br><span class="line">COPY edk2-libc /workspace/edk2-libc</span><br><span class="line">COPY edk2-platforms /workspace/edk2-platforms</span><br><span class="line">COPY acpica /workspace/acpica</span><br><span class="line">COPY myexport.sh /workspace</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将当前文件夹下所有文件和文件夹都拷贝到容器的 /workspace 目录下</span>  </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">COPY . /workspace</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell"># 使用基础的 Ubuntu 镜像
+FROM ubuntu:latest
 
+# 设置工作目录
+WORKDIR /workspace
+
+# 更新 apt 软件包索引并安装所需软件包  
+RUN apt-get update &amp;&amp; apt-get install -y \
+git \
+python3 \
+uuid-dev \
+nasm \
+bison \
+flex \
+build-essential \
+x11proto-xext-dev \
+libx11-dev \
+libxext-dev
+
+# 将所需要的文件夹下的所有文件拷贝到容器的 /workspace 目录下  
+COPY edk2 /workspace/edk2
+COPY edk2-libc /workspace/edk2-libc
+COPY edk2-platforms /workspace/edk2-platforms
+COPY acpica /workspace/acpica
+COPY myexport.sh /workspace
+
+# 将当前文件夹下所有文件和文件夹都拷贝到容器的 /workspace 目录下  
+# COPY . /workspace
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/fccb17ceef6a23117cd75f9a270e02b1.png" alt="figure"></p>
 <p>需要明确，我的<code>EDK2</code>开发环境是放置在 <code>/home/dsy/Desktop/UEFIWorkspace/</code> 下的，你们要确认自己的环境位置再针对修改上方路径。</p>
 <h3 id="1-3-编译Docker镜像"><a href="#1-3-编译Docker镜像" class="headerlink" title="1.3 编译Docker镜像"></a>1.3 编译Docker镜像</h3><p>同样，我把刚刚<code>1.2</code>中的两种不同情况也分开编译。</p>
 <h4 id="1-3-1-拉取EDK2的最新source并编译为镜像文件"><a href="#1-3-1-拉取EDK2的最新source并编译为镜像文件" class="headerlink" title="1.3.1 拉取EDK2的最新source并编译为镜像文件"></a>1.3.1 拉取EDK2的最新source并编译为镜像文件</h4><p>拉取<code>EDK2</code>的<code>github source</code>并编译为<code>Docker</code>镜像，命名为<code>edk2\_dev\_env</code>，版本号为<code>1.0</code>，前方的镜像命名必须为小写，缩写含义为(<code>EDK2\_Development\_Environment</code>)：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker build -t edk2\_dev\_env:1.0 .</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo docker build -t edk2\_dev\_env:1.0 .
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/73d7b921921e45abbc1575bb9e07e935.png" alt="figure"></p>
 <h4 id="1-3-2-打包本地开发环境并编译为镜像文件"><a href="#1-3-2-打包本地开发环境并编译为镜像文件" class="headerlink" title="1.3.2 打包本地开发环境并编译为镜像文件"></a>1.3.2 打包本地开发环境并编译为镜像文件</h4><p>直接在<code>_/home/dsy/Desktop/UEFIWorkspace/_</code>，开始编译<code>Docker</code>镜像，命名为<code>edk2\_dev\_env\_local</code>，版本号为<code>1.0</code>，前方的镜像命名必须为小写，缩写含义为<code>(EDK2\_Development\_Environment\_Local)</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker build -t edk2\_dev\_env\_local:1.0 .</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">sudo docker build -t edk2\_dev\_env\_local:1.0 .
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/386ca3e4d6e262a91a3ed2a5e181de64.png" alt="figure"></p>
-<h3 id="1-4-启动Docker容器"><a href="#1-4-启动Docker容器" class="headerlink" title="1.4 启动Docker容器"></a>1.4 启动Docker容器</h3><h4 id="1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像"><a href="#1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像" class="headerlink" title="1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像"></a>1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --name container\_edk2\_dev\_env edk2\_dev\_env:1.0</span><br></pre></td></tr></table></figure>
-
+<h3 id="1-4-启动Docker容器"><a href="#1-4-启动Docker容器" class="headerlink" title="1.4 启动Docker容器"></a>1.4 启动Docker容器</h3><h4 id="1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像"><a href="#1-4-1-启动1-3-1中生成的edk2-dev-env-1-0镜像" class="headerlink" title="1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像"></a>1.4.1 启动1.3.1中生成的edk2_dev_env:1.0镜像</h4><pre><code class="language-shell">sudo docker run -it --name container\_edk2\_dev\_env edk2\_dev\_env:1.0
+</code></pre>
 <p> 接下来就可以正常执行<code>uefi</code>代码编译和开发了。</p>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/9b8470df882c6f5d10ac22ee15461457.png" alt="figure"></p>
-<h4 id="1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像"><a href="#1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像" class="headerlink" title="1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像"></a>1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run -it --name container\_edk2\_dev\_env\_local edk2\_dev\_env\_local:1.0</span><br></pre></td></tr></table></figure>
-
+<h4 id="1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像"><a href="#1-4-2-启动1-3-2中生成的edk2-dev-env-local-1-0镜像" class="headerlink" title="1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像"></a>1.4.2 启动1.3.2中生成的edk2_dev_env_local:1.0镜像</h4><pre><code class="language-shell">sudo docker run -it --name container\_edk2\_dev\_env\_local edk2\_dev\_env\_local:1.0
+</code></pre>
 <p><img src="/2024/03/10/Uefi/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/%E4%BD%BF%E7%94%A8Docker%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2EDK2%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/31c70ede993f1919fb5c2c131b9a70cc.png" alt="figure"></p>
 <h2 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h2><hr>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo docker ps -a                                   #显示所有正在运行和已停止的 Docker 容器的列表</span><br><span class="line">sudo docker rm container\_name/id                   #删除容器(提供名称或ID)</span><br><span class="line">sudo docker restart container\_name/id              #重新启动容器(提供名称或ID)</span><br><span class="line">sudo docker exec -it container\_name/id /bin/bash   #以命令行的形式执行容器</span><br><span class="line">sudo docker images                                  #显示所有Docker镜像的列表</span><br><span class="line">sudo docker rmi image\_name/id                      #删除镜像(提供名称或ID)</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">sudo docker ps -a                                   #显示所有正在运行和已停止的 Docker 容器的列表
+sudo docker rm container\_name/id                   #删除容器(提供名称或ID)
+sudo docker restart container\_name/id              #重新启动容器(提供名称或ID)
+sudo docker exec -it container\_name/id /bin/bash   #以命令行的形式执行容器
+sudo docker images                                  #显示所有Docker镜像的列表
+sudo docker rmi image\_name/id                      #删除镜像(提供名称或ID)
+</code></pre>
 
     </div>
 
@@ -460,20 +550,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -524,12 +614,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -619,6 +709,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

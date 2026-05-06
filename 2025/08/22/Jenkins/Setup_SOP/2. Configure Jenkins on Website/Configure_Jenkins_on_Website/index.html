@@ -297,17 +297,24 @@
 <li>Jdk: 21.0.8</li>
 <li>Local ip address: 192.168.77.199</li>
 </ul>
-<h2 id="2-Create-the-Jenkins-user-for-gerrit"><a href="#2-Create-the-Jenkins-user-for-gerrit" class="headerlink" title="2. Create the Jenkins user for gerrit"></a>2. Create the <code>Jenkins</code> user for <code>gerrit</code></h2><h3 id="2-1-Swtich-the-path-of-terminal-to-Gerrit-Workplace-users"><a href="#2-1-Swtich-the-path-of-terminal-to-Gerrit-Workplace-users" class="headerlink" title="2.1 Swtich the path of terminal to Gerrit_Workplace&#x2F;users&#x2F;"></a>2.1 Swtich the path of terminal to Gerrit_Workplace&#x2F;users&#x2F;</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd Gerrit_Workplace/users/</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-2-Create-an-jenkins-account-for-gerrit"><a href="#2-2-Create-an-jenkins-account-for-gerrit" class="headerlink" title="2.2 Create an jenkins account for gerrit"></a>2.2 Create an <code>jenkins account</code> for gerrit</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -m gerrit.password jenkins</span><br><span class="line">New password: </span><br><span class="line">Re-type new password: </span><br><span class="line">Adding password for user jenkins</span><br></pre></td></tr></table></figure>
-
+<h2 id="2-Create-the-Jenkins-user-for-gerrit"><a href="#2-Create-the-Jenkins-user-for-gerrit" class="headerlink" title="2. Create the Jenkins user for gerrit"></a>2. Create the <code>Jenkins</code> user for <code>gerrit</code></h2><h3 id="2-1-Swtich-the-path-of-terminal-to-Gerrit-Workplace-users"><a href="#2-1-Swtich-the-path-of-terminal-to-Gerrit-Workplace-users" class="headerlink" title="2.1 Swtich the path of terminal to Gerrit_Workplace&#x2F;users&#x2F;"></a>2.1 Swtich the path of terminal to Gerrit_Workplace&#x2F;users&#x2F;</h3><pre><code class="language-shell">cd Gerrit_Workplace/users/
+</code></pre>
+<h3 id="2-2-Create-an-jenkins-account-for-gerrit"><a href="#2-2-Create-an-jenkins-account-for-gerrit" class="headerlink" title="2.2 Create an jenkins account for gerrit"></a>2.2 Create an <code>jenkins account</code> for gerrit</h3><pre><code class="language-shell">htpasswd -m gerrit.password jenkins
+New password: 
+Re-type new password: 
+Adding password for user jenkins
+</code></pre>
 <h3 id="2-3-Set-jenkins-account-as-an-Service-Users"><a href="#2-3-Set-jenkins-account-as-an-Service-Users" class="headerlink" title="2.3 Set jenkins account as an Service Users"></a>2.3 Set <code>jenkins account</code> as an <code>Service Users</code></h3><ul>
 <li>Login with <code>administrator account</code><br><img src="/2025/08/22/Jenkins/Setup_SOP/2.%20Configure%20Jenkins%20on%20Website/Configure_Jenkins_on_Website/Service_Users_1.png" alt="Service_Users_1.png" title="Service_Users_1.png"><br><img src="/2025/08/22/Jenkins/Setup_SOP/2.%20Configure%20Jenkins%20on%20Website/Configure_Jenkins_on_Website/Service_Users_2.png" alt="Service_Users_2.png" title="Service_Users_2.png"></li>
 </ul>
-<h3 id="2-4-Generate-ssh-key-on-the-server-which-is-login-jenkins"><a href="#2-4-Generate-ssh-key-on-the-server-which-is-login-jenkins" class="headerlink" title="2.4 Generate ssh key on the server which is login jenkins"></a>2.4 Generate ssh key on the server which is login <code>jenkins</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C &quot;jenkins_dev@dev.com&quot;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-5-Copy-the-content-of-id-rsa-pub-to-gerrit"><a href="#2-5-Copy-the-content-of-id-rsa-pub-to-gerrit" class="headerlink" title="2.5 Copy the content of id_rsa.pub to gerrit"></a>2.5 Copy the content of <code>id_rsa.pub</code> to <code>gerrit</code></h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd ~/.ssh</span><br><span class="line">ubuntu@ubuntu-VirtualBox:~/.ssh$ ls -l</span><br><span class="line">total 20</span><br><span class="line">-rw------- 1 ubuntu ubuntu 3381  8月 22 17:17 id_rsa</span><br><span class="line">-rw-r--r-- 1 ubuntu ubuntu  745  8月 22 17:17 id_rsa.pub</span><br></pre></td></tr></table></figure>
-
+<h3 id="2-4-Generate-ssh-key-on-the-server-which-is-login-jenkins"><a href="#2-4-Generate-ssh-key-on-the-server-which-is-login-jenkins" class="headerlink" title="2.4 Generate ssh key on the server which is login jenkins"></a>2.4 Generate ssh key on the server which is login <code>jenkins</code></h3><pre><code class="language-shell">ssh-keygen -t rsa -b 4096 -C &quot;jenkins_dev@dev.com&quot;
+</code></pre>
+<h3 id="2-5-Copy-the-content-of-id-rsa-pub-to-gerrit"><a href="#2-5-Copy-the-content-of-id-rsa-pub-to-gerrit" class="headerlink" title="2.5 Copy the content of id_rsa.pub to gerrit"></a>2.5 Copy the content of <code>id_rsa.pub</code> to <code>gerrit</code></h3><pre><code class="language-shell">cd ~/.ssh
+ubuntu@ubuntu-VirtualBox:~/.ssh$ ls -l
+total 20
+-rw------- 1 ubuntu ubuntu 3381  8月 22 17:17 id_rsa
+-rw-r--r-- 1 ubuntu ubuntu  745  8月 22 17:17 id_rsa.pub
+</code></pre>
 <ul>
 <li>Login with <code>jenkins account</code>, and copy <code>id_rsa.pub</code> to <code>New SSH key</code><br><img src="/2025/08/22/Jenkins/Setup_SOP/2.%20Configure%20Jenkins%20on%20Website/Configure_Jenkins_on_Website/Copy_Ssh.png" alt="Copy_Ssh.png" title="Copy_Ssh.png"></li>
 </ul>
@@ -349,7 +356,10 @@
     <a href="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/" rel="prev" title="[Jenkins] 1. Install Jenkins">
       <i class="fa fa-chevron-left"></i> [Jenkins] 1. Install Jenkins
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2026/05/06/Circuit/XOR_Gate_Basic/XOR_Gate_Basic/" rel="next" title="[Digital Circuit] XOR Gate Implemented with Basic Logic Gates">
+      [Digital Circuit] XOR Gate Implemented with Basic Logic Gates <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -425,20 +435,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -489,12 +499,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -584,6 +594,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

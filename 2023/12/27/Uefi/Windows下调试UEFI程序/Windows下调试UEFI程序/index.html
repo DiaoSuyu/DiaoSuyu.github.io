@@ -289,13 +289,13 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
               </span>
-              <span>8.4k</span>
+              <span>7.9k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
-              <span>8 mins.</span>
+              <span>7 mins.</span>
             </span>
 
         </div>
@@ -334,8 +334,214 @@
 <h4 id="1-1-3-修改工程文件"><a href="#1-1-3-修改工程文件" class="headerlink" title="1.1.3 修改工程文件"></a>1.1.3 修改工程文件</h4><p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/39fe5ce586b73be1932cd21c152f8916.jpeg" alt="figure"></p>
 <p>找到<code>Win32</code>和<code>X64</code>下的<code>NMakeBuildCommandLine</code>、<code>NMakeCleanCommandLine</code>和<code>NMakeReBuildCommandLine</code>，把<code>needtomodify</code>部分按照如下修改：</p>
 <p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/a0e4a73ec2df9d7b29c7b2028f5ca3c0.jpeg" alt="figure"></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br></pre></td><td class="code"><pre><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Debug|Win32&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;WIN32;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Release|Win32&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Debug|X64&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;X64;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br><span class="line"></span><br><span class="line">   &lt;PropertyGroup Condition=&quot;&#x27;$(Configuration)|$(Platform)&#x27;==&#x27;Release|X64&#x27;&quot;&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeCleanCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">       cd /D C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       set WORKSPACE=C:\\UEFIWorkspace</span><br><span class="line"></span><br><span class="line">       call mybuild.bat</span><br><span class="line"></span><br><span class="line">       call edk2\\edksetup.bat</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean</span><br><span class="line"></span><br><span class="line">       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE</span><br><span class="line"></span><br><span class="line">     &lt;/NMakeReBuildCommandLine&gt;</span><br><span class="line"></span><br><span class="line">     &lt;NMakePreprocessorDefinitions&gt;X64;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;</span><br><span class="line"></span><br><span class="line">   &lt;/PropertyGroup&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">   &lt;PropertyGroup Condition=&quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|Win32&#39;&quot;&gt;
 
+     &lt;NMakeBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG
+
+     &lt;/NMakeBuildCommandLine&gt;
+
+     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;
+
+     &lt;NMakeCleanCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean
+
+     &lt;/NMakeCleanCommandLine&gt;
+
+     &lt;NMakeReBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG clean
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b DEBUG
+
+     &lt;/NMakeReBuildCommandLine&gt;
+
+     &lt;NMakePreprocessorDefinitions&gt;WIN32;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;
+
+   &lt;/PropertyGroup&gt;
+
+   &lt;PropertyGroup Condition=&quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Release|Win32&#39;&quot;&gt;
+
+     &lt;NMakeBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE
+
+     &lt;/NMakeBuildCommandLine&gt;
+
+     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;
+
+     &lt;NMakeCleanCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean
+
+     &lt;/NMakeCleanCommandLine&gt;
+
+     &lt;NMakeReBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE clean
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32 -b RELEASE
+
+     &lt;/NMakeReBuildCommandLine&gt;
+
+     &lt;NMakePreprocessorDefinitions&gt;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;
+
+   &lt;/PropertyGroup&gt;
+
+   &lt;PropertyGroup Condition=&quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Debug|X64&#39;&quot;&gt;
+
+     &lt;NMakeBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG
+
+     &lt;/NMakeBuildCommandLine&gt;
+
+     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;
+
+     &lt;NMakeCleanCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean
+
+     &lt;/NMakeCleanCommandLine&gt;
+
+     &lt;NMakeReBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG clean
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b DEBUG
+
+     &lt;/NMakeReBuildCommandLine&gt;
+
+     &lt;NMakePreprocessorDefinitions&gt;X64;\_DEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;
+
+   &lt;/PropertyGroup&gt;
+
+   &lt;PropertyGroup Condition=&quot;&#39;$(Configuration)|$(Platform)&#39;==&#39;Release|X64&#39;&quot;&gt;
+
+     &lt;NMakeBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE
+
+     &lt;/NMakeBuildCommandLine&gt;
+
+     &lt;NMakeOutput&gt;test.exe&lt;/NMakeOutput&gt;
+
+     &lt;NMakeCleanCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean
+
+     &lt;/NMakeCleanCommandLine&gt;
+
+     &lt;NMakeReBuildCommandLine&gt;
+
+       cd /D C:\\UEFIWorkspace
+
+       set WORKSPACE=C:\\UEFIWorkspace
+
+       call mybuild.bat
+
+       call edk2\\edksetup.bat
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE clean
+
+       call build.bat -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64 -b RELEASE
+
+     &lt;/NMakeReBuildCommandLine&gt;
+
+     &lt;NMakePreprocessorDefinitions&gt;X64;NDEBUG;$(NMakePreprocessorDefinitions)&lt;/NMakePreprocessorDefinitions&gt;
+
+   &lt;/PropertyGroup&gt;
+</code></pre>
 <h4 id="1-1-4-添加代码"><a href="#1-1-4-添加代码" class="headerlink" title="1.1.4 添加代码"></a>1.1.4 添加代码</h4><p>添加<code>HelloWorld.c</code>到<code>Source</code>下</p>
 <p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3c30c4fb2ac24855fc83758414176fae.jpeg" alt="figure"></p>
 <h4 id="1-1-5-编译代码并调试"><a href="#1-1-5-编译代码并调试" class="headerlink" title="1.1.5 编译代码并调试"></a>1.1.5 编译代码并调试</h4><p>在代码处增加一处断点用于调试</p>
@@ -372,25 +578,25 @@
 <p>挂载完毕如上，此时在我的电脑下会出现一个新的硬盘，盘符为<code>HDD\_BOOT</code>。</p>
 <h4 id="1-2-3-编译OVMF镜像文件和HelloWorld-efi-使用x86-64-Native-Tools-Command-Prompt-for-VS2019"><a href="#1-2-3-编译OVMF镜像文件和HelloWorld-efi-使用x86-64-Native-Tools-Command-Prompt-for-VS2019" class="headerlink" title="1.2.3 编译OVMF镜像文件和HelloWorld.efi(使用x86&#x2F;64 Native Tools Command Prompt for VS2019)"></a>1.2.3 编译OVMF镜像文件和HelloWorld.efi(使用x86&#x2F;64 Native Tools Command Prompt for VS2019)</h4><h5 id="1-2-3-1-编译OVMF镜像文件"><a href="#1-2-3-1-编译OVMF镜像文件" class="headerlink" title="1.2.3.1 编译OVMF镜像文件"></a>1.2.3.1 编译OVMF镜像文件</h5><p>基于OVMF镜像镜像源码级调试，编译<code>edk2\\OvmfPkg</code>。</p>
 <p>32位：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgIA32.dsc -t VS2019 -a IA32 -b NOOPT -D SOURCE\_DEBUG\_ENABLE</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgIA32.dsc -t VS2019 -a IA32 -b NOOPT -D SOURCE\_DEBUG\_ENABLE
+</code></pre>
 <p>64位：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgX64.dsc -t VS2019 -a X64 -b NOOPT -D SOURCE\_DEBUG\_ENABLE</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">C:\\UEFIWorkspace&gt;build -p edk2\\OvmfPkg\\OvmfPkgX64.dsc -t VS2019 -a X64 -b NOOPT -D SOURCE\_DEBUG\_ENABLE
+</code></pre>
 <h5 id="1-2-3-2-编译HelloWorld-efi"><a href="#1-2-3-2-编译HelloWorld-efi" class="headerlink" title="1.2.3.2 编译HelloWorld.efi"></a>1.2.3.2 编译HelloWorld.efi</h5><p>32位：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a IA32
+</code></pre>
 <p>64位：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">C:\\UEFIWorkspace&gt;build -p edk2\\MdeModulePkg\\MdeModulePkg.dsc -m edk2\\MdeModulePkg\\Application\\HelloWorld\\HelloWorld.inf -t VS2019 -a X64
+</code></pre>
 <h4 id="1-2-4-调试"><a href="#1-2-4-调试" class="headerlink" title="1.2.4 调试"></a>1.2.4 调试</h4><h5 id="1-2-4-1-文件准备"><a href="#1-2-4-1-文件准备" class="headerlink" title="1.2.4.1 文件准备"></a>1.2.4.1 文件准备</h5><p>在<code>UEFIWorkspace</code>下新建一个文件夹并命名为<code>QemuDebug</code>。</p>
 <p>将32位或者64位的<code>OVMF.fd</code>复制到<code>QemuDebug</code>文件夹下。</p>
 <p>将32位或者64位的<code>HelloWorld.efi</code>复制到<code>HDD\_BOOT</code>的盘符下，然后将<code>HDD\_BOOT.IMA</code>复制到<code>QemuDebug</code>文件夹下，想偷懒的话可以直接将<code>HDD\_BOOT.IMA</code>在<code>1.2.2.1</code>节中的另存为默认地址放置在<code>QemuDebug</code>文件夹下，这样就不需要再手动的搬移<code>HDD\_BOOT.IMA</code>，做完这一步以后，把<code>HDD\_BOOT</code>弹出，否则会在下面正式调试的时候报错。</p>
 <p>从<code>QEMU</code>的根目录下复制<code>qemu-x86\_64.bat</code>到<code>QemuDebug</code>文件夹下，并修改这个批处理文件如下：</p>
 <p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/9b7de3dfe25486cbc77400852a9458fc.jpeg" alt="figure"></p>
 <p>即，注释掉最后一行，并添加新的命令，其中<code>QemuPipeDbg</code>要与<code>1.2.1.3</code>节中设置<code>Pipe Port</code>名称<code>match</code>：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\\UEFIWorkspace\\Tools\\QEMU\\qemu-system-x86\_64.exe -bios OVMF.fd -usbdevice disk:HDD\_BOOT.IMA -serial pipe:QemuPipeDbg</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">C:\\UEFIWorkspace\\Tools\\QEMU\\qemu-system-x86\_64.exe -bios OVMF.fd -usbdevice disk:HDD\_BOOT.IMA -serial pipe:QemuPipeDbg
+</code></pre>
 <p>至此，文件准备完毕，<code>QemuDebug</code>文件夹下将会存在以下三个文件：</p>
 <p><img src="/2023/12/27/Uefi/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/Windows%E4%B8%8B%E8%B0%83%E8%AF%95UEFI%E7%A8%8B%E5%BA%8F/3907d20a2d90f1c84ed8f36d3935762e.jpeg" alt="figure"></p>
 <h5 id="1-2-4-2-开始调试"><a href="#1-2-4-2-开始调试" class="headerlink" title="1.2.4.2 开始调试"></a>1.2.4.2 开始调试</h5><p>运行<code>Start WinDbg with Intel UDK Debugger Tool</code>，<code>UDK Debugger</code>和<code>WINDBG</code>会一起弹出，如下：</p>
@@ -428,11 +634,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/03/10/Others/%E3%80%90%E8%84%9A%E6%9C%AC%E3%80%91%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/" rel="prev" title="[脚本] 利用OneDrive实时同步零碎文件">
+    <a href="/2023/03/10/Circuit/%E3%80%90%E8%84%9A%E6%9C%AC%E3%80%91%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/%E5%88%A9%E7%94%A8OneDriver%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5%E9%9B%B6%E7%A2%8E%E6%96%87%E4%BB%B6/" rel="prev" title="[脚本] 利用OneDrive实时同步零碎文件">
       <i class="fa fa-chevron-left"></i> [脚本] 利用OneDrive实时同步零碎文件
     </a></div>
       <div class="post-nav-item">
-    <a href="/2024/02/15/Others/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/" rel="next" title="[Code] 关于编译、汇编和链接">
+    <a href="/2024/02/15/Circuit/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/%E5%85%B3%E4%BA%8E%E7%BC%96%E8%AF%91%E3%80%81%E6%B1%87%E7%BC%96%E5%92%8C%E9%93%BE%E6%8E%A5/" rel="next" title="[Code] 关于编译、汇编和链接">
       [Code] 关于编译、汇编和链接 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -510,20 +716,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -574,12 +780,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -669,6 +875,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

@@ -264,7 +264,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
               </span>
-              <span>9.8k</span>
+              <span>9.6k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -291,21 +291,107 @@
 <li>Jdk: 21.0.8</li>
 <li>Local ip address: 192.168.77.199</li>
 </ul>
-<h2 id="2-Configuration-Steps"><a href="#2-Configuration-Steps" class="headerlink" title="2. Configuration Steps"></a>2. Configuration Steps</h2><h3 id="2-1-Update-the-package-list"><a href="#2-1-Update-the-package-list" class="headerlink" title="2.1 Update the package list"></a>2.1 Update the package list</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+<h2 id="2-Configuration-Steps"><a href="#2-Configuration-Steps" class="headerlink" title="2. Configuration Steps"></a>2. Configuration Steps</h2><h3 id="2-1-Update-the-package-list"><a href="#2-1-Update-the-package-list" class="headerlink" title="2.1 Update the package list"></a>2.1 Update the package list</h3><pre><code class="language-shell">sudo apt-get update
+</code></pre>
+<h3 id="2-2-Install-JDK-21"><a href="#2-2-Install-JDK-21" class="headerlink" title="2.2 Install JDK 21"></a>2.2 Install JDK 21</h3><pre><code class="language-shell">sudo apt install -y openjdk-21-jre-headless
 
-<h3 id="2-2-Install-JDK-21"><a href="#2-2-Install-JDK-21" class="headerlink" title="2.2 Install JDK 21"></a>2.2 Install JDK 21</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y openjdk-21-jre-headless</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ sudo apt install -y openjdk-17-jre-headless</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree... Done</span><br><span class="line">Reading state information... Done</span><br><span class="line">Suggested packages:</span><br><span class="line">  fonts-ipafont-gothic fonts-ipafont-mincho fonts-wqy-microhei | fonts-wqy-zenhei</span><br><span class="line">The following NEW packages will be installed:</span><br><span class="line">  openjdk-17-jre-headless</span><br><span class="line">0 upgraded, 1 newly installed, 0 to remove and 59 not upgraded.</span><br><span class="line">Need to get 48.3 MB of archives.</span><br><span class="line">After this operation, 193 MB of additional disk space will be used.</span><br><span class="line">Get:1 http://cn.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 openjdk-17-jre-headless amd64 17.0.16+8~us1-0ubuntu1~22.04.1 [48.3 MB]</span><br><span class="line">Fetched 48.3 MB in 3s (15.7 MB/s)                  </span><br><span class="line">Selecting previously unselected package openjdk-17-jre-headless:amd64.</span><br><span class="line">(Reading database ... 207010 files and directories currently installed.)</span><br><span class="line">Preparing to unpack .../openjdk-17-jre-headless_17.0.16+8~us1-0ubuntu1~22.04.1_amd64.deb ...</span><br><span class="line">Unpacking openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...</span><br><span class="line">Setting up openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java --version</span><br><span class="line">openjdk 21.0.8 2025-07-15</span><br><span class="line">OpenJDK Runtime Environment (build 21.0.8+9-Ubuntu-0ubuntu122.04.1)</span><br><span class="line">OpenJDK 64-Bit Server VM (build 21.0.8+9-Ubuntu-0ubuntu122.04.1, mixed mode, sharing)</span><br></pre></td></tr></table></figure>
+ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ sudo apt install -y openjdk-17-jre-headless
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Suggested packages:
+  fonts-ipafont-gothic fonts-ipafont-mincho fonts-wqy-microhei | fonts-wqy-zenhei
+The following NEW packages will be installed:
+  openjdk-17-jre-headless
+0 upgraded, 1 newly installed, 0 to remove and 59 not upgraded.
+Need to get 48.3 MB of archives.
+After this operation, 193 MB of additional disk space will be used.
+Get:1 http://cn.archive.ubuntu.com/ubuntu jammy-updates/universe amd64 openjdk-17-jre-headless amd64 17.0.16+8~us1-0ubuntu1~22.04.1 [48.3 MB]
+Fetched 48.3 MB in 3s (15.7 MB/s)                  
+Selecting previously unselected package openjdk-17-jre-headless:amd64.
+(Reading database ... 207010 files and directories currently installed.)
+Preparing to unpack .../openjdk-17-jre-headless_17.0.16+8~us1-0ubuntu1~22.04.1_amd64.deb ...
+Unpacking openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...
+Setting up openjdk-17-jre-headless:amd64 (17.0.16+8~us1-0ubuntu1~22.04.1) ...
 
-<h3 id="2-3-Create-Jenkins-Workplace-folder"><a href="#2-3-Create-Jenkins-Workplace-folder" class="headerlink" title="2.3 Create Jenkins_Workplace folder"></a>2.3 Create Jenkins_Workplace folder</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir Jenkins_Workplace</span><br></pre></td></tr></table></figure>
+ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java --version
+openjdk 21.0.8 2025-07-15
+OpenJDK Runtime Environment (build 21.0.8+9-Ubuntu-0ubuntu122.04.1)
+OpenJDK 64-Bit Server VM (build 21.0.8+9-Ubuntu-0ubuntu122.04.1, mixed mode, sharing)
+</code></pre>
+<h3 id="2-3-Create-Jenkins-Workplace-folder"><a href="#2-3-Create-Jenkins-Workplace-folder" class="headerlink" title="2.3 Create Jenkins_Workplace folder"></a>2.3 Create Jenkins_Workplace folder</h3><pre><code class="language-shell">mkdir Jenkins_Workplace
+</code></pre>
+<h3 id="2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler</h3><pre><code class="language-shell">sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war
 
-<h3 id="2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-4-Download-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.4 Download Jenkins 2.516.2 to Jenkins_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line"></span><br><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins$ sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line">[sudo] password for ubuntu: </span><br><span class="line">--2025-08-21 17:51:49--  https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war</span><br><span class="line">Resolving mirrors.jenkins.io (mirrors.jenkins.io)... 20.7.178.24, 2603:1030:408:5::15a</span><br><span class="line">Connecting to mirrors.jenkins.io (mirrors.jenkins.io)|20.7.178.24|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 302 Found</span><br><span class="line">Location: https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war [following]</span><br><span class="line">--2025-08-21 17:51:51--  https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war</span><br><span class="line">Resolving mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)... 101.6.15.130, 2402:f000:1:400::2</span><br><span class="line">Connecting to mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)|101.6.15.130|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 87485720 (83M) [application/java-archive]</span><br><span class="line">Saving to: ‘./jenkins.war’</span><br><span class="line"></span><br><span class="line">jenkins.war                100%[========================================&gt;]  83.43M  45.8MB/s    in 1.8s    </span><br><span class="line"></span><br><span class="line">2025-08-21 17:51:54 (45.8 MB/s) - ‘./jenkins.war’ saved [87485720/87485720]</span><br></pre></td></tr></table></figure>
+ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins$ sudo wget -P ./ https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war
+[sudo] password for ubuntu: 
+--2025-08-21 17:51:49--  https://mirrors.jenkins.io/war-stable/2.516.2/jenkins.war
+Resolving mirrors.jenkins.io (mirrors.jenkins.io)... 20.7.178.24, 2603:1030:408:5::15a
+Connecting to mirrors.jenkins.io (mirrors.jenkins.io)|20.7.178.24|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war [following]
+--2025-08-21 17:51:51--  https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.516.2/jenkins.war
+Resolving mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)... 101.6.15.130, 2402:f000:1:400::2
+Connecting to mirrors.tuna.tsinghua.edu.cn (mirrors.tuna.tsinghua.edu.cn)|101.6.15.130|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 87485720 (83M) [application/java-archive]
+Saving to: ‘./jenkins.war’
 
-<h3 id="2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -jar jenkins.war --httpPort=8000</span><br></pre></td></tr></table></figure>
+jenkins.war                100%[========================================&gt;]  83.43M  45.8MB/s    in 1.8s    
 
+2025-08-21 17:51:54 (45.8 MB/s) - ‘./jenkins.war’ saved [87485720/87485720]
+</code></pre>
+<h3 id="2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler"><a href="#2-5-Install-Jenkins-2-516-2-to-Jenkins-Workplace-foler" class="headerlink" title="2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler"></a>2.5 Install Jenkins 2.516.2 to Jenkins_Workplace foler</h3><pre><code class="language-shell">java -jar jenkins.war --httpPort=8000
+</code></pre>
 <ul>
 <li>After executing the above command, the Jenkins engine is power on, the following is the log of the default configuration.</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java -jar jenkins.war --httpPort=8000</span><br><span class="line">Running from: /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war</span><br><span class="line">webroot: /home/ubuntu/.jenkins/war</span><br><span class="line">2025-08-21 10:22:52.882+0000 [<span class="built_in">id</span>=1]	INFO	winstone.Logger#logInternal: Beginning extraction from war file</span><br><span class="line">2025-08-21 10:22:52.930+0000 [<span class="built_in">id</span>=1]	WARNING	o.e.j.ee9.nested.ContextHandler#setContextPath: Empty contextPath</span><br><span class="line">2025-08-21 10:22:52.971+0000 [<span class="built_in">id</span>=1]	INFO	org.eclipse.jetty.server.Server#doStart: jetty-12.0.22; built: 2025-06-02T15:25:31.946Z; git: 335c9ab44a5591f0ea941bf350e139b8c4f5537c; jvm 21.0.8+9-Ubuntu-0ubuntu122.04.1</span><br><span class="line">2025-08-21 10:22:53.225+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.e.w.StandardDescriptorProcessor#visitServlet: NO JSP Support <span class="keyword">for</span> /, did not find org.eclipse.jetty.ee9.jsp.JettyJspServlet</span><br><span class="line">2025-08-21 10:22:53.268+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.s.DefaultSessionIdManager#doStart: Session workerName=node0</span><br><span class="line">2025-08-21 10:22:53.530+0000 [<span class="built_in">id</span>=1]	INFO	hudson.WebAppMain#contextInitialized: Jenkins home directory: /home/ubuntu/.jenkins found at: <span class="variable">$user</span>.home/.jenkins</span><br><span class="line">2025-08-21 10:22:53.624+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.s.handler.ContextHandler#doStart: Started oeje9n.ContextHandler<span class="variable">$CoreContextHandler</span>@7577b641&#123;Jenkins v2.516.2,/,b=file:///home/ubuntu/.jenkins/war/,a=AVAILABLE,h=oeje9n.ContextHandler$CoreContextHandler<span class="variable">$CoreToNestedHandler</span>@3704122f&#123;STARTED&#125;&#125;</span><br><span class="line">2025-08-21 10:22:53.630+0000 [<span class="built_in">id</span>=1]	INFO	o.e.j.server.AbstractConnector#doStart: Started ServerConnector@7561db12&#123;HTTP/1.1, (http/1.1)&#125;&#123;0.0.0.0:8000&#125;</span><br><span class="line">2025-08-21 10:22:53.635+0000 [<span class="built_in">id</span>=1]	INFO	org.eclipse.jetty.server.Server#doStart: Started oejs.Server@57c758ac&#123;STARTING&#125;[12.0.22,sto=0] @1055ms</span><br><span class="line">2025-08-21 10:22:53.636+0000 [<span class="built_in">id</span>=39]	INFO	winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled</span><br><span class="line">2025-08-21 10:22:53.723+0000 [<span class="built_in">id</span>=38]	INFO	jenkins.model.Jenkins#&lt;init&gt;: Starting version 2.516.2</span><br><span class="line">2025-08-21 10:22:53.777+0000 [<span class="built_in">id</span>=48]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Started initialization</span><br><span class="line">2025-08-21 10:22:53.782+0000 [<span class="built_in">id</span>=55]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Listed all plugins</span><br><span class="line">2025-08-21 10:22:54.231+0000 [<span class="built_in">id</span>=55]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Prepared all plugins</span><br><span class="line">2025-08-21 10:22:54.234+0000 [<span class="built_in">id</span>=48]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Started all plugins</span><br><span class="line">2025-08-21 10:22:54.234+0000 [<span class="built_in">id</span>=50]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Augmented all extensions</span><br><span class="line">2025-08-21 10:22:54.318+0000 [<span class="built_in">id</span>=50]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: System config loaded</span><br><span class="line">2025-08-21 10:22:54.319+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: System config adapted</span><br><span class="line">2025-08-21 10:22:54.319+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Loaded all <span class="built_in">jobs</span></span><br><span class="line">2025-08-21 10:22:54.320+0000 [<span class="built_in">id</span>=49]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Configuration <span class="keyword">for</span> all <span class="built_in">jobs</span> updated</span><br><span class="line">2025-08-21 10:22:54.333+0000 [<span class="built_in">id</span>=75]	INFO	hudson.util.Retrier#start: Attempt <span class="comment">#1 to do the action check updates server</span></span><br><span class="line">2025-08-21 10:22:54.537+0000 [<span class="built_in">id</span>=54]	INFO	jenkins.install.SetupWizard#init: </span><br><span class="line"></span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line"></span><br><span class="line">Jenkins initial setup is required. An admin user has been created and a password generated.</span><br><span class="line">Please use the following password to proceed to installation:</span><br><span class="line"></span><br><span class="line">2781b125f4cc45b6a912324b1e710b4b</span><br><span class="line"></span><br><span class="line">This may also be found at: /home/ubuntu/.jenkins/secrets/initialAdminPassword</span><br><span class="line"></span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line">*************************************************************</span><br><span class="line"></span><br><span class="line">2025-08-21 10:23:00.033+0000 [<span class="built_in">id</span>=54]	INFO	jenkins.InitReactorRunner<span class="variable">$1</span>#onAttained: Completed initialization</span><br><span class="line">2025-08-21 10:23:00.045+0000 [<span class="built_in">id</span>=38]	INFO	hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running</span><br><span class="line">2025-08-21 10:23:03.133+0000 [<span class="built_in">id</span>=75]	INFO	h.m.DownloadService<span class="variable">$Downloadable</span>#load: Obtained the updated data file <span class="keyword">for</span> hudson.tasks.Maven.MavenInstaller</span><br><span class="line">2025-08-21 10:23:03.133+0000 [<span class="built_in">id</span>=75]	INFO	hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt <span class="comment">#1</span></span><br></pre></td></tr></table></figure>
+<pre><code class="language-bash">ubuntu@ubuntu-VirtualBox:/media/sf_VirtualBoxShare/Jenkins_Workplace$ java -jar jenkins.war --httpPort=8000
+Running from: /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war
+webroot: /home/ubuntu/.jenkins/war
+2025-08-21 10:22:52.882+0000 [id=1]	INFO	winstone.Logger#logInternal: Beginning extraction from war file
+2025-08-21 10:22:52.930+0000 [id=1]	WARNING	o.e.j.ee9.nested.ContextHandler#setContextPath: Empty contextPath
+2025-08-21 10:22:52.971+0000 [id=1]	INFO	org.eclipse.jetty.server.Server#doStart: jetty-12.0.22; built: 2025-06-02T15:25:31.946Z; git: 335c9ab44a5591f0ea941bf350e139b8c4f5537c; jvm 21.0.8+9-Ubuntu-0ubuntu122.04.1
+2025-08-21 10:22:53.225+0000 [id=1]	INFO	o.e.j.e.w.StandardDescriptorProcessor#visitServlet: NO JSP Support for /, did not find org.eclipse.jetty.ee9.jsp.JettyJspServlet
+2025-08-21 10:22:53.268+0000 [id=1]	INFO	o.e.j.s.DefaultSessionIdManager#doStart: Session workerName=node0
+2025-08-21 10:22:53.530+0000 [id=1]	INFO	hudson.WebAppMain#contextInitialized: Jenkins home directory: /home/ubuntu/.jenkins found at: $user.home/.jenkins
+2025-08-21 10:22:53.624+0000 [id=1]	INFO	o.e.j.s.handler.ContextHandler#doStart: Started oeje9n.ContextHandler$CoreContextHandler@7577b641&#123;Jenkins v2.516.2,/,b=file:///home/ubuntu/.jenkins/war/,a=AVAILABLE,h=oeje9n.ContextHandler$CoreContextHandler$CoreToNestedHandler@3704122f&#123;STARTED&#125;&#125;
+2025-08-21 10:22:53.630+0000 [id=1]	INFO	o.e.j.server.AbstractConnector#doStart: Started ServerConnector@7561db12&#123;HTTP/1.1, (http/1.1)&#125;&#123;0.0.0.0:8000&#125;
+2025-08-21 10:22:53.635+0000 [id=1]	INFO	org.eclipse.jetty.server.Server#doStart: Started oejs.Server@57c758ac&#123;STARTING&#125;[12.0.22,sto=0] @1055ms
+2025-08-21 10:22:53.636+0000 [id=39]	INFO	winstone.Logger#logInternal: Winstone Servlet Engine running: controlPort=disabled
+2025-08-21 10:22:53.723+0000 [id=38]	INFO	jenkins.model.Jenkins#&lt;init&gt;: Starting version 2.516.2
+2025-08-21 10:22:53.777+0000 [id=48]	INFO	jenkins.InitReactorRunner$1#onAttained: Started initialization
+2025-08-21 10:22:53.782+0000 [id=55]	INFO	jenkins.InitReactorRunner$1#onAttained: Listed all plugins
+2025-08-21 10:22:54.231+0000 [id=55]	INFO	jenkins.InitReactorRunner$1#onAttained: Prepared all plugins
+2025-08-21 10:22:54.234+0000 [id=48]	INFO	jenkins.InitReactorRunner$1#onAttained: Started all plugins
+2025-08-21 10:22:54.234+0000 [id=50]	INFO	jenkins.InitReactorRunner$1#onAttained: Augmented all extensions
+2025-08-21 10:22:54.318+0000 [id=50]	INFO	jenkins.InitReactorRunner$1#onAttained: System config loaded
+2025-08-21 10:22:54.319+0000 [id=49]	INFO	jenkins.InitReactorRunner$1#onAttained: System config adapted
+2025-08-21 10:22:54.319+0000 [id=49]	INFO	jenkins.InitReactorRunner$1#onAttained: Loaded all jobs
+2025-08-21 10:22:54.320+0000 [id=49]	INFO	jenkins.InitReactorRunner$1#onAttained: Configuration for all jobs updated
+2025-08-21 10:22:54.333+0000 [id=75]	INFO	hudson.util.Retrier#start: Attempt #1 to do the action check updates server
+2025-08-21 10:22:54.537+0000 [id=54]	INFO	jenkins.install.SetupWizard#init: 
 
+*************************************************************
+*************************************************************
+*************************************************************
+
+Jenkins initial setup is required. An admin user has been created and a password generated.
+Please use the following password to proceed to installation:
+
+2781b125f4cc45b6a912324b1e710b4b
+
+This may also be found at: /home/ubuntu/.jenkins/secrets/initialAdminPassword
+
+*************************************************************
+*************************************************************
+*************************************************************
+
+2025-08-21 10:23:00.033+0000 [id=54]	INFO	jenkins.InitReactorRunner$1#onAttained: Completed initialization
+2025-08-21 10:23:00.045+0000 [id=38]	INFO	hudson.lifecycle.Lifecycle#onReady: Jenkins is fully up and running
+2025-08-21 10:23:03.133+0000 [id=75]	INFO	h.m.DownloadService$Downloadable#load: Obtained the updated data file for hudson.tasks.Maven.MavenInstaller
+2025-08-21 10:23:03.133+0000 [id=75]	INFO	hudson.util.Retrier#start: Performed the action check updates server successfully at the attempt #1
+</code></pre>
 <h3 id="2-6-Try-to-login"><a href="#2-6-Try-to-login" class="headerlink" title="2.6 Try to login"></a>2.6 Try to login</h3><ul>
 <li><p>Try to entry <code>http://192.168.77.119:8000</code> use browser</p>
 <p><img src="/2025/08/21/Jenkins/Setup_SOP/1.%20Install%20Jenkins/Install_Jenkins/Login_Setting.png" alt="Login_Setting.png" title="Login_Setting.png"></p>
@@ -353,33 +439,66 @@
 <ul>
 <li>Set the Jenkins service to start automatically when ubuntu is powered on</li>
 </ul>
-<h4 id="3-1-1-Create-the-Jenkins-directory"><a href="#3-1-1-Create-the-Jenkins-directory" class="headerlink" title="3.1.1 Create the Jenkins directory"></a>3.1.1 Create the Jenkins directory</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /opt/jenkins</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory"><a href="#3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory" class="headerlink" title="3.1.2 Copy the Jenkins WAR file to the directory"></a>3.1.2 Copy the Jenkins WAR file to the directory</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo cp /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war /opt/jenkins/</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-1-3-Set-ownership-to-the-ubuntu-user"><a href="#3-1-3-Set-ownership-to-the-ubuntu-user" class="headerlink" title="3.1.3 Set ownership to the ubuntu user"></a>3.1.3 Set ownership to the ubuntu user</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R ubuntu:ubuntu /opt/jenkins</span><br></pre></td></tr></table></figure>
-
+<h4 id="3-1-1-Create-the-Jenkins-directory"><a href="#3-1-1-Create-the-Jenkins-directory" class="headerlink" title="3.1.1 Create the Jenkins directory"></a>3.1.1 Create the Jenkins directory</h4><pre><code class="language-shell">sudo mkdir -p /opt/jenkins
+</code></pre>
+<h4 id="3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory"><a href="#3-1-2-Copy-the-Jenkins-WAR-file-to-the-directory" class="headerlink" title="3.1.2 Copy the Jenkins WAR file to the directory"></a>3.1.2 Copy the Jenkins WAR file to the directory</h4><pre><code class="language-shell">sudo cp /media/sf_VirtualBoxShare/Jenkins_Workplace/jenkins.war /opt/jenkins/
+</code></pre>
+<h4 id="3-1-3-Set-ownership-to-the-ubuntu-user"><a href="#3-1-3-Set-ownership-to-the-ubuntu-user" class="headerlink" title="3.1.3 Set ownership to the ubuntu user"></a>3.1.3 Set ownership to the ubuntu user</h4><pre><code class="language-shell">sudo chown -R ubuntu:ubuntu /opt/jenkins
+</code></pre>
 <h4 id="3-1-4-Create-a-Java-TrustStore-and-import-the-Gerrit-certificate"><a href="#3-1-4-Create-a-Java-TrustStore-and-import-the-Gerrit-certificate" class="headerlink" title="3.1.4 Create a Java TrustStore and import the Gerrit certificate"></a>3.1.4 Create a Java TrustStore and import the Gerrit certificate</h4><ul>
 <li><p>Remove any existing TrustStore (if present):</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -f /home/ubuntu/gerritTrustStore.jks</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">sudo rm -f /home/ubuntu/gerritTrustStore.jks
+</code></pre>
 </li>
 <li><p>Create an empty TrustStore with a temporary key entry:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -genkey -alias temp \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit \</span><br><span class="line">  -keyalg RSA -keysize 2048 \</span><br><span class="line">  -dname &quot;CN=temp&quot;</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">sudo keytool -genkey -alias temp \
+  -keystore /home/ubuntu/gerritTrustStore.jks \
+  -storepass changeit \
+  -keyalg RSA -keysize 2048 \
+  -dname &quot;CN=temp&quot;
+</code></pre>
 </li>
 <li><p>Delete the temporary alias:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -delete -alias temp \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">sudo keytool -delete -alias temp \
+  -keystore /home/ubuntu/gerritTrustStore.jks \
+  -storepass changeit
+</code></pre>
 </li>
 <li><p>Import the Gerrit certificate into the TrustStore:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -importcert -trustcacerts -alias gerrit \</span><br><span class="line">  -file /home/ubuntu/Gerrit_Workplace/key/gerrit.crt \</span><br><span class="line">  -keystore /home/ubuntu/gerritTrustStore.jks \</span><br><span class="line">  -storepass changeit -noprompt</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">sudo keytool -importcert -trustcacerts -alias gerrit \
+  -file /home/ubuntu/Gerrit_Workplace/key/gerrit.crt \
+  -keystore /home/ubuntu/gerritTrustStore.jks \
+  -storepass changeit -noprompt
+</code></pre>
 </li>
 <li><p>Verify the certificate was imported successfully:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keytool -list -v -keystore /home/ubuntu/gerritTrustStore.jks -storepass changeit</span><br></pre></td></tr></table></figure></li>
+<pre><code class="language-shell">sudo keytool -list -v -keystore /home/ubuntu/gerritTrustStore.jks -storepass changeit
+</code></pre>
+</li>
 </ul>
-<h4 id="3-1-5-Create-a-systemd-service-file-for-Jenkins"><a href="#3-1-5-Create-a-systemd-service-file-for-Jenkins" class="headerlink" title="3.1.5 Create a systemd service file for Jenkins"></a>3.1.5 Create a systemd service file for Jenkins</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sudo nano /etc/systemd/system/jenkins.service</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Add the following content:</span></span><br><span class="line">[Unit]</span><br><span class="line">Description=Jenkins Server</span><br><span class="line">After=network.target</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">User=ubuntu</span><br><span class="line">Group=ubuntu</span><br><span class="line">WorkingDirectory=/opt/jenkins</span><br><span class="line">ExecStart=/usr/bin/java -Djavax.net.ssl.trustStore=/home/ubuntu/gerritTrustStore.jks -Djavax.net.ssl.trustStorePassword=changeit -jar /opt/jenkins/jenkins.war --httpPort=8000</span><br><span class="line">Restart=always</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-5-Create-a-systemd-service-file-for-Jenkins"><a href="#3-1-5-Create-a-systemd-service-file-for-Jenkins" class="headerlink" title="3.1.5 Create a systemd service file for Jenkins"></a>3.1.5 Create a systemd service file for Jenkins</h4><pre><code class="language-shell">sudo nano /etc/systemd/system/jenkins.service
 
-<h4 id="3-1-6-Reload-systemd-to-apply-the-new-service"><a href="#3-1-6-Reload-systemd-to-apply-the-new-service" class="headerlink" title="3.1.6 Reload systemd to apply the new service"></a>3.1.6 Reload systemd to apply the new service</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+# Add the following content:
+[Unit]
+Description=Jenkins Server
+After=network.target
 
-<h4 id="3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot"><a href="#3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot" class="headerlink" title="3.1.7 Start Jenkins and enable it to auto-start on boot:"></a>3.1.7 Start Jenkins and enable it to auto-start on boot:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start jenkins</span><br><span class="line">sudo systemctl enable jenkins</span><br><span class="line">sudo systemctl status jenkins</span><br></pre></td></tr></table></figure>
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/jenkins
+ExecStart=/usr/bin/java -Djavax.net.ssl.trustStore=/home/ubuntu/gerritTrustStore.jks -Djavax.net.ssl.trustStorePassword=changeit -jar /opt/jenkins/jenkins.war --httpPort=8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<h4 id="3-1-6-Reload-systemd-to-apply-the-new-service"><a href="#3-1-6-Reload-systemd-to-apply-the-new-service" class="headerlink" title="3.1.6 Reload systemd to apply the new service"></a>3.1.6 Reload systemd to apply the new service</h4><pre><code class="language-shell">sudo systemctl daemon-reload
+</code></pre>
+<h4 id="3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot"><a href="#3-1-7-Start-Jenkins-and-enable-it-to-auto-start-on-boot" class="headerlink" title="3.1.7 Start Jenkins and enable it to auto-start on boot:"></a>3.1.7 Start Jenkins and enable it to auto-start on boot:</h4><pre><code class="language-shell">sudo systemctl start jenkins
+sudo systemctl enable jenkins
+sudo systemctl status jenkins
+</code></pre>
 
     </div>
 
@@ -481,20 +600,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -545,12 +664,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -640,6 +759,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

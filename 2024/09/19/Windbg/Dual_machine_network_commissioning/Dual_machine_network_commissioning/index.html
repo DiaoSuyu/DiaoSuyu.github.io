@@ -283,12 +283,36 @@
 <ul>
 <li>Set on client machine</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">1. Execute the following <span class="built_in">command</span> <span class="keyword">in</span> CMD:</span></span><br><span class="line">bcdedit /set testsigning on        # Turn on Windows Test Mode</span><br><span class="line">bcdedit /debug on                  # Enable kernel debugging for the Windows operating system associated with a specified startup item or the current startup item</span><br><span class="line">bcdedit /bootdebug on              # Enable startup debugging for the current or specified Windows operating system startup items</span><br><span class="line">bcdedit /set nointegritychecks on  # Enable digital signatures permanently</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">2. Configure the debugging startup parameters of the target machine</span></span><br><span class="line">bcdedit /dbgsettings net hostip:192.168.77.10 port:50000 key:abcd1234.abcd1234.abcd1234.abcd1234</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">3. Allow port 50000</span></span><br><span class="line">netsh advfirewall firewall add rule name=&quot;Windbg Debug&quot; dir=in action=allow protocol=TCP localport=50000</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">4. Reboot client machine</span></span><br><span class="line">shutdown /r /t 0</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell"># 1. Execute the following command in CMD:
+bcdedit /set testsigning on        # Turn on Windows Test Mode
+bcdedit /debug on                  # Enable kernel debugging for the Windows operating system associated with a specified startup item or the current startup item
+bcdedit /bootdebug on              # Enable startup debugging for the current or specified Windows operating system startup items
+bcdedit /set nointegritychecks on  # Enable digital signatures permanently
 
+# 2. Configure the debugging startup parameters of the target machine
+bcdedit /dbgsettings net hostip:192.168.77.10 port:50000 key:abcd1234.abcd1234.abcd1234.abcd1234
+
+# 3. Allow port 50000
+netsh advfirewall firewall add rule name=&quot;Windbg Debug&quot; dir=in action=allow protocol=TCP localport=50000
+
+# 4. Reboot client machine
+shutdown /r /t 0
+</code></pre>
 <ul>
 <li>Set on host machine</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. Open Windbg, select File &gt; Kernel Debug</span><br><span class="line"></span><br><span class="line">2. In the dialog box that pops up, select the NET tab</span><br><span class="line"></span><br><span class="line">3. In the Port field, enter the port number 50000 that you set on the target machine</span><br><span class="line"></span><br><span class="line">4. Enter the key you set in the Key field, abcd1234.abcd1234.abcd1234.abcd1234</span><br><span class="line"></span><br><span class="line">5. Enter the IP address of the target machine in the Target IP field, 192.168.77.35</span><br><span class="line"></span><br><span class="line">6. Adjust the printing level of debug messages, ed nt!Kd_DEFAULT_Mask 0xFFFFFFFF</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">1. Open Windbg, select File &gt; Kernel Debug
+
+2. In the dialog box that pops up, select the NET tab
+
+3. In the Port field, enter the port number 50000 that you set on the target machine
+
+4. Enter the key you set in the Key field, abcd1234.abcd1234.abcd1234.abcd1234
+
+5. Enter the IP address of the target machine in the Target IP field, 192.168.77.35
+
+6. Adjust the printing level of debug messages, ed nt!Kd_DEFAULT_Mask 0xFFFFFFFF
+</code></pre>
 
     </div>
 
@@ -389,20 +413,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -453,12 +477,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -548,6 +572,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 

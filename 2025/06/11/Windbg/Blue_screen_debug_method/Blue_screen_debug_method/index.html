@@ -254,7 +254,7 @@
               <span class="post-meta-item-icon">
                 <i class="fa fa-file-word-o"></i>
               </span>
-              <span>14k</span>
+              <span>13k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -282,23 +282,179 @@
 <li>Open Windbg, select File &gt; Open Crash Dump</li>
 <li>Wait for loading</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Microsoft (R) Windows Debugger Version 10.0.19041.685 AMD64</span><br><span class="line">Copyright (c) Microsoft Corporation. All rights reserved.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Loading Dump File [C:\Users\Administrator\Desktop\WDF_error\061125-28937-01.dmp]</span><br><span class="line">Mini Kernel Dump File: Only registers and stack trace are available</span><br><span class="line"></span><br><span class="line">Symbol search path is: srv*</span><br><span class="line">Executable search path is: </span><br><span class="line">Windows 10 Kernel Version 26100 MP (24 procs) Free x64</span><br><span class="line">Product: WinNt, suite: TerminalServer SingleUserTS</span><br><span class="line">Machine Name:</span><br><span class="line">Kernel base = 0xfffff804`bfa00000 PsLoadedModuleList = 0xfffff804`c08f4aa0</span><br><span class="line">Debug session time: Wed Jun 11 14:37:42.041 2025 (UTC + 8:00)</span><br><span class="line">System Uptime: 0 days 0:05:25.322</span><br><span class="line">Loading Kernel Symbols</span><br><span class="line">...............................................................</span><br><span class="line">................................................................</span><br><span class="line">................................................................</span><br><span class="line">.......</span><br><span class="line">Loading User Symbols</span><br><span class="line">Loading unloaded module list</span><br><span class="line">............</span><br><span class="line">For analysis of this file, run !analyze -v</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">Microsoft (R) Windows Debugger Version 10.0.19041.685 AMD64
+Copyright (c) Microsoft Corporation. All rights reserved.
 
+
+Loading Dump File [C:\Users\Administrator\Desktop\WDF_error\061125-28937-01.dmp]
+Mini Kernel Dump File: Only registers and stack trace are available
+
+Symbol search path is: srv*
+Executable search path is: 
+Windows 10 Kernel Version 26100 MP (24 procs) Free x64
+Product: WinNt, suite: TerminalServer SingleUserTS
+Machine Name:
+Kernel base = 0xfffff804`bfa00000 PsLoadedModuleList = 0xfffff804`c08f4aa0
+Debug session time: Wed Jun 11 14:37:42.041 2025 (UTC + 8:00)
+System Uptime: 0 days 0:05:25.322
+Loading Kernel Symbols
+...............................................................
+................................................................
+................................................................
+.......
+Loading User Symbols
+Loading unloaded module list
+............
+For analysis of this file, run !analyze -v
+</code></pre>
 <ul>
 <li>Enter the analysis command <code>!analyze -v</code></li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line">23: kd&gt; !analyze -v</span><br><span class="line">*******************************************************************************</span><br><span class="line">*                                                                             *</span><br><span class="line">*                        Bugcheck Analysis                                    *</span><br><span class="line">*                                                                             *</span><br><span class="line">*******************************************************************************</span><br><span class="line"></span><br><span class="line">WDF_VIOLATION (10d)</span><br><span class="line">The Kernel-Mode Driver Framework was notified that Windows detected an error</span><br><span class="line">in a framework-based driver. In general, the dump file will yield additional</span><br><span class="line">information about the driver that caused this bug check.</span><br><span class="line">Arguments:</span><br><span class="line">Arg1: 0000000000000005, A framework object handle of the incorrect type was passed to</span><br><span class="line">	a framework object method.</span><br><span class="line">Arg2: 0000000000000000, The handle value passed in.</span><br><span class="line">Arg3: 0000000000001201, Reserved.</span><br><span class="line">Arg4: ffffc6011d35ddd0, Reserved.</span><br><span class="line"></span><br><span class="line">Debugging Details:</span><br><span class="line">------------------</span><br><span class="line"></span><br><span class="line">*** WARNING: Unable to verify timestamp for StcMcuI2cDriver.sys</span><br><span class="line"></span><br><span class="line">KEY_VALUES_STRING: 1</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.CPU.Sec</span><br><span class="line">    Value: 0</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugAnalysisProvider.CPP</span><br><span class="line">    Value: Create: 8007007e on SAM-DIAO</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugData</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugModel</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.Elapsed.Sec</span><br><span class="line">    Value: 2</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.Memory.CommitPeak.Mb</span><br><span class="line">    Value: 119</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.System</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DUMP_FILE_ATTRIBUTES: 0x21808</span><br><span class="line">  Kernel Generated Triage Dump</span><br><span class="line"></span><br><span class="line">BUGCHECK_CODE:  10d</span><br><span class="line"></span><br><span class="line">BUGCHECK_P1: 5</span><br><span class="line"></span><br><span class="line">BUGCHECK_P2: 0</span><br><span class="line"></span><br><span class="line">BUGCHECK_P3: 1201</span><br><span class="line"></span><br><span class="line">BUGCHECK_P4: ffffc6011d35ddd0</span><br><span class="line"></span><br><span class="line">BLACKBOXBSD: 1 (!blackboxbsd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXNTFS: 1 (!blackboxntfs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXPNP: 1 (!blackboxpnp)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXWINLOGON: 1</span><br><span class="line"></span><br><span class="line">CUSTOMER_CRASH_COUNT:  1</span><br><span class="line"></span><br><span class="line">PROCESS_NAME:  MaxsunSyncServ</span><br><span class="line"></span><br><span class="line">STACK_TEXT:  </span><br><span class="line">ffff828a`3e186ea8 fffff804`520d30dc : 00000000`0000010d 00000000`00000005 00000000`00000000 00000000`00001201 : nt!KeBugCheckEx</span><br><span class="line">ffff828a`3e186eb0 fffff804`520612f8 : ffffc601`1eba7c00 ffffc601`1d35ddd0 00000000`00000000 000039fe`db480201 : Wdf01000!FxVerifierBugCheckWorker+0x24 [minkernel\wdf\framework\shared\object\fxverifierbugcheck.cpp @ 87] </span><br><span class="line">ffff828a`3e186ef0 fffff804`68f02d67 : ffffc601`1d13dba0 ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 : Wdf01000!imp_WdfIoTargetClose+0x118 [minkernel\wdf\framework\shared\targets\general\fxiotargetapi.cpp @ 620] </span><br><span class="line">ffff828a`3e186f60 ffffc601`1d13dba0 : ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 ffffc601`1d35ddd0 : StcMcuI2cDriver+0x2d67</span><br><span class="line">ffff828a`3e186f68 ffffc601`1eba7c00 : fffff804`68f07050 00000000`04001c04 ffffc601`1d35ddd0 fffff804`68f0223f : 0xffffc601`1d13dba0</span><br><span class="line">ffff828a`3e186f70 fffff804`68f07050 : 00000000`04001c04 ffffc601`1d35ddd0 fffff804`68f0223f 000039fe`db4802d8 : 0xffffc601`1eba7c00</span><br><span class="line">ffff828a`3e186f78 00000000`04001c04 : ffffc601`1d35ddd0 fffff804`68f0223f 000039fe`db4802d8 ffffc601`1d8a36c0 : StcMcuI2cDriver+0x7050</span><br><span class="line">ffff828a`3e186f80 ffffc601`1d35ddd0 : fffff804`68f0223f 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 : 0x4001c04</span><br><span class="line">ffff828a`3e186f88 fffff804`68f0223f : 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 : 0xffffc601`1d35ddd0</span><br><span class="line">ffff828a`3e186f90 000039fe`db4802d8 : ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 ffffc601`1d8a36c0 : StcMcuI2cDriver+0x223f</span><br><span class="line">ffff828a`3e186f98 ffffc601`1d8a36c0 : 000039fe`e275c938 000039fe`db4802d8 ffffc601`1d8a36c0 ffffc601`1d8a3730 : 0x000039fe`db4802d8</span><br><span class="line">ffff828a`3e186fa0 000039fe`e275c938 : 000039fe`db4802d8 ffffc601`1d8a36c0 ffffc601`1d8a3730 00000000`04001c04 : 0xffffc601`1d8a36c0</span><br><span class="line">ffff828a`3e186fa8 000039fe`db4802d8 : ffffc601`1d8a36c0 ffffc601`1d8a3730 00000000`04001c04 fffff804`5205fde6 : 0x000039fe`e275c938</span><br><span class="line">ffff828a`3e186fb0 ffffc601`1d8a36c0 : ffffc601`1d8a3730 00000000`04001c04 fffff804`5205fde6 ffffc601`24b7fd20 : 0x000039fe`db4802d8</span><br><span class="line">ffff828a`3e186fb8 ffffc601`1d8a3730 : 00000000`04001c04 fffff804`5205fde6 ffffc601`24b7fd20 ffffc601`1d8a3890 : 0xffffc601`1d8a36c0</span><br><span class="line">ffff828a`3e186fc0 00000000`04001c04 : fffff804`5205fde6 ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 : 0xffffc601`1d8a3730</span><br><span class="line">ffff828a`3e186fc8 fffff804`5205fde6 : ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 00000000`00000000 : 0x4001c04</span><br><span class="line">ffff828a`3e186fd0 fffff804`5205eae9 : 00000000`00000000 fffff804`52104c28 00000000`0000000b ffffc601`1d8a36c0 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x296 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3448] </span><br><span class="line">ffff828a`3e187050 fffff804`5205b173 : ffffc601`1d8a36c0 fffff804`bfcf4c00 00000000`00000000 ffffc601`24b7fd20 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] </span><br><span class="line">ffff828a`3e187160 fffff804`68f02ad1 : 000039fe`db480200 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 : Wdf01000!imp_WdfRequestForwardToIoQueue+0x343 [minkernel\wdf\framework\shared\core\fxrequestapi.cpp @ 3130] </span><br><span class="line">ffff828a`3e187230 000039fe`db480200 : 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 ffffc601`24b7fd20 : StcMcuI2cDriver+0x2ad1</span><br><span class="line">ffff828a`3e187238 000039fe`e276d688 : fffff804`68f07000 ffffc601`00000001 ffffc601`24b7fd20 00000000`00000000 : 0x000039fe`db480200</span><br><span class="line">ffff828a`3e187240 fffff804`68f07000 : ffffc601`00000001 ffffc601`24b7fd20 00000000`00000000 0000000e`00000028 : 0x000039fe`e276d688</span><br><span class="line">ffff828a`3e187248 ffffc601`00000001 : ffffc601`24b7fd20 00000000`00000000 0000000e`00000028 00000000`00000000 : StcMcuI2cDriver+0x7000</span><br><span class="line">ffff828a`3e187250 ffffc601`24b7fd20 : 00000000`00000000 0000000e`00000028 00000000`00000000 00000000`00000000 : 0xffffc601`00000001</span><br><span class="line">ffff828a`3e187258 00000000`00000000 : 0000000e`00000028 00000000`00000000 00000000`00000000 00000000`04001c04 : 0xffffc601`24b7fd20</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SYMBOL_NAME:  StcMcuI2cDriver+2d67</span><br><span class="line"></span><br><span class="line">MODULE_NAME: StcMcuI2cDriver</span><br><span class="line"></span><br><span class="line">IMAGE_NAME:  StcMcuI2cDriver.sys</span><br><span class="line"></span><br><span class="line">STACK_COMMAND:  .thread ; .cxr ; kb</span><br><span class="line"></span><br><span class="line">BUCKET_ID_FUNC_OFFSET:  2d67</span><br><span class="line"></span><br><span class="line">FAILURE_BUCKET_ID:  0x10D_5_StcMcuI2cDriver!unknown_function</span><br><span class="line"></span><br><span class="line">OSPLATFORM_TYPE:  x64</span><br><span class="line"></span><br><span class="line">OSNAME:  Windows 10</span><br><span class="line"></span><br><span class="line">FAILURE_ID_HASH:  &#123;f601315d-5c7a-bc38-1801-2c856e4bfc93&#125;</span><br><span class="line"></span><br><span class="line">Followup:     MachineOwner</span><br><span class="line">---------</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">23: kd&gt; !analyze -v
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
 
+WDF_VIOLATION (10d)
+The Kernel-Mode Driver Framework was notified that Windows detected an error
+in a framework-based driver. In general, the dump file will yield additional
+information about the driver that caused this bug check.
+Arguments:
+Arg1: 0000000000000005, A framework object handle of the incorrect type was passed to
+	a framework object method.
+Arg2: 0000000000000000, The handle value passed in.
+Arg3: 0000000000001201, Reserved.
+Arg4: ffffc6011d35ddd0, Reserved.
+
+Debugging Details:
+------------------
+
+*** WARNING: Unable to verify timestamp for StcMcuI2cDriver.sys
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.Sec
+    Value: 0
+
+    Key  : Analysis.DebugAnalysisProvider.CPP
+    Value: Create: 8007007e on SAM-DIAO
+
+    Key  : Analysis.DebugData
+    Value: CreateObject
+
+    Key  : Analysis.DebugModel
+    Value: CreateObject
+
+    Key  : Analysis.Elapsed.Sec
+    Value: 2
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 119
+
+    Key  : Analysis.System
+    Value: CreateObject
+
+
+TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b
+
+
+DUMP_FILE_ATTRIBUTES: 0x21808
+  Kernel Generated Triage Dump
+
+BUGCHECK_CODE:  10d
+
+BUGCHECK_P1: 5
+
+BUGCHECK_P2: 0
+
+BUGCHECK_P3: 1201
+
+BUGCHECK_P4: ffffc6011d35ddd0
+
+BLACKBOXBSD: 1 (!blackboxbsd)
+
+
+BLACKBOXNTFS: 1 (!blackboxntfs)
+
+
+BLACKBOXPNP: 1 (!blackboxpnp)
+
+
+BLACKBOXWINLOGON: 1
+
+CUSTOMER_CRASH_COUNT:  1
+
+PROCESS_NAME:  MaxsunSyncServ
+
+STACK_TEXT:  
+ffff828a`3e186ea8 fffff804`520d30dc : 00000000`0000010d 00000000`00000005 00000000`00000000 00000000`00001201 : nt!KeBugCheckEx
+ffff828a`3e186eb0 fffff804`520612f8 : ffffc601`1eba7c00 ffffc601`1d35ddd0 00000000`00000000 000039fe`db480201 : Wdf01000!FxVerifierBugCheckWorker+0x24 [minkernel\wdf\framework\shared\object\fxverifierbugcheck.cpp @ 87] 
+ffff828a`3e186ef0 fffff804`68f02d67 : ffffc601`1d13dba0 ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 : Wdf01000!imp_WdfIoTargetClose+0x118 [minkernel\wdf\framework\shared\targets\general\fxiotargetapi.cpp @ 620] 
+ffff828a`3e186f60 ffffc601`1d13dba0 : ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 ffffc601`1d35ddd0 : StcMcuI2cDriver+0x2d67
+ffff828a`3e186f68 ffffc601`1eba7c00 : fffff804`68f07050 00000000`04001c04 ffffc601`1d35ddd0 fffff804`68f0223f : 0xffffc601`1d13dba0
+ffff828a`3e186f70 fffff804`68f07050 : 00000000`04001c04 ffffc601`1d35ddd0 fffff804`68f0223f 000039fe`db4802d8 : 0xffffc601`1eba7c00
+ffff828a`3e186f78 00000000`04001c04 : ffffc601`1d35ddd0 fffff804`68f0223f 000039fe`db4802d8 ffffc601`1d8a36c0 : StcMcuI2cDriver+0x7050
+ffff828a`3e186f80 ffffc601`1d35ddd0 : fffff804`68f0223f 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 : 0x4001c04
+ffff828a`3e186f88 fffff804`68f0223f : 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 : 0xffffc601`1d35ddd0
+ffff828a`3e186f90 000039fe`db4802d8 : ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 ffffc601`1d8a36c0 : StcMcuI2cDriver+0x223f
+ffff828a`3e186f98 ffffc601`1d8a36c0 : 000039fe`e275c938 000039fe`db4802d8 ffffc601`1d8a36c0 ffffc601`1d8a3730 : 0x000039fe`db4802d8
+ffff828a`3e186fa0 000039fe`e275c938 : 000039fe`db4802d8 ffffc601`1d8a36c0 ffffc601`1d8a3730 00000000`04001c04 : 0xffffc601`1d8a36c0
+ffff828a`3e186fa8 000039fe`db4802d8 : ffffc601`1d8a36c0 ffffc601`1d8a3730 00000000`04001c04 fffff804`5205fde6 : 0x000039fe`e275c938
+ffff828a`3e186fb0 ffffc601`1d8a36c0 : ffffc601`1d8a3730 00000000`04001c04 fffff804`5205fde6 ffffc601`24b7fd20 : 0x000039fe`db4802d8
+ffff828a`3e186fb8 ffffc601`1d8a3730 : 00000000`04001c04 fffff804`5205fde6 ffffc601`24b7fd20 ffffc601`1d8a3890 : 0xffffc601`1d8a36c0
+ffff828a`3e186fc0 00000000`04001c04 : fffff804`5205fde6 ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 : 0xffffc601`1d8a3730
+ffff828a`3e186fc8 fffff804`5205fde6 : ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 00000000`00000000 : 0x4001c04
+ffff828a`3e186fd0 fffff804`5205eae9 : 00000000`00000000 fffff804`52104c28 00000000`0000000b ffffc601`1d8a36c0 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x296 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3448] 
+ffff828a`3e187050 fffff804`5205b173 : ffffc601`1d8a36c0 fffff804`bfcf4c00 00000000`00000000 ffffc601`24b7fd20 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] 
+ffff828a`3e187160 fffff804`68f02ad1 : 000039fe`db480200 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 : Wdf01000!imp_WdfRequestForwardToIoQueue+0x343 [minkernel\wdf\framework\shared\core\fxrequestapi.cpp @ 3130] 
+ffff828a`3e187230 000039fe`db480200 : 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 ffffc601`24b7fd20 : StcMcuI2cDriver+0x2ad1
+ffff828a`3e187238 000039fe`e276d688 : fffff804`68f07000 ffffc601`00000001 ffffc601`24b7fd20 00000000`00000000 : 0x000039fe`db480200
+ffff828a`3e187240 fffff804`68f07000 : ffffc601`00000001 ffffc601`24b7fd20 00000000`00000000 0000000e`00000028 : 0x000039fe`e276d688
+ffff828a`3e187248 ffffc601`00000001 : ffffc601`24b7fd20 00000000`00000000 0000000e`00000028 00000000`00000000 : StcMcuI2cDriver+0x7000
+ffff828a`3e187250 ffffc601`24b7fd20 : 00000000`00000000 0000000e`00000028 00000000`00000000 00000000`00000000 : 0xffffc601`00000001
+ffff828a`3e187258 00000000`00000000 : 0000000e`00000028 00000000`00000000 00000000`00000000 00000000`04001c04 : 0xffffc601`24b7fd20
+
+
+SYMBOL_NAME:  StcMcuI2cDriver+2d67
+
+MODULE_NAME: StcMcuI2cDriver
+
+IMAGE_NAME:  StcMcuI2cDriver.sys
+
+STACK_COMMAND:  .thread ; .cxr ; kb
+
+BUCKET_ID_FUNC_OFFSET:  2d67
+
+FAILURE_BUCKET_ID:  0x10D_5_StcMcuI2cDriver!unknown_function
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  &#123;f601315d-5c7a-bc38-1801-2c856e4bfc93&#125;
+
+Followup:     MachineOwner
+---------
+</code></pre>
 <ul>
 <li>Specify the path to the <code>.sys</code> and <code>.pdb</code> (usually these two together)</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">23: kd&gt; .sympath+ C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release</span><br><span class="line">Symbol search path is: srv*;C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release</span><br><span class="line">Expanded Symbol search path is: cache*;SRV*https://msdl.microsoft.com/download/symbols;c:\users\administrator\desktop\wdf_error\1\1.2\sys\x64\release</span><br><span class="line"></span><br><span class="line">************* Path validation summary **************</span><br><span class="line">Response                         Time (ms)     Location</span><br><span class="line">Deferred                                       srv*</span><br><span class="line">OK                                             C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">23: kd&gt; .sympath+ C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release
+Symbol search path is: srv*;C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release
+Expanded Symbol search path is: cache*;SRV*https://msdl.microsoft.com/download/symbols;c:\users\administrator\desktop\wdf_error\1\1.2\sys\x64\release
 
+************* Path validation summary **************
+Response                         Time (ms)     Location
+Deferred                                       srv*
+OK                                             C:\Users\Administrator\Desktop\WDF_error\1\1.2\sys\x64\Release
+</code></pre>
 <ul>
 <li>Load your driver(<code>.sys</code>)</li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">23: kd&gt; .reload /f StcMcuI2cDriver.sys</span><br></pre></td></tr></table></figure>
-
+<pre><code class="language-shell">23: kd&gt; .reload /f StcMcuI2cDriver.sys
+</code></pre>
 <ul>
 <li><p>Enter the analysis command <code>!analyze -v</code> again</p>
 <ul>
@@ -306,7 +462,152 @@
 </ul>
 </li>
 </ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br></pre></td><td class="code"><pre><span class="line">23: kd&gt; !analyze -v</span><br><span class="line">*******************************************************************************</span><br><span class="line">*                                                                             *</span><br><span class="line">*                        Bugcheck Analysis                                    *</span><br><span class="line">*                                                                             *</span><br><span class="line">*******************************************************************************</span><br><span class="line"></span><br><span class="line">WDF_VIOLATION (10d)</span><br><span class="line">The Kernel-Mode Driver Framework was notified that Windows detected an error</span><br><span class="line">in a framework-based driver. In general, the dump file will yield additional</span><br><span class="line">information about the driver that caused this bug check.</span><br><span class="line">Arguments:</span><br><span class="line">Arg1: 0000000000000005, A framework object handle of the incorrect type was passed to</span><br><span class="line">	a framework object method.</span><br><span class="line">Arg2: 0000000000000000, The handle value passed in.</span><br><span class="line">Arg3: 0000000000001201, Reserved.</span><br><span class="line">Arg4: ffffc6011d35ddd0, Reserved.</span><br><span class="line"></span><br><span class="line">Debugging Details:</span><br><span class="line">------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">KEY_VALUES_STRING: 1</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.CPU.Sec</span><br><span class="line">    Value: 0</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugAnalysisProvider.CPP</span><br><span class="line">    Value: Create: 8007007e on SAM-DIAO</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugData</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.DebugModel</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.Elapsed.Sec</span><br><span class="line">    Value: 0</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.Memory.CommitPeak.Mb</span><br><span class="line">    Value: 131</span><br><span class="line"></span><br><span class="line">    Key  : Analysis.System</span><br><span class="line">    Value: CreateObject</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">DUMP_FILE_ATTRIBUTES: 0x21808</span><br><span class="line">  Kernel Generated Triage Dump</span><br><span class="line"></span><br><span class="line">BUGCHECK_CODE:  10d</span><br><span class="line"></span><br><span class="line">BUGCHECK_P1: 5</span><br><span class="line"></span><br><span class="line">BUGCHECK_P2: 0</span><br><span class="line"></span><br><span class="line">BUGCHECK_P3: 1201</span><br><span class="line"></span><br><span class="line">BUGCHECK_P4: ffffc6011d35ddd0</span><br><span class="line"></span><br><span class="line">BLACKBOXBSD: 1 (!blackboxbsd)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXNTFS: 1 (!blackboxntfs)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXPNP: 1 (!blackboxpnp)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BLACKBOXWINLOGON: 1</span><br><span class="line"></span><br><span class="line">CUSTOMER_CRASH_COUNT:  1</span><br><span class="line"></span><br><span class="line">PROCESS_NAME:  MaxsunSyncServ</span><br><span class="line"></span><br><span class="line">STACK_TEXT:  </span><br><span class="line">ffff828a`3e186ea8 fffff804`520d30dc : 00000000`0000010d 00000000`00000005 00000000`00000000 00000000`00001201 : nt!KeBugCheckEx</span><br><span class="line">ffff828a`3e186eb0 fffff804`520612f8 : ffffc601`1eba7c00 ffffc601`1d35ddd0 00000000`00000000 000039fe`db480201 : Wdf01000!FxVerifierBugCheckWorker+0x24 [minkernel\wdf\framework\shared\object\fxverifierbugcheck.cpp @ 87] </span><br><span class="line">ffff828a`3e186ef0 fffff804`68f02d67 : ffffc601`1d13dba0 ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 : Wdf01000!imp_WdfIoTargetClose+0x118 [minkernel\wdf\framework\shared\targets\general\fxiotargetapi.cpp @ 620] </span><br><span class="line">ffff828a`3e186f60 fffff804`68f0223f : 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 : StcMcuI2cDriver!SpbPeripheralClose+0x8f [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp @ 129] </span><br><span class="line">ffff828a`3e186f90 fffff804`5205fde6 : ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 00000000`00000000 : StcMcuI2cDriver!OnIoDeviceControl+0x1cf [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\device.cpp @ 706] </span><br><span class="line">ffff828a`3e186fd0 fffff804`5205eae9 : 00000000`00000000 fffff804`52104c28 00000000`0000000b ffffc601`1d8a36c0 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x296 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3448] </span><br><span class="line">ffff828a`3e187050 fffff804`5205b173 : ffffc601`1d8a36c0 fffff804`bfcf4c00 00000000`00000000 ffffc601`24b7fd20 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] </span><br><span class="line">ffff828a`3e187160 fffff804`68f02ad1 : 000039fe`db480200 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 : Wdf01000!imp_WdfRequestForwardToIoQueue+0x343 [minkernel\wdf\framework\shared\core\fxrequestapi.cpp @ 3130] </span><br><span class="line">ffff828a`3e187230 fffff804`5205fd38 : ffffc601`24b7fd01 ffffc601`1d35ddd0 ffffc601`24b7fd20 ffffc601`24b7fd20 : StcMcuI2cDriver!OnTopLevelIoDefault+0x121 [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\device.cpp @ 511] </span><br><span class="line">ffff828a`3e1872b0 fffff804`5205eae9 : fffff804`68f07000 fffff804`52104c28 00000000`0000000b ffffc601`1d892970 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x1e8 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3414] </span><br><span class="line">ffff828a`3e187330 fffff804`520793ec : ffffc601`1d892970 ffff828a`3e187800 00000000`00000000 00000002`00000048 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] </span><br><span class="line">ffff828a`3e187440 fffff804`52078d89 : 00000000`00000000 ffffc601`23d6ca00 ffff828a`3e187800 fffff804`bfd41401 : Wdf01000!FxPkgIo::DispatchStep1+0x5ec [minkernel\wdf\framework\shared\irphandlers\io\fxpkgio.cpp @ 324] </span><br><span class="line">ffff828a`3e187520 fffff804`520972e2 : ffffc601`23d6ca30 00000000`24b7fd20 ffffc601`1d13d8b0 fffff804`bfccdc39 : Wdf01000!FxPkgIo::Dispatch+0x59 [minkernel\wdf\framework\shared\irphandlers\io\fxpkgio.cpp @ 119] </span><br><span class="line">ffff828a`3e187580 fffff804`bfc987ed : 00000000`00000000 00000000`00000000 ffffc601`1d08c8d0 ffffc601`27122d10 : Wdf01000!FxDevice::DispatchWithLock+0x232 [minkernel\wdf\framework\shared\core\fxdevice.cpp @ 1445] </span><br><span class="line">ffff828a`3e1875e0 fffff804`c02d33a8 : ffffc601`27122d10 ffff828a`3e187690 ffffc601`1d08c8d0 00000000`00000001 : nt!IofCallDriver+0xcd</span><br><span class="line">ffff828a`3e187620 fffff804`c02d21f2 : 00000000`42dd2ce6 00000000`00000001 ffffc601`27122d10 00000000`00000001 : nt!IopSynchronousServiceTail+0x1c8</span><br><span class="line">ffff828a`3e1876d0 fffff804`c02d187e : 00000000`00000000 fffff804`bfcaaa80 00000000`00000000 00007ff8`ed5a58f0 : nt!IopXxxControlFile+0x962</span><br><span class="line">ffff828a`3e187940 fffff804`c00b7c55 : 00000267`bf8d27c0 00000267`bf9720a0 000000f5`6f8a1000 00000267`be7da980 : nt!NtDeviceIoControlFile+0x5e</span><br><span class="line">ffff828a`3e1879b0 00007ff9`59541be4 : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KiSystemServiceCopyEnd+0x25</span><br><span class="line">000000f5`703ff728 00000000`00000000 : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : 0x00007ff9`59541be4</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">FAULTING_SOURCE_LINE:  D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp</span><br><span class="line"></span><br><span class="line">FAULTING_SOURCE_FILE:  D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp</span><br><span class="line"></span><br><span class="line">FAULTING_SOURCE_LINE_NUMBER:  129</span><br><span class="line"></span><br><span class="line">FAULTING_SOURCE_CODE:  </span><br><span class="line">   125:         &quot;Closing handle to SPB target&quot;);</span><br><span class="line">   126: </span><br><span class="line">   127:     WdfIoTargetClose(pDevice-&gt;SpbController);</span><br><span class="line">   128: </span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash"> 129:     FuncExit(TRACE_FLAG_SPBAPI);</span></span><br><span class="line">   130:     </span><br><span class="line">   131:     return STATUS_SUCCESS;</span><br><span class="line">   132: &#125;</span><br><span class="line">   133: </span><br><span class="line">   134: VOID</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">SYMBOL_NAME:  StcMcuI2cDriver!SpbPeripheralClose+8f</span><br><span class="line"></span><br><span class="line">MODULE_NAME: StcMcuI2cDriver</span><br><span class="line"></span><br><span class="line">IMAGE_NAME:  StcMcuI2cDriver.sys</span><br><span class="line"></span><br><span class="line">STACK_COMMAND:  .thread ; .cxr ; kb</span><br><span class="line"></span><br><span class="line">BUCKET_ID_FUNC_OFFSET:  8f</span><br><span class="line"></span><br><span class="line">FAILURE_BUCKET_ID:  0x10D_5_StcMcuI2cDriver!SpbPeripheralClose</span><br><span class="line"></span><br><span class="line">OSPLATFORM_TYPE:  x64</span><br><span class="line"></span><br><span class="line">OSNAME:  Windows 10</span><br><span class="line"></span><br><span class="line">FAILURE_ID_HASH:  &#123;862ad8cf-4de1-9dc0-849b-4a6423d819ac&#125;</span><br><span class="line"></span><br><span class="line">Followup:     MachineOwner</span><br><span class="line">---------</span><br><span class="line"></span><br><span class="line">23: kd&gt; ln StcMcuI2cDriver+0x8f</span><br><span class="line">Browse module</span><br><span class="line">Set bu breakpoint</span><br><span class="line"></span><br><span class="line">(fffff804`68f01000)   StcMcuI2cDriver!OnDeviceAdd+0xffffffff`ffffffff   |  (fffff804`68f01740)   StcMcuI2cDriver!OnDriverCleanup</span><br></pre></td></tr></table></figure>
+<pre><code class="language-shell">23: kd&gt; !analyze -v
+*******************************************************************************
+*                                                                             *
+*                        Bugcheck Analysis                                    *
+*                                                                             *
+*******************************************************************************
+
+WDF_VIOLATION (10d)
+The Kernel-Mode Driver Framework was notified that Windows detected an error
+in a framework-based driver. In general, the dump file will yield additional
+information about the driver that caused this bug check.
+Arguments:
+Arg1: 0000000000000005, A framework object handle of the incorrect type was passed to
+	a framework object method.
+Arg2: 0000000000000000, The handle value passed in.
+Arg3: 0000000000001201, Reserved.
+Arg4: ffffc6011d35ddd0, Reserved.
+
+Debugging Details:
+------------------
+
+
+KEY_VALUES_STRING: 1
+
+    Key  : Analysis.CPU.Sec
+    Value: 0
+
+    Key  : Analysis.DebugAnalysisProvider.CPP
+    Value: Create: 8007007e on SAM-DIAO
+
+    Key  : Analysis.DebugData
+    Value: CreateObject
+
+    Key  : Analysis.DebugModel
+    Value: CreateObject
+
+    Key  : Analysis.Elapsed.Sec
+    Value: 0
+
+    Key  : Analysis.Memory.CommitPeak.Mb
+    Value: 131
+
+    Key  : Analysis.System
+    Value: CreateObject
+
+
+TAG_NOT_DEFINED_202b:  *** Unknown TAG in analysis list 202b
+
+
+DUMP_FILE_ATTRIBUTES: 0x21808
+  Kernel Generated Triage Dump
+
+BUGCHECK_CODE:  10d
+
+BUGCHECK_P1: 5
+
+BUGCHECK_P2: 0
+
+BUGCHECK_P3: 1201
+
+BUGCHECK_P4: ffffc6011d35ddd0
+
+BLACKBOXBSD: 1 (!blackboxbsd)
+
+
+BLACKBOXNTFS: 1 (!blackboxntfs)
+
+
+BLACKBOXPNP: 1 (!blackboxpnp)
+
+
+BLACKBOXWINLOGON: 1
+
+CUSTOMER_CRASH_COUNT:  1
+
+PROCESS_NAME:  MaxsunSyncServ
+
+STACK_TEXT:  
+ffff828a`3e186ea8 fffff804`520d30dc : 00000000`0000010d 00000000`00000005 00000000`00000000 00000000`00001201 : nt!KeBugCheckEx
+ffff828a`3e186eb0 fffff804`520612f8 : ffffc601`1eba7c00 ffffc601`1d35ddd0 00000000`00000000 000039fe`db480201 : Wdf01000!FxVerifierBugCheckWorker+0x24 [minkernel\wdf\framework\shared\object\fxverifierbugcheck.cpp @ 87] 
+ffff828a`3e186ef0 fffff804`68f02d67 : ffffc601`1d13dba0 ffffc601`1eba7c00 fffff804`68f07050 00000000`04001c04 : Wdf01000!imp_WdfIoTargetClose+0x118 [minkernel\wdf\framework\shared\targets\general\fxiotargetapi.cpp @ 620] 
+ffff828a`3e186f60 fffff804`68f0223f : 000039fe`db4802d8 ffffc601`1d8a36c0 000039fe`e275c938 000039fe`db4802d8 : StcMcuI2cDriver!SpbPeripheralClose+0x8f [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp @ 129] 
+ffff828a`3e186f90 fffff804`5205fde6 : ffffc601`24b7fd20 ffffc601`1d8a3890 000039fe`e275c938 00000000`00000000 : StcMcuI2cDriver!OnIoDeviceControl+0x1cf [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\device.cpp @ 706] 
+ffff828a`3e186fd0 fffff804`5205eae9 : 00000000`00000000 fffff804`52104c28 00000000`0000000b ffffc601`1d8a36c0 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x296 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3448] 
+ffff828a`3e187050 fffff804`5205b173 : ffffc601`1d8a36c0 fffff804`bfcf4c00 00000000`00000000 ffffc601`24b7fd20 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] 
+ffff828a`3e187160 fffff804`68f02ad1 : 000039fe`db480200 000039fe`e276d688 fffff804`68f07000 ffffc601`00000001 : Wdf01000!imp_WdfRequestForwardToIoQueue+0x343 [minkernel\wdf\framework\shared\core\fxrequestapi.cpp @ 3130] 
+ffff828a`3e187230 fffff804`5205fd38 : ffffc601`24b7fd01 ffffc601`1d35ddd0 ffffc601`24b7fd20 ffffc601`24b7fd20 : StcMcuI2cDriver!OnTopLevelIoDefault+0x121 [D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\device.cpp @ 511] 
+ffff828a`3e1872b0 fffff804`5205eae9 : fffff804`68f07000 fffff804`52104c28 00000000`0000000b ffffc601`1d892970 : Wdf01000!FxIoQueue::DispatchRequestToDriver+0x1e8 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3414] 
+ffff828a`3e187330 fffff804`520793ec : ffffc601`1d892970 ffff828a`3e187800 00000000`00000000 00000002`00000048 : Wdf01000!FxIoQueue::DispatchEvents+0xa99 [minkernel\wdf\framework\shared\irphandlers\io\fxioqueue.cpp @ 3125] 
+ffff828a`3e187440 fffff804`52078d89 : 00000000`00000000 ffffc601`23d6ca00 ffff828a`3e187800 fffff804`bfd41401 : Wdf01000!FxPkgIo::DispatchStep1+0x5ec [minkernel\wdf\framework\shared\irphandlers\io\fxpkgio.cpp @ 324] 
+ffff828a`3e187520 fffff804`520972e2 : ffffc601`23d6ca30 00000000`24b7fd20 ffffc601`1d13d8b0 fffff804`bfccdc39 : Wdf01000!FxPkgIo::Dispatch+0x59 [minkernel\wdf\framework\shared\irphandlers\io\fxpkgio.cpp @ 119] 
+ffff828a`3e187580 fffff804`bfc987ed : 00000000`00000000 00000000`00000000 ffffc601`1d08c8d0 ffffc601`27122d10 : Wdf01000!FxDevice::DispatchWithLock+0x232 [minkernel\wdf\framework\shared\core\fxdevice.cpp @ 1445] 
+ffff828a`3e1875e0 fffff804`c02d33a8 : ffffc601`27122d10 ffff828a`3e187690 ffffc601`1d08c8d0 00000000`00000001 : nt!IofCallDriver+0xcd
+ffff828a`3e187620 fffff804`c02d21f2 : 00000000`42dd2ce6 00000000`00000001 ffffc601`27122d10 00000000`00000001 : nt!IopSynchronousServiceTail+0x1c8
+ffff828a`3e1876d0 fffff804`c02d187e : 00000000`00000000 fffff804`bfcaaa80 00000000`00000000 00007ff8`ed5a58f0 : nt!IopXxxControlFile+0x962
+ffff828a`3e187940 fffff804`c00b7c55 : 00000267`bf8d27c0 00000267`bf9720a0 000000f5`6f8a1000 00000267`be7da980 : nt!NtDeviceIoControlFile+0x5e
+ffff828a`3e1879b0 00007ff9`59541be4 : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : nt!KiSystemServiceCopyEnd+0x25
+000000f5`703ff728 00000000`00000000 : 00000000`00000000 00000000`00000000 00000000`00000000 00000000`00000000 : 0x00007ff9`59541be4
+
+
+FAULTING_SOURCE_LINE:  D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp
+
+FAULTING_SOURCE_FILE:  D:\Project\Drivers\Windows\SourceCode\Pch_I2C\Source\1.2\sys\peripheral.cpp
+
+FAULTING_SOURCE_LINE_NUMBER:  129
+
+FAULTING_SOURCE_CODE:  
+   125:         &quot;Closing handle to SPB target&quot;);
+   126: 
+   127:     WdfIoTargetClose(pDevice-&gt;SpbController);
+   128: 
+&gt;  129:     FuncExit(TRACE_FLAG_SPBAPI);
+   130:     
+   131:     return STATUS_SUCCESS;
+   132: &#125;
+   133: 
+   134: VOID
+
+
+SYMBOL_NAME:  StcMcuI2cDriver!SpbPeripheralClose+8f
+
+MODULE_NAME: StcMcuI2cDriver
+
+IMAGE_NAME:  StcMcuI2cDriver.sys
+
+STACK_COMMAND:  .thread ; .cxr ; kb
+
+BUCKET_ID_FUNC_OFFSET:  8f
+
+FAILURE_BUCKET_ID:  0x10D_5_StcMcuI2cDriver!SpbPeripheralClose
+
+OSPLATFORM_TYPE:  x64
+
+OSNAME:  Windows 10
+
+FAILURE_ID_HASH:  &#123;862ad8cf-4de1-9dc0-849b-4a6423d819ac&#125;
+
+Followup:     MachineOwner
+---------
+
+23: kd&gt; ln StcMcuI2cDriver+0x8f
+Browse module
+Set bu breakpoint
+
+(fffff804`68f01000)   StcMcuI2cDriver!OnDeviceAdd+0xffffffff`ffffffff   |  (fffff804`68f01740)   StcMcuI2cDriver!OnDriverCleanup
+</code></pre>
 
     </div>
 
@@ -408,20 +709,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -472,12 +773,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="Symbols count total">112k</span>
+    <span title="Symbols count total">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="Reading time total">1:42</span>
+    <span title="Reading time total">1:45</span>
 </div>
 
 <!-- <Sam_Diao20251112+> -->
@@ -567,6 +868,8 @@ if (document.querySelectorAll('pre.mermaid').length) {
 }
 </script>
 
+
+  
 
   
 
